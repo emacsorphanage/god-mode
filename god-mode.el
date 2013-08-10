@@ -1,12 +1,62 @@
-;; C-a → a
-;; C-SPC → SPC
-;; M-a → ga
-;; C-M-a → Ga
-;; C-x h → xh
-;; C-x b → xb
-;; C-x C-s → Xs
-;; C-x C-x → Xx
-;; C-c C-c → Cc
+;;; ghc-core.el --- Syntax highlighting module for GHC Core
+
+;; Copyright (C) 2010  Johan Tibell
+
+;; Author: Chris Done <chrisdone@gmail.com>
+
+;; This file is not part of GNU Emacs.
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with GNU Emacs; see the file COPYING.  If not, write to
+;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+;; Boston, MA 02110-1301, USA.
+
+;;; Commentary:
+
+;; This library defines the following mapping:
+;;
+;; 1. All commands are assumed to be C-<something> unless otherwise
+;;    indicated. Examples:
+;;    * a    -> C-a
+;;    * s    -> C-s
+;;    * akny -> C-a C-k C-n C-y
+;;
+;; 2. `g' is a special key to indicate M-<something>. This means that
+;;    there is no way to write `C-g' in this mode, you must therefore
+;;    type `C-g' directly. Examples:
+;;    * gf -> M-f
+;;    * gx -> M-f
+;;
+;; 3. `x' is a special key to indicate C-x <something>. Examples:
+;;    * xb -> C-x b
+;;    * xh -> C-x h
+;;
+;; 4. `c' is a special key to indicate C-c <something>. Examples:
+;;    * ca -> C-c a
+;;    * cc -> C-c c
+;;
+;; 5. `h' is a special key to indicate C-h <something>. Examples:
+;;    * hh -> C-h h
+;;    * hf -> C-h f
+;;
+;; 6. There is a convention of uppercase special keys to indicate
+;;    two modifier keys in action. Those are:
+;;    * Gx -> C-M-x
+;;    * Xs -> C-x C-s
+;;    * Xx -> C-x C-x
+;;    * Cc -> C-c C-c
+
+;;; Code:
 
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
