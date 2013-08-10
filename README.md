@@ -45,3 +45,9 @@ This library defines the following mapping:
    * `Xs` → `C-x C-s`
    * `Xx` → `C-x C-x`
    * `Cc` → `C-c C-c`
+
+## Not implemented yet
+
+* Prefix/universal arguments: M-n
+* C- with dackspace and arrow keys don't quite work, not looked into
+  it yet
