@@ -63,6 +63,7 @@
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
+;;;###autoload
 (defun god-mode ()
   (interactive)
   "Activate/deactivate God mode."
@@ -77,6 +78,7 @@
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
     map))
 
+;;;###autoload
 (define-minor-mode god-local-mode
   "Minor mode for running commands."
   :lighter " God")
