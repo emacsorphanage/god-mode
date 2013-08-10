@@ -71,15 +71,15 @@
       (god-local-mode 1)
     (god-local-mode -1)))
 
-(define-minor-mode god-local-mode
-  "Minor mode for running commands."
-  :lighter " God")
-
 (defvar god-local-mode-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map t)
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
     map))
+
+(define-minor-mode god-local-mode
+  "Minor mode for running commands."
+  :lighter " God")
 
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
