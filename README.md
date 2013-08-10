@@ -2,8 +2,11 @@
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
-insertion mode. Activate by running `M-x god-mode`. Toggle between God
-mode and non-God mode using `ESC`.
+insertion mode. Activate by running `M-x god-mode`.
+
+Toggle between God mode and non-God mode using `ESC`:
+
+    (global-set-key (kbd "<escape>") 'god-local-mode)
 
 ## Mapping
 
