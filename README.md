@@ -44,6 +44,7 @@ This library defines the following mapping:
    * `Gx` → `C-M-x`
    * `Xs` → `C-x C-s`
    * `Xx` → `C-x C-x`
+   * `Ca` → `C-c C-a`
    * `Cc` → `C-c C-c`
 
 ## Not implemented yet
