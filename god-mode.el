@@ -3,6 +3,8 @@
 ;; Copyright (C) 2013 Chris Done
 
 ;; Author: Chris Done <chrisdone@gmail.com>
+;; URL: https://github.com/chrisdone/god-mode
+;; Version: 1.0.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -146,4 +148,4 @@ somehow activated."
 
 (provide 'god-mode)
 
-;;; god-mode.le ends here
+;;; god-mode.el ends here
