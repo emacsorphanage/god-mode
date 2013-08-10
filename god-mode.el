@@ -1,6 +1,6 @@
-;;; ghc-core.el --- Syntax highlighting module for GHC Core
+;;; god-mode.el --- Syntax highlighting module for GHC Core
 
-;; Copyright (C) 2010  Johan Tibell
+;; Copyright (C) 2013 Chris Done
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 
@@ -63,7 +63,7 @@
 
 (defun god-mode ()
   (interactive)
-  "Activate/deactivate  God mode."
+  "Activate/deactivate God mode."
   (setq god-global-mode (not god-global-mode))
   (if god-global-mode
       (god-local-mode 1)
@@ -82,81 +82,38 @@
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
   (interactive)
-  (let
-      ((key (this-command-keys)))
+  (let ((key (this-command-keys)))
     (god-mode-interpret-key key)))
 
 (defun god-mode-interpret-key (key)
   "Interpret the given key. This function sometimes recurses."
   (cond
-   ((string= key " ")
-    (god-mode-interpret-key "SPC"))
-   ((string= key "u")
-    (let ((key (read-event "u-")))
-      (error "God: Universal argument not supported yet.")))
-   ((string= key "g")
-    (let ((key (read-event "g-")))
-      (let* ((formatted (format "M-%s" (char-to-string key)))
-             (command (read-kbd-macro formatted))
-             (binding (key-binding command)))
-        (if (commandp binding)
-            (call-interactively binding)
-          (error "God: Unknown key binding for `%s`" formatted)))))
-   ((string= key "x")
-    (let ((key (read-event "C-x ")))
-      (let* ((formatted (format "C-x %s" (char-to-string key)))
-             (command (read-kbd-macro formatted))
-             (binding (key-binding command)))
-        (if (commandp binding)
-            (call-interactively binding)
-          (error "God: Unknown key binding for `%s`" formatted)))))
-   ((string= key "X")
-    (let ((key (read-event "C-x C-")))
-      (let* ((formatted (format "C-x C-%s" (char-to-string key)))
-             (command (read-kbd-macro formatted))
-             (binding (key-binding command)))
-        (if (commandp binding)
-            (call-interactively binding)
-          (error "God: Unknown key binding for `%s`" formatted)))))
-   ((string= key "h")
-    (let ((key (read-event "C-h ")))
-      (let* ((formatted (format "C-h %s" (char-to-string key)))
-             (command (read-kbd-macro formatted))
-             (binding (key-binding command)))
-        (if (commandp binding)
-            (call-interactively binding)
-          (error "God: Unknown key binding for `%s`" formatted)))))
-   ((string= key "c")
-    (let ((key (read-event "C-c ")))
-      (let* ((formatted (format "C-c %s" (char-to-string key)))
-             (command (read-kbd-macro formatted))
-             (binding (key-binding command)))
-        (if (commandp binding)
-            (call-interactively binding)
-          (error "God: Unknown key binding for `%s`" formatted)))))
-   ((string= key "C")
-    (let ((key (read-event "C-c C-")))
-      (let* ((formatted (format "C-c C-%s" (char-to-string key)))
-             (command (read-kbd-macro formatted))
-             (binding (key-binding command)))
-        (if (commandp binding)
-            (call-interactively binding)
-          (error "God: Unknown key binding for `%s`" formatted)))))
-   ((string= key "G")
-    (let ((key (read-event "G-")))
-      (let* ((formatted (format "C-M-%s" (char-to-string key)))
-             (command (read-kbd-macro formatted))
-             (binding (key-binding command)))
-        (if (commandp binding)
-            (call-interactively binding)
-          (error "God: Unknown key binding for `%s`" formatted)))))
+   ((string= key " ") (god-mode-interpret-key "SPC"))
+   ((string= key "u") (error "God: Universal argument not supported yet."))
+   ((string= key "g") (god-mode-try-command "g" "M-%s"))
+   ((string= key "x") (god-mode-try-command "x" "C-x %s"))
+   ((string= key "X") (god-mode-try-command "X" "C-x C-%s"))
+   ((string= key "h") (god-mode-try-command "h" "C-h %s"))
+   ((string= key "c") (god-mode-try-command "c" "C-c %s"))
+   ((string= key "C") (god-mode-try-command "C" "C-c C-%s"))
+   ((string= key "G") (god-mode-try-command "G" "C-M-%s"))
    (t
     (let* ((formatted (format "C-%s" key))
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
       (if (commandp binding)
           (call-interactively binding)
-        (error "Unknown key binding for `%s`" formatted))))))
+        (error "God: Unknown key binding for `%s`" formatted))))))
+
+(defun god-mode-try-command (prompt format)
+  "Try to run a command that takes additional key presses."
+  (let* ((key (read-event prompt))
+         (formatted (format format (char-to-string key)))
+         (command (read-kbd-macro formatted))
+         (binding (key-binding command)))
+    (if (commandp binding)
+        (call-interactively binding)
+      (error "God: Unknown extended key binding for `%s`" formatted))))
 
 (defadvice display-buffer (before god activate)
   (god-mode-activate))
