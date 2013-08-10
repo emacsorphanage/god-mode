@@ -144,8 +144,6 @@ somehow activated."
 (ad-activate 'display-buffer)
 (ad-activate 'switch-to-buffer)
 
-(global-set-key (kbd "<escape>") 'god-local-mode)
-
 (provide 'god-mode)
 
 ;;; god-mode.el ends here
