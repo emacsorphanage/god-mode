@@ -50,8 +50,15 @@ This library defines the following mapping:
    * `Ca` → `C-c C-a`
    * `Cc` → `C-c C-c`
 
+* Digit arguments:
+
+  * `12f` → `M-12 C-f`
+
+* Universal boolean argument:
+
+  * `uCi` → `C-u C-c C-i`
+
 ## Not implemented yet
 
-* Prefix/universal arguments: M-n
 * C- with dackspace and arrow keys don't quite work, not looked into
   it yet
