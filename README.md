@@ -1,6 +1,9 @@
 # God Mode
 
-Global minor mode for entering Emacs commands without modifier keys
+This is a global minor mode for entering Emacs commands without
+modifier keys. It's similar to Vim's separation of commands and
+insertion mode. Activate by running `M-x god-mode`. Toggle between God
+mode and non-God mode using `ESC`.
 
 ## Mapping
 
@@ -42,8 +45,3 @@ This library defines the following mapping:
    * `Xs` → `C-x C-s`
    * `Xx` → `C-x C-x`
    * `Cc` → `C-c C-c`
-
-## Activating
-
-Activate by running `M-x god-mode`. Toggle between God mode and
-non-God mode using `ESC`.
