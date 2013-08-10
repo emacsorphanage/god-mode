@@ -21,7 +21,7 @@ This library defines the following mapping:
    type `C-g` directly. Examples:
 
    * `gf` → `M-f`
-   * `gx` → `M-f`
+   * `gx` → `M-x`
 
 * `x` is a special key to indicate `C-x <something>`. Examples:
 
