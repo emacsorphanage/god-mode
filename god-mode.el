@@ -1,4 +1,4 @@
-;;; god-mode.el --- Syntax highlighting module for GHC Core
+;;; god-mode.el --- God-like command entering minor mode
 
 ;; Copyright (C) 2013 Chris Done
 
@@ -75,7 +75,7 @@
 
 (defvar god-local-mode-map
   (let ((map (make-sparse-keymap)))
-    (suppress-keymap map)
+    (suppress-keymap map t)
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
     map))
 
@@ -88,8 +88,17 @@
 (defun god-mode-interpret-key (key)
   "Interpret the given key. This function sometimes recurses."
   (cond
+   ((string-match "^[0-9]$" key)
+    (let ((current-prefix-arg
+           (if (numberp current-prefix-arg)
+               (string-to-number (concat (number-to-string current-prefix-arg)
+                                         key))
+             (string-to-number key))))
+      (god-mode-interpret-key (char-to-string (read-event (format "%d" current-prefix-arg))))))
+   ((string= key "u")
+    (let ((current-prefix-arg t))
+      (god-mode-interpret-key (char-to-string (read-event "u")))))
    ((string= key " ") (god-mode-interpret-key "SPC"))
-   ((string= key "u") (error "God: Universal argument not supported yet."))
    ((string= key "g") (god-mode-try-command "g" "M-%s"))
    ((string= key "x") (god-mode-try-command "x" "C-x %s"))
    ((string= key "X") (god-mode-try-command "X" "C-x C-%s"))
@@ -134,3 +143,7 @@ somehow activated."
 (ad-activate 'switch-to-buffer)
 
 (global-set-key (kbd "<escape>") 'god-local-mode)
+
+(provide 'god-mode)
+
+;;; god-mode.le ends here
