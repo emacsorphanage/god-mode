@@ -34,6 +34,9 @@
 ;;    * a    -> C-a
 ;;    * s    -> C-s
 ;;    * akny -> C-a C-k C-n C-y
+;;   * `x s`  → `C-x s`
+;;
+;;   Note the use of space to produce `C-x s`.
 ;;
 ;; 2. `g' is a special key to indicate M-<something>. This means that
 ;;    there is no way to write `C-g' in this mode, you must therefore
@@ -46,12 +49,6 @@
 ;; 6. There is a convention of uppercase special keys to indicate
 ;;    two modifier keys in action. Those are:
 ;;    * Gx -> C-M-x
-;;
-;;    And for C-* chords:
-;;
-;;    * Xs -> C-x s
-;;    * Xx -> C-x x
-;;    * Cc -> C-c c
 ;;
 ;; 7. There is a literal interpretation key as `l' that can
 ;;    be used on chained commands, e.g.
@@ -127,16 +124,12 @@
    ;; Meta key support
    ((string= key god-meta-key) (god-mode-try-command "M-" "M-%s"))
    ((string= key (upcase god-meta-key)) (god-mode-try-command "C-M-" "C-M-%s"))
-   ;; Xa ->  C-x a
-   ;; Helpful for when the literal character is shadowing a command
-   ((string= key (upcase key))
-    (god-mode-try-command nil (format "C-%s C-%%s" sdf owncase key)))
-   ;; By default all other things are C-*
+   ;; By default all other things are C-*///
    (t
     (let* ((formatted (format "C-%s" key))
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
-      (god-mode-execute-binding formatted binding))))))
+      (god-mode-execute-binding formatted binding)))))
 
 (defun god-mode-try-command (prompt format &optional keymapp control)
   "Try to run a command that takes additional key presses."
