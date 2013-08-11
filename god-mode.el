@@ -1,10 +1,11 @@
 ;;; god-mode.el --- God-like command entering minor mode
 
 ;; Copyright (C) 2013 Chris Done
+;; Copyright (C) 2013 Magnar Sveen
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 1.2.0
+;; Version: 1.3.0
 
 ;; This file is not part of GNU Emacs.
 
