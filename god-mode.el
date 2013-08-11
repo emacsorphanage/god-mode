@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.1.0
+;; Version: 2.2.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -75,8 +75,8 @@
   :group 'god
   :type 'string)
 
-(defcustom god-meta-key-key
-  "."
+(defcustom god-repeat-key
+  "z"
   "The key used for repetition."
   :group 'god
   :type 'string)
