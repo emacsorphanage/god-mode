@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.3.0
+;; Version: 2.4.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -72,18 +72,6 @@
   :group 'god
   :type 'string)
 
-(defcustom god-repeat-key
-  "z"
-  "The key used for repetition."
-  :group 'god
-  :type 'string)
-
-(defcustom god-insert-key
-  "i"
-  "The key used to switch into insert mode."
-  :group 'god
-  :type 'string)
-
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
@@ -108,6 +96,8 @@
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
     (define-key map (kbd "g") 'god-mode-meta)
     (define-key map (kbd "G") 'god-mode-control-meta)
+    (define-key map (kbd "z") 'god-mode-repeat)
+    (define-key map (kbd "i") 'god-local-mode)
     map))
 
 ;;;###autoload
@@ -131,6 +121,13 @@
   (let ((key (this-command-keys)))
     (god-mode-interpret-key key)))
 
+(defun god-mode-repeat ()
+  "Repeat the last command."
+  (interactive)
+  (when god-mode-last-command
+    (let ((current-prefix-arg god-mode-last-prefix-arg))
+      (call-interactively god-mode-last-command))))
+
 (defun god-mode-interpret-key (key)
   "Interpret the given key. This function sometimes recurses."
   (cond
@@ -142,19 +139,12 @@
                                          key))
              (string-to-number key))))
       (god-mode-interpret-key (char-to-string (read-event (format "%d" current-prefix-arg))))))
-   ;; Repetition
-   ((string= god-repeat-key key)
-    (when god-mode-last-command
-      (let ((current-prefix-arg god-mode-last-prefix-arg))
-       (call-interactively god-mode-last-command))))
    ;; Boolean prefix arguments
    ((string= key "u")
     (let ((current-prefix-arg t))
       (god-mode-interpret-key (char-to-string (read-event "u")))))
    ;; For better keyboard macro interpretation.
    ((string= key " ") (god-mode-interpret-key "SPC"))
-   ;; Easy switch to insert mode
-   ((string= key god-insert-key) (god-local-mode -1))
    ;; By default all other things are C-*///
    (t
     (let* ((formatted (format "C-%s" key))
