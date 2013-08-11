@@ -75,8 +75,20 @@
   :group 'god
   :type 'string)
 
+(defcustom god-meta-key-key
+  "."
+  "The key used for repetition."
+  :group 'god
+  :type 'string)
+
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
+
+(defvar god-mode-last-command nil
+  "Last command ran. Used for repetition.")
+
+(defvar god-mode-last-prefix-arg nil
+  "Last previous arg, for repetition.")
 
 ;;;###autoload
 (defun god-mode ()
@@ -115,6 +127,11 @@
                                          key))
              (string-to-number key))))
       (god-mode-interpret-key (char-to-string (read-event (format "%d" current-prefix-arg))))))
+   ;; Repetition
+   ((string= god-repeat-key key)
+    (when god-mode-last-command
+      (let ((current-prefix-arg god-mode-last-prefix-arg))
+       (call-interactively god-mode-last-command))))
    ;; Boolean prefix arguments
    ((string= key "u")
     (let ((current-prefix-arg t))
@@ -152,6 +169,8 @@
   "Execute extended keymaps such as C-c, or if it is a command,
 call it."
   (cond ((commandp binding)
+         (setq god-mode-last-command binding)
+         (setq god-mode-last-prefix-arg current-prefix-arg)
          (call-interactively binding))
         ((keymapp binding)
          (god-mode-try-command formatted formatted t t))
