@@ -104,19 +104,14 @@
       (god-mode-interpret-key (char-to-string (read-event "u")))))
    ((string= key " ") (god-mode-interpret-key "SPC"))
    ((string= key "g") (god-mode-try-command "g" "M-%s"))
-   ((string= key "x") (god-mode-try-command "x" "C-x %s"))
    ((string= key "X") (god-mode-try-command "X" "C-x C-%s"))
-   ((string= key "h") (god-mode-try-command "h" "C-h %s"))
-   ((string= key "c") (god-mode-try-command "c" "C-c %s"))
    ((string= key "C") (god-mode-try-command "C" "C-c C-%s"))
    ((string= key "G") (god-mode-try-command "G" "C-M-%s"))
    (t
     (let* ((formatted (format "C-%s" key))
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
-      (if (commandp binding)
-          (call-interactively binding)
-        (error "God: Unknown key binding for `%s`" formatted))))))
+      (god-mode-execute-binding formatted binding)))))
 
 (defun god-mode-try-command (prompt format)
   "Try to run a command that takes additional key presses."
@@ -124,9 +119,15 @@
          (formatted (format format (char-to-string key)))
          (command (read-kbd-macro formatted))
          (binding (key-binding command)))
-    (if (commandp binding)
-        (call-interactively binding)
-      (error "God: Unknown extended key binding for `%s`" formatted))))
+    (god-mode-execute-binding formatted binding)))
+
+(defun god-mode-execute-binding (formatted binding)
+  (cond ((commandp binding)
+         (call-interactively binding))
+        ((keymapp binding)
+         (god-mode-try-command formatted (concat formatted " %s")))
+        (:else
+         (error "God: Unknown key binding for `%s`" formatted))))
 
 (defadvice display-buffer (before god activate)
   (god-mode-activate))
