@@ -126,7 +126,7 @@
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
   (interactive)
-  (let ((key (this-command-keys)))
+  (let ((key (char-to-string (aref (this-command-keys-vector) 0))))
     (god-mode-interpret-key key)))
 
 (defun god-mode-repeat ()
