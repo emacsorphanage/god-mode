@@ -103,10 +103,10 @@
     (let ((current-prefix-arg t))
       (god-mode-interpret-key (char-to-string (read-event "u")))))
    ((string= key " ") (god-mode-interpret-key "SPC"))
-   ((string= key "g") (god-mode-try-command "g" "M-%s"))
-   ((string= key "X") (god-mode-try-command "X" "C-x C-%s"))
-   ((string= key "C") (god-mode-try-command "C" "C-c C-%s"))
-   ((string= key "G") (god-mode-try-command "G" "C-M-%s"))
+   ((string= key "g") (god-mode-try-command "M-" "M-%s"))
+   ((string= key "X") (god-mode-try-command "C-c C-" "C-x C-%s"))
+   ((string= key "C") (god-mode-try-command "C-c C-" "C-c C-%s"))
+   ((string= key "G") (god-mode-try-command "C-M-" "C-M-%s"))
    (t
     (let* ((formatted (format "C-%s" key))
            (command (read-kbd-macro formatted))
@@ -122,6 +122,8 @@
     (god-mode-execute-binding formatted binding)))
 
 (defun god-mode-execute-binding (formatted binding)
+  "Execute extended keymaps such as C-c, or if it is a command,
+call it."
   (cond ((commandp binding)
          (call-interactively binding))
         ((keymapp binding)
