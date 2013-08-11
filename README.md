@@ -2,7 +2,7 @@
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
-insertion mode. Activate by running `M-x god-mode`.
+insertion mode. Activate for all buffers by running `M-x god-mode`.
 
 Toggle between God mode and non-God mode using `ESC`:
 
@@ -48,6 +48,21 @@ This library defines the following mapping:
 
 * There is a key (default `i` - think *insert*) to disable God mode,
   similar to Vim's i.
+
+## Global god-mode and excempt major modes
+
+If you do `M-x god-mode`, then all buffers will be started in God
+mode. If you don't like that behavior, just use the `god-local-mode`
+toggler with a keybinding.
+
+Sometimes `god-mode` is enabled in buffers where it makes no sense. In
+that case you can add the major mode to `god-excempt-major-modes`:
+
+    (add-to-list 'god-excempt-major-modes 'dired-mode)
+
+Since `dired-mode` is already in the list, that's a noop, but you get
+the idea. Consider opening an issue or pull request if you find a
+major mode that should be on the official list.
 
 ## Not implemented yet
 

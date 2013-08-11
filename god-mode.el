@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.4.0
+;; Version: 2.5.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -71,6 +71,13 @@
   "The key used for literal interpretation."
   :group 'god
   :type 'string)
+
+(defcustom god-excempt-major-modes
+  '(dired-mode
+    magit-log-edit-mode)
+  "List of major modes that should not start in god-local-mode."
+  :group 'god
+  :type '(function))
 
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
@@ -181,23 +188,14 @@ call it."
         (:else
          (error "God: Unknown key binding for `%s`" formatted))))
 
-(defadvice display-buffer (before god activate)
-  (god-mode-activate))
+(add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
-(defadvice switch-to-buffer (before god activate)
-  (god-mode-activate))
-
-(defun god-mode-activate ()
-  "Activate God mode locally on individual buffers when they are
-somehow activated."
-  (cond (god-global-mode
-         (unless god-local-mode
-           (god-local-mode 1)))
-        (god-local-mode
-         (god-local-mode -1))))
-
-(ad-activate 'display-buffer)
-(ad-activate 'switch-to-buffer)
+(defun god-mode-maybe-activate ()
+  "Activate God mode locally on individual buffers when appropriate."
+  (when (and god-global-mode
+             (not (minibufferp))
+             (not (memq major-mode god-excempt-major-modes)))
+    (god-local-mode 1)))
 
 (provide 'god-mode)
 
