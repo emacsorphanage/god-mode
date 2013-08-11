@@ -72,12 +72,6 @@
   :group 'god
   :type 'string)
 
-(defcustom god-meta-key
-  "g"
-  "The key used for meta interpretation."
-  :group 'god
-  :type 'string)
-
 (defcustom god-repeat-key
   "z"
   "The key used for repetition."
