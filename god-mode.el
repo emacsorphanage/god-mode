@@ -2,6 +2,7 @@
 
 ;; Copyright (C) 2013 Chris Done
 ;; Copyright (C) 2013 Magnar Sveen
+;; Copyright (C) 2013 Rüdiger Sonderfeld
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
