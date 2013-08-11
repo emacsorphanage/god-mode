@@ -112,12 +112,24 @@
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map t)
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
+    (define-key map (kbd "g") 'god-mode-meta)
+    (define-key map (kbd "G") 'god-mode-control-meta)
     map))
 
 ;;;###autoload
 (define-minor-mode god-local-mode
   "Minor mode for running commands."
   :lighter " God")
+
+(defun god-mode-meta ()
+  "The command for M-."
+  (interactive)
+  (god-mode-try-command "M-" "M-%s"))
+
+(defun god-mode-control-meta ()
+  "The command for C-M-."
+  (interactive)
+  (god-mode-try-command "C-M-" "C-M-%s"))
 
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
@@ -147,9 +159,6 @@
       (god-mode-interpret-key (char-to-string (read-event "u")))))
    ;; For better keyboard macro interpretation.
    ((string= key " ") (god-mode-interpret-key "SPC"))
-   ;; Meta key support
-   ((string= key god-meta-key) (god-mode-try-command "M-" "M-%s"))
-   ((string= key (upcase god-meta-key)) (god-mode-try-command "C-M-" "C-M-%s"))
    ;; Easy switch to insert mode
    ((string= key god-insert-key) (god-local-mode -1))
    ;; By default all other things are C-*///
