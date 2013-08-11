@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.2.0
+;; Version: 2.3.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -60,6 +60,9 @@
 ;;    * xx -> C-x C-x
 ;;
 ;;    This key can be configured.
+;;
+;; 8. There is a key (default `i') to disable God mode, similar to
+;;    Vim's i.
 
 ;;; Code:
 

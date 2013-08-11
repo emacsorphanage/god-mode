@@ -47,6 +47,9 @@ This library defines the following mapping:
 
   * `uCi` → `C-u C-c C-i`
 
+* There is a key (default `i`) to disable God mode, similar to Vim's
+  i.
+
 ## Not implemented yet
 
 * C- with backspace and arrow keys don't quite work, not looked into
