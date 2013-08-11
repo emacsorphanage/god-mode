@@ -75,7 +75,8 @@
 (defcustom god-excempt-major-modes
   '(dired-mode
     magit-log-edit-mode
-    magit-stats-mode)
+    magit-stats-mode
+    Buffer-menu-mode)
   "List of major modes that should not start in god-local-mode."
   :group 'god
   :type '(function))
