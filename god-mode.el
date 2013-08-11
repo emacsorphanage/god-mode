@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 1.3.0
+;; Version: 2.0.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -41,26 +41,42 @@
 ;;    * gf -> M-f
 ;;    * gx -> M-f
 ;;
-;; 3. `x' is a special key to indicate C-x <something>. Examples:
-;;    * xb -> C-x b
-;;    * xh -> C-x h
-;;
-;; 4. `c' is a special key to indicate C-c <something>. Examples:
-;;    * ca -> C-c a
-;;    * cc -> C-c c
-;;
-;; 5. `h' is a special key to indicate C-h <something>. Examples:
-;;    * hh -> C-h h
-;;    * hf -> C-h f
+;;    This key can be configured.
 ;;
 ;; 6. There is a convention of uppercase special keys to indicate
 ;;    two modifier keys in action. Those are:
 ;;    * Gx -> C-M-x
-;;    * Xs -> C-x C-s
-;;    * Xx -> C-x C-x
-;;    * Cc -> C-c C-c
+;;
+;;    And for C-* chords:
+;;
+;;    * Xs -> C-x s
+;;    * Xx -> C-x x
+;;    * Cc -> C-c c
+;;
+;; 7. There is a literal interpretation key as `l' that can
+;;    be used on chained commands, e.g.
+;;
+;;    * xs -> C-x C-s
+;;    * xlb -> C-x b
+;;    * xlh -> C-x h
+;;    * xp -> C-x C-p
+;;    * xx -> C-x C-x
+;;
+;;    This key can be configured.
 
 ;;; Code:
+
+(defcustom god-literal-key
+  " "
+  "The key used for literal interpretation."
+  :group 'god
+  :type 'string)
+
+(defcustom god-meta-key
+  "g"
+  "The key used for meta interpretation."
+  :group 'god
+  :type 'string)
 
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
@@ -94,6 +110,7 @@
 (defun god-mode-interpret-key (key)
   "Interpret the given key. This function sometimes recurses."
   (cond
+   ;; Digit argument
    ((string-match "^[0-9]$" key)
     (let ((current-prefix-arg
            (if (numberp current-prefix-arg)
@@ -101,27 +118,42 @@
                                          key))
              (string-to-number key))))
       (god-mode-interpret-key (char-to-string (read-event (format "%d" current-prefix-arg))))))
+   ;; Boolean prefix arguments
    ((string= key "u")
     (let ((current-prefix-arg t))
       (god-mode-interpret-key (char-to-string (read-event "u")))))
+   ;; For better keyboard macro interpretation.
    ((string= key " ") (god-mode-interpret-key "SPC"))
-   ((string= key "g") (god-mode-try-command "M-" "M-%s"))
-   ((string= key "X") (god-mode-try-command "C-c C-" "C-x C-%s"))
-   ((string= key "C") (god-mode-try-command "C-c C-" "C-c C-%s"))
-   ((string= key "G") (god-mode-try-command "C-M-" "C-M-%s"))
+   ;; Meta key support
+   ((string= key god-meta-key) (god-mode-try-command "M-" "M-%s"))
+   ((string= key (upcase god-meta-key)) (god-mode-try-command "C-M-" "C-M-%s"))
+   ;; Xa ->  C-x a
+   ;; Helpful for when the literal character is shadowing a command
+   ((string= key (upcase key))
+    (god-mode-try-command nil (format "C-%s C-%%s" sdf owncase key)))
+   ;; By default all other things are C-*
    (t
     (let* ((formatted (format "C-%s" key))
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
-      (god-mode-execute-binding formatted binding)))))
+      (god-mode-execute-binding formatted binding))))))
 
-(defun god-mode-try-command (prompt format)
+(defun god-mode-try-command (prompt format &optional keymapp control)
   "Try to run a command that takes additional key presses."
-  (let* ((key (read-event prompt))
-         (formatted (format format (char-to-string key)))
-         (command (read-kbd-macro formatted))
-         (binding (key-binding command)))
-    (god-mode-execute-binding formatted binding)))
+  (let* ((key. (char-to-string (read-event prompt))))
+    (let* ((control (if (string= key. god-literal-key) nil control))
+           (key (if (string= key. god-literal-key)
+                    (char-to-string (read-event prompt))
+                  key.))
+           (formatted (format (if keymapp
+                                  (if control
+                                      (concat format " C-%s")
+                                    (concat format " %s"))
+                                format)
+                              key))
+           (command (read-kbd-macro formatted))
+           (binding (key-binding command)))
+      (god-mode-execute-binding formatted binding))))
 
 (defun god-mode-execute-binding (formatted binding)
   "Execute extended keymaps such as C-c, or if it is a command,
@@ -129,7 +161,7 @@ call it."
   (cond ((commandp binding)
          (call-interactively binding))
         ((keymapp binding)
-         (god-mode-try-command formatted (concat formatted " %s")))
+         (god-mode-try-command formatted formatted t t))
         (:else
          (error "God: Unknown key binding for `%s`" formatted))))
 
