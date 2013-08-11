@@ -41,7 +41,7 @@ This library defines the following mapping:
 
 * Repetition:
 
-  * `f..` → `fff`
+  * `fzz` → `fff`
 
 * Universal boolean argument:
 
