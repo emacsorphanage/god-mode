@@ -39,6 +39,10 @@ This library defines the following mapping:
 
   * `12f` → `M-12 C-f`
 
+* Repetition:
+
+  * `f..` → `fff`
+
 * Universal boolean argument:
 
   * `uCi` → `C-u C-c C-i`
