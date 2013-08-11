@@ -30,8 +30,7 @@ This library defines the following mapping:
    * `gf` → `M-f`
    * `gx` → `M-x`
 
-* And there is a convention of uppercase special keys to indicate
-   two modifier keys in action. Those are:
+* `G` is a special key to indicate `C-M-<something>`. Example:
 
    * `Gx` → `C-M-x`
 
@@ -41,14 +40,14 @@ This library defines the following mapping:
 
 * Repetition:
 
-  * `fzz` → `fff`
+  * `gfzz` → `M-f M-f M-f`
 
 * Universal boolean argument:
 
-  * `uCi` → `C-u C-c C-i`
+  * `uco` → `C-u C-c C-o`
 
-* There is a key (default `i`) to disable God mode, similar to Vim's
-  i.
+* There is a key (default `i` - think *insert*) to disable God mode,
+  similar to Vim's i.
 
 ## Not implemented yet
 
