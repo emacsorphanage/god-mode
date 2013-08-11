@@ -182,6 +182,8 @@
   "Execute extended keymaps such as C-c, or if it is a command,
 call it."
   (cond ((commandp binding)
+         (setq this-original-command binding)
+         (setq this-command binding)
          (setq god-mode-last-command binding)
          (setq god-mode-last-prefix-arg current-prefix-arg)
          (call-interactively binding))
