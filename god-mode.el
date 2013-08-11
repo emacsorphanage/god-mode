@@ -81,6 +81,12 @@
   :group 'god
   :type 'string)
 
+(defcustom god-insert-key
+  "i"
+  "The key used to switch into insert mode."
+  :group 'god
+  :type 'string)
+
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
@@ -141,6 +147,8 @@
    ;; Meta key support
    ((string= key god-meta-key) (god-mode-try-command "M-" "M-%s"))
    ((string= key (upcase god-meta-key)) (god-mode-try-command "C-M-" "C-M-%s"))
+   ;; Easy switch to insert mode
+   ((string= key god-insert-key) (god-local-mode -1))
    ;; By default all other things are C-*///
    (t
     (let* ((formatted (format "C-%s" key))
