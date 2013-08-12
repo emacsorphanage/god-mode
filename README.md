@@ -76,3 +76,16 @@ major mode that should be on the official list.
 
 * C- with backspace and arrow keys don't quite work, not looked into
   it yet.
+
+## Cursor style to indicate mode
+
+You can change the cursor style indicate whether you're in God mode or
+not.
+
+    (defun my-update-cursor ()
+      (setq cursor-type (if (or god-local-mode buffer-read-only)
+                            'box
+                          'bar)))
+
+    (add-hook 'god-mode-enabled-hook 'my-update-cursor)
+    (add-hook 'god-mode-disabled-hook 'my-update-cursor)
