@@ -8,6 +8,14 @@ Toggle between God mode and non-God mode using `ESC`:
 
     (global-set-key (kbd "<escape>") 'god-local-mode)
 
+Also, you can add this to your `.xmodmap` to rebind Caps Lock to
+Escape:
+
+    remove Lock = Caps_Lock
+    keysym Caps_Lock = Escape
+
+And run `xmodmap .xmodmap` for the changes to take effect immediately.
+
 ## Mapping
 
 This library defines the following mapping:
