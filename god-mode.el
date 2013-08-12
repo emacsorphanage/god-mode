@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.6.0
+;; Version: 2.7.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -72,7 +72,7 @@
   :group 'god
   :type 'string)
 
-(defcustom god-excempt-major-modes
+(defcustom god-exempt-major-modes
   '(dired-mode
     help-mode
     grep-mode
@@ -205,7 +205,7 @@ call it."
   "Activate God mode locally on individual buffers when appropriate."
   (when (and god-global-mode
              (not (minibufferp))
-             (not (memq major-mode god-excempt-major-modes)))
+             (not (memq major-mode god-exempt-major-modes)))
     (god-local-mode 1)))
 
 (provide 'god-mode)
