@@ -97,7 +97,7 @@
 ;;;###autoload
 (defun god-mode ()
   (interactive)
-  "Activate/deactivate God mode."
+   "Toggle global God mode."
   (setq god-global-mode (not god-global-mode))
   (if god-global-mode
       (god-local-mode 1)
@@ -116,7 +116,10 @@
 ;;;###autoload
 (define-minor-mode god-local-mode
   "Minor mode for running commands."
-  :lighter " God")
+  nil " God" god-local-mode-map
+  (if god-local-mode
+      (run-hooks 'god-mode-enabled-hook)
+    (run-hooks 'god-mode-disabled-hook)))
 
 (defun god-mode-meta ()
   "The command for M-."
