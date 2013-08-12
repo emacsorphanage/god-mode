@@ -77,7 +77,6 @@
     help-mode
     grep-mode
     magit-log-edit-mode
-    magit-stats-mode
     magit-status-mode
     vc-annotate-mode
     package-menu-mode
