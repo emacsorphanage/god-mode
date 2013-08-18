@@ -57,16 +57,16 @@ This library defines the following mapping:
 * There is a key (default `i` - think *insert*) to disable God mode,
   similar to Vim's i.
 
-## Global god-mode and excempt major modes
+## Global god-mode and exempt major modes
 
 If you do `M-x god-mode`, then all buffers will be started in God
 mode. If you don't like that behavior, just use the `god-local-mode`
 toggler with a keybinding.
 
 Sometimes `god-mode` is enabled in buffers where it makes no sense. In
-that case you can add the major mode to `god-excempt-major-modes`:
+that case you can add the major mode to `god-exempt-major-modes`:
 
-    (add-to-list 'god-excempt-major-modes 'dired-mode)
+    (add-to-list 'god-exempt-major-modes 'dired-mode)
 
 Since `dired-mode` is already in the list, that's a noop, but you get
 the idea. Consider opening an issue or pull request if you find a
