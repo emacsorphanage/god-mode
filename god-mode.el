@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.7.1
+;; Version: 2.7.2
 
 ;; This file is not part of GNU Emacs.
 
@@ -186,7 +186,7 @@
                               key))
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
-      (god-mode-execute-binding formatted binding)))))
+      (god-mode-execute-binding formatted binding))))
 
 (defun god-mode-execute-binding (formatted binding)
   "Execute extended keymaps such as C-c, or if it is a command,
