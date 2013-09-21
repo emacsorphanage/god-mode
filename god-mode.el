@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.7.0
+;; Version: 2.7.1
 
 ;; This file is not part of GNU Emacs.
 
@@ -96,8 +96,8 @@
 
 ;;;###autoload
 (defun god-mode ()
+  "Toggle global God mode."
   (interactive)
-   "Toggle global God mode."
   (setq god-global-mode (not god-global-mode))
   (if god-global-mode
       (god-local-mode 1)
@@ -170,7 +170,10 @@
 
 (defun god-mode-try-command (prompt format &optional keymapp control)
   "Try to run a command that takes additional key presses."
-  (let* ((key. (char-to-string (read-event prompt))))
+  (let* ((event (read-event prompt))
+         (key. (if (eq event 'backspace)
+                   "DEL"
+                 (char-to-string event))))
     (let* ((control (if (string= key. god-literal-key) nil control))
            (key (if (string= key. god-literal-key)
                     (char-to-string (read-event prompt))
@@ -183,7 +186,7 @@
                               key))
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
-      (god-mode-execute-binding formatted binding))))
+      (god-mode-execute-binding formatted binding)))))
 
 (defun god-mode-execute-binding (formatted binding)
   "Execute extended keymaps such as C-c, or if it is a command,
