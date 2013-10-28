@@ -6,7 +6,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.7.2
+;; Version: 2.7.3
 
 ;; This file is not part of GNU Emacs.
 
@@ -80,7 +80,8 @@
     magit-status-mode
     vc-annotate-mode
     package-menu-mode
-    Buffer-menu-mode)
+    Buffer-menu-mode
+    git-rebase-mode)
   "List of major modes that should not start in god-local-mode."
   :group 'god
   :type '(function))
