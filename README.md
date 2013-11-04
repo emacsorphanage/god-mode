@@ -1,5 +1,7 @@
 # God Mode [![Build Status](https://secure.travis-ci.org/chrisdone/god-mode.png)](http://travis-ci.org/chrisdone/god-mode)
 
+***NOTE***: Emacs 24.3 is required for this package to work well!
+
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
 insertion mode. Activate for all buffers by running `M-x god-mode`.
