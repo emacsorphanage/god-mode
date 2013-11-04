@@ -7,6 +7,11 @@
       (lambda ()
         (god-local-mode 1)))
 
+(Then "^I am in insertion mode$"
+      "Turn god-mode off."
+      (lambda ()
+        (god-local-mode -1)))
+
 (Then "^the buffer's contents should be\\(?: \"\\(.+\\)\"\\|:\\)$"
       "Asserts that the current buffer includes some text.
 
