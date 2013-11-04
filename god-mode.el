@@ -89,12 +89,6 @@
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
-(defvar god-mode-last-command nil
-  "Last command ran. Used for repetition.")
-
-(defvar god-mode-last-prefix-arg nil
-  "Last previous arg, for repetition.")
-
 ;;;###autoload
 (defun god-mode ()
   "Toggle global God mode."
@@ -110,9 +104,20 @@
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
     (define-key map (kbd "g") 'god-mode-meta)
     (define-key map (kbd "G") 'god-mode-control-meta)
-    (define-key map (kbd "z") 'god-mode-repeat)
+    (define-key map (kbd "z") 'repeat)
     (define-key map (kbd "i") 'god-local-mode)
     map))
+
+(defvar god-mode-universal-argument-map
+  (let ((map (copy-keymap universal-argument-map)))
+    (define-key map (kbd "u") 'universal-argument-more)
+    map)
+  "Keymap used while processing \\[universal-argument] with god-mode on.")
+
+(defadvice save&set-overriding-map (before god-mode-add-to-universal-argument-map (map) activate compile)
+  "This is used to set special keybindings after C-u is pressed. When god-mode is active, intercept the call to add in our own keybindings."
+  (if (and god-local-mode (equal universal-argument-map map))
+      (setq map god-mode-universal-argument-map)))
 
 ;;;###autoload
 (define-minor-mode god-local-mode
@@ -135,31 +140,12 @@
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
   (interactive)
-  (let ((key (char-to-string (aref (this-command-keys-vector) 0))))
+  (let ((key (char-to-string (aref (this-command-keys-vector) (- (length (this-command-keys-vector)) 1)))))
     (god-mode-interpret-key key)))
-
-(defun god-mode-repeat ()
-  "Repeat the last command."
-  (interactive)
-  (when god-mode-last-command
-    (let ((current-prefix-arg god-mode-last-prefix-arg))
-      (call-interactively god-mode-last-command))))
 
 (defun god-mode-interpret-key (key)
   "Interpret the given key. This function sometimes recurses."
   (cond
-   ;; Digit argument
-   ((string-match "^[0-9]$" key)
-    (let ((current-prefix-arg
-           (if (numberp current-prefix-arg)
-               (string-to-number (concat (number-to-string current-prefix-arg)
-                                         key))
-             (string-to-number key))))
-      (god-mode-interpret-key (char-to-string (read-event (format "%d" current-prefix-arg))))))
-   ;; Boolean prefix arguments
-   ((string= key "u")
-    (let ((current-prefix-arg t))
-      (god-mode-interpret-key (char-to-string (read-event "u")))))
    ;; For better keyboard macro interpretation.
    ((string= key " ") (god-mode-interpret-key "SPC"))
    ;; By default all other things are C-*///
@@ -195,8 +181,7 @@ call it."
   (cond ((commandp binding)
          (setq this-original-command binding)
          (setq this-command binding)
-         (setq god-mode-last-command binding)
-         (setq god-mode-last-prefix-arg current-prefix-arg)
+         (setq real-this-command binding)    ;; `real-this-command'  is used by emacs to populate `last-repeatable-command', which is used by `repeat'.
          (call-interactively binding))
         ((keymapp binding)
          (god-mode-try-command formatted formatted t t))

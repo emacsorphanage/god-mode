@@ -1,4 +1,4 @@
-# God Mode
+# God Mode [![Build Status](https://secure.travis-ci.org/chrisdone/god-mode.png)](http://travis-ci.org/chrisdone/god-mode)
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
