@@ -5,4 +5,5 @@
 
 (development
  (depends-on "ecukes")
+ (depends-on "ansi")
  )
