@@ -78,8 +78,11 @@
     map)
   "Keymap used while processing \\[universal-argument] with god-mode on.")
 
-(defadvice save&set-overriding-map (before god-mode-add-to-universal-argument-map (map) activate compile)
-  "This is used to set special keybindings after C-u is pressed. When god-mode is active, intercept the call to add in our own keybindings."
+(defadvice save&set-overriding-map
+  (before god-mode-add-to-universal-argument-map (map) activate compile)
+  "This is used to set special keybindings after C-u is
+pressed. When god-mode is active, intercept the call to add in
+our own keybindings."
   (if (and god-local-mode (equal universal-argument-map map))
       (setq map god-mode-universal-argument-map)))
 
@@ -104,7 +107,9 @@
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
   (interactive)
-  (let ((key (char-to-string (aref (this-command-keys-vector) (- (length (this-command-keys-vector)) 1)))))
+  (let ((key (char-to-string
+              (aref (this-command-keys-vector)
+                    (- (length (this-command-keys-vector)) 1)))))
     (god-mode-interpret-key key)))
 
 (defun god-mode-interpret-key (key)
@@ -145,7 +150,9 @@ call it."
   (cond ((commandp binding)
          (setq this-original-command binding)
          (setq this-command binding)
-         (setq real-this-command binding)    ;; `real-this-command'  is used by emacs to populate `last-repeatable-command', which is used by `repeat'.
+         ;; `real-this-command' is used by emacs to populate
+         ;; `last-repeatable-command', which is used by `repeat'.
+         (setq real-this-command binding)
          (call-interactively binding))
         ((keymapp binding)
          (god-mode-try-command formatted formatted t (not literal)))
