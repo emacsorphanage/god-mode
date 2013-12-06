@@ -56,8 +56,18 @@ This library defines the following mapping:
 
   * `uco` → `C-u C-c C-o`
 
-* There is a key (default `i` - think *insert*) to disable God mode,
-  similar to Vim's i.
+## Popular keybindings
+
+The following customizations are popular:
+
+    (define-key god-local-mode-map (kbd "z") 'repeat)
+    (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+
+Although I personally prefer:
+
+    (define-key god-local-mode-map (kbd ".") 'repeat)
+
+Feel free to alter and customize as you prefer.
 
 ## Global god-mode and exempt major modes
 
