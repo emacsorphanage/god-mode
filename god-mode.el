@@ -7,7 +7,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.9.0
+;; Version: 2.9.1
 
 ;; This file is not part of GNU Emacs.
 
@@ -137,9 +137,9 @@
                               key))
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
-      (god-mode-execute-binding formatted binding))))
+      (god-mode-execute-binding formatted binding (not control)))))
 
-(defun god-mode-execute-binding (formatted binding)
+(defun god-mode-execute-binding (formatted binding &optional literal)
   "Execute extended keymaps such as C-c, or if it is a command,
 call it."
   (cond ((commandp binding)
@@ -148,7 +148,7 @@ call it."
          (setq real-this-command binding)    ;; `real-this-command'  is used by emacs to populate `last-repeatable-command', which is used by `repeat'.
          (call-interactively binding))
         ((keymapp binding)
-         (god-mode-try-command formatted formatted t t))
+         (god-mode-try-command formatted formatted t (not literal)))
         (:else
          (error "God: Unknown key binding for `%s`" formatted))))
 
