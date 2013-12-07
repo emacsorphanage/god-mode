@@ -56,7 +56,7 @@ This library defines the following mapping:
 
   * `uco` → `C-u C-c C-o`
 
-## Popular keybindings
+## Nice keybindings
 
 The following customizations are popular:
 
@@ -68,6 +68,15 @@ Although I personally prefer:
     (define-key god-local-mode-map (kbd ".") 'repeat)
 
 Feel free to alter and customize as you prefer.
+
+Also handy are these:
+
+    (global-set-key (kbd "C-x C-1") 'delete-other-windows)
+    (global-set-key (kbd "C-x C-2") 'split-window-below)
+    (global-set-key (kbd "C-x C-3") 'split-window-right)
+    (global-set-key (kbd "C-x C-0") 'delete-window)
+
+So that you can run `x1`/`x2`/`x3`/`x0` in god-mode.
 
 ## Global god-mode and exempt major modes
 
