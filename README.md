@@ -48,9 +48,9 @@ This library defines the following mapping:
 
   * `12f` → `M-12 C-f`
 
-* Repetition:
+* Repetition (with `.` keybinding):
 
-  * `gfzz` → `M-f M-f M-f`
+  * `gf..` → `M-f M-f M-f`
 
 * Universal boolean argument:
 
