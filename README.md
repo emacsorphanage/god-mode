@@ -13,6 +13,9 @@ In the example below you can see how much effort is reduced:
     Before: C-p C-k C-n M-^ ) C-j C-y M-r C-x z z M-2 C-g C-g C-x C-s
     After:    p   k   n g ^ )   j   y g r     . .   2   g   g   x   s
 
+You'll find that this mode comes surprisingly naturally and that you
+already know how to run your existing Emacs commands.
+
 See the Mapping section for a complete rundown of the transformations.
 
 ## Activation
