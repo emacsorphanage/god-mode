@@ -1,10 +1,27 @@
-# God Mode [![Build Status](https://secure.travis-ci.org/chrisdone/god-mode.png)](http://travis-ci.org/chrisdone/god-mode)
+# God Mode — no more RSI
 
 ***NOTE***: Emacs 24.3 is required for this package to work well!
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
-insertion mode. Activate for all buffers by running `M-x god-mode`.
+insertion mode.
+
+## Example
+
+In the example below you can see how much effort is reduced:
+
+    Before: C-p C-k C-n M-^ ) C-j C-y M-r C-x z z M-2 C-g C-g C-x C-s
+    After:    p   k   n g ^ )   j   y g r     . .   2   g   g   x   s
+
+See the Mapping section for a complete rundown of the transformations.
+
+## Activation
+
+Load it up:
+
+    (require 'god-mode)
+
+Activate for all buffers by running `M-x god-mode`.
 
 Toggle between God mode and non-God mode using `ESC`:
 
