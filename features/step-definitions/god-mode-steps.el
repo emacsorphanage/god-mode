@@ -2,6 +2,33 @@
 ;; files in this directory whose names end with "-steps.el" will be
 ;; loaded automatically by Ecukes.
 
+(Given "^god-mode is enabled for all buffers$"
+  (lambda ()
+    (when (not god-global-mode)
+      (god-mode))))
+
+(Given "^I describe function \"\\(.+\\)\"$"
+       (lambda (fn)
+         (describe-function (intern fn))))
+
+(Given "^I grep current directory"
+       (lambda ()
+         (set-process-query-on-exit-flag
+          (get-buffer-process (grep "grep -Rin god ."))
+          nil)))
+
+(When "I switch to buffer \"\\(.+\\)\""
+      (lambda (buffer)
+        (switch-to-buffer buffer)))
+
+(Then "^god-mode is enabled$"
+      (lambda ()
+        (assert (not (null god-local-mode)))))
+
+(Then "^god-mode is disabled$"
+      (lambda ()
+        (assert (null god-local-mode))))
+
 (Then "^I have god-mode on$"
       "Turn god-mode on."
       (lambda ()
