@@ -40,14 +40,9 @@
 
 (defcustom god-exempt-major-modes
   '(dired-mode
-    help-mode
     grep-mode
     magit-log-edit-mode
-    magit-status-mode
-    vc-annotate-mode
-    package-menu-mode
-    Buffer-menu-mode
-    git-rebase-mode)
+    vc-annotate-mode)
   "List of major modes that should not start in god-local-mode."
   :group 'god
   :type '(function))
