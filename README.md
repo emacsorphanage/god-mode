@@ -113,6 +113,12 @@ Since `dired-mode` is already in the list, that's a noop, but you get
 the idea. Consider opening an issue or pull request if you find a
 major mode that should be on the official list.
 
+Another option to control god-mode's global behavior is to provide a
+function with no arguments that must return non-nil if god-mode should
+be disabled for the current buffer. See the `god-exempt-predicates`
+variable and its default members `god-exempt-mode-p` and
+`god-special-mode-p` for further details.
+
 ## Not implemented yet
 
 * C- with backspace and arrow keys don't quite work, not looked into
