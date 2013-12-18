@@ -52,6 +52,13 @@
   :group 'god
   :type '(function))
 
+(defcustom god-exempt-predicates
+  (list #'god-exempt-mode-p #'god-special-mode-p)
+  "List of predicates checked before enabling god-local-mode.
+All predicates must return nil for god-local-mode to start."
+  :group 'god
+  :type '(repeat function))
+
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
@@ -165,8 +172,35 @@ call it."
   "Activate God mode locally on individual buffers when appropriate."
   (when (and god-global-mode
              (not (minibufferp))
-             (not (memq major-mode god-exempt-major-modes)))
+             (god-passes-predicates-p))
     (god-local-mode 1)))
+
+(defun god-exempt-mode-p ()
+  "Return non-nil if major-mode is exempt.
+Members of the `god-exempt-major-modes' list are exempt."
+  (memq major-mode god-exempt-major-modes))
+
+(defun god--special-mode-p (major-mode)
+  (let ((parent-mode (get major-mode 'derived-mode-parent)))
+    (cond ((eq parent-mode 'special-mode))
+          ((not (null parent-mode))
+           (god--special-mode-p parent-mode))
+          (t nil))))
+
+(defun god-special-mode-p ()
+  "Return non-nil if major-mode is child of special-mode."
+  (god--special-mode-p major-mode))
+
+(defun god-passes-predicates-p ()
+  "Return non-nil if all `god-exempt-predicates' return nil."
+  (not
+   (catch 'disable
+     (let ((preds god-exempt-predicates))
+       (while preds
+         (when (funcall (car preds))
+           (throw 'disable t))
+         (setq preds (cdr preds)))))))
+
 
 (provide 'god-mode)
 
