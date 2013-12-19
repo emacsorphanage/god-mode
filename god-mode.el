@@ -4,10 +4,11 @@
 ;; Copyright (C) 2013 Magnar Sveen
 ;; Copyright (C) 2013 Rüdiger Sonderfeld
 ;; Copyright (C) 2013 Dillon Kearns
+;; Copyright (C) 2013 Fabián Ezequiel Gallina
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.9.1
+;; Version: 2.10.0
 
 ;; This file is not part of GNU Emacs.
 
