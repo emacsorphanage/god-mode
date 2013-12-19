@@ -17,6 +17,11 @@
           (get-buffer-process (grep "grep -Rin god ."))
           nil)))
 
+(Given "^I view the units table$"
+       (lambda ()
+         (require 'calc-units)
+         (math-build-units-table-buffer nil)))
+
 (When "I switch to buffer \"\\(.+\\)\""
       (lambda (buffer)
         (switch-to-buffer buffer)))
