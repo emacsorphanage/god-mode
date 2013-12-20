@@ -71,12 +71,13 @@ All predicates must return nil for god-local-mode to start."
 (defun god-mode-all ()
   "Toggle God mode in all buffers."
   (interactive)
-  (setq god-global-mode t)
   (let ((new-status (if (bound-and-true-p god-local-mode) -1 1)))
+    (setq god-global-mode t)
     (mapc (lambda (buffer)
             (with-current-buffer buffer
               (god-mode-maybe-activate new-status)))
-          (buffer-list))))
+          (buffer-list))
+    (setq god-global-mode (= new-status 1))))
 
 (defvar god-local-mode-map
   (let ((map (make-sparse-keymap)))
