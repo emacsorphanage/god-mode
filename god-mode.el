@@ -129,13 +129,10 @@ our own keybindings."
 
 (defun god-mode-try-command (prompt format &optional keymapp control)
   "Try to run a command that takes additional key presses."
-  (let* ((event (read-event prompt))
-         (key. (if (eq event 'backspace)
-                   "DEL"
-                 (char-to-string event))))
+  (let* ((key. (god-mode-read-event prompt)))
     (let* ((control (if (string= key. god-literal-key) nil control))
            (key (if (string= key. god-literal-key)
-                    (char-to-string (read-event prompt))
+                    (god-mode-read-event prompt)
                   key.))
            (formatted (format (if keymapp
                                   (if control
@@ -146,6 +143,19 @@ our own keybindings."
            (command (read-kbd-macro formatted))
            (binding (key-binding command)))
       (god-mode-execute-binding formatted binding (not control)))))
+
+(defun god-mode-read-event (prompt)
+  "Read in an event and convert any special events to textual
+events."
+  (let ((event (read-event prompt)))
+    (case event
+      (tab "TAB")
+      (left "<left>")
+      (right "<right>")
+      (prior "<prior>")
+      (next "<next>")
+      (backspace "DEL")
+      (t (char-to-string event)))))
 
 (defun god-mode-execute-binding (formatted binding &optional literal)
   "Execute extended keymaps such as C-c, or if it is a command,
