@@ -97,6 +97,21 @@ our own keybindings."
       (run-hooks 'god-mode-enabled-hook)
     (run-hooks 'god-mode-disabled-hook)))
 
+(defun god-local-mode-pause ()
+  "Pause god-mode local to the buffer, if it's
+enabled. See also `god-local-mode-resume'."
+  (when god-local-mode
+    (god-local-mode -1)
+    (set (make-local-variable 'god-local-mode-paused)
+         t)))
+
+(defun god-local-mode-resume ()
+  "Will re-enable god-mode, if it was active when
+`god-local-mode-pause' was called. If not, nothing happens."
+  (when (bound-and-true-p god-local-mode-paused)
+    (setq god-local-mode-paused nil)
+    (god-local-mode 1)))
+
 (defun god-mode-meta ()
   "The command for M-."
   (interactive)
