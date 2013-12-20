@@ -76,6 +76,32 @@ This library defines the following mapping:
 
   * `uco` → `C-u C-c C-o`
 
+## Cursor style to indicate mode
+
+You can change the cursor style indicate whether you're in God mode or
+not.
+
+    (defun my-update-cursor ()
+      (setq cursor-type (if (or god-local-mode buffer-read-only)
+                            'box
+                          'bar)))
+
+    (add-hook 'god-mode-enabled-hook 'my-update-cursor)
+    (add-hook 'god-mode-disabled-hook 'my-update-cursor)
+
+## Overwrite mode
+
+You can pause `god-mode` when `overwrite-mode` is enabled and resume
+when `overwrite-mode` is disabled.
+
+    (defun god-toggle-on-overwrite ()
+      "Toggle god-mode on overwrite-mode."
+      (if (bound-and-true-p overwrite-mode)
+          (god-local-mode-pause)
+        (god-local-mode-resume)))
+
+    (add-hook 'overwrite-mode-hook 'god-toggle-on-overwrite)
+
 ## Nice keybindings
 
 The following customizations are popular:
@@ -123,16 +149,3 @@ variable and its default members `god-exempt-mode-p`,
 
 * C- with backspace and arrow keys don't quite work, not looked into
   it yet.
-
-## Cursor style to indicate mode
-
-You can change the cursor style indicate whether you're in God mode or
-not.
-
-    (defun my-update-cursor ()
-      (setq cursor-type (if (or god-local-mode buffer-read-only)
-                            'box
-                          'bar)))
-
-    (add-hook 'god-mode-enabled-hook 'my-update-cursor)
-    (add-hook 'god-mode-disabled-hook 'my-update-cursor)
