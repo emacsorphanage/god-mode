@@ -24,11 +24,17 @@ Load it up:
 
     (require 'god-mode)
 
-Activate for all buffers by running `M-x god-mode`.
+Activate for all future buffers by running `M-x god-mode`. Although the
+activation is buffer-local.
 
 Toggle between God mode and non-God mode using `ESC`:
 
     (global-set-key (kbd "<escape>") 'god-local-mode)
+
+If you want to enable/disable on *all active and future buffers*, use
+this:
+
+    (global-set-key (kbd "<escape>") 'god-mode-all)
 
 Also, you can add this to your `.xmodmap` to rebind Caps Lock to
 Escape:

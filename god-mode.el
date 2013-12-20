@@ -8,7 +8,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.10.1
+;; Version: 2.10.2
 
 ;; This file is not part of GNU Emacs.
 
@@ -66,6 +66,17 @@ All predicates must return nil for god-local-mode to start."
   (if god-global-mode
       (god-local-mode 1)
     (god-local-mode -1)))
+
+;;;###autoload
+(defun god-mode-all ()
+  "Toggle God mode in all buffers."
+  (interactive)
+  (setq god-global-mode t)
+  (let ((new-status (if (bound-and-true-p god-local-mode) -1 1)))
+    (mapc (lambda (buffer)
+            (with-current-buffer buffer
+              (god-mode-maybe-activate new-status)))
+          (buffer-list))))
 
 (defvar god-local-mode-map
   (let ((map (make-sparse-keymap)))
@@ -189,12 +200,12 @@ call it."
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
-(defun god-mode-maybe-activate ()
+(defun god-mode-maybe-activate (&optional status)
   "Activate God mode locally on individual buffers when appropriate."
   (when (and god-global-mode
              (not (minibufferp))
              (god-passes-predicates-p))
-    (god-local-mode 1)))
+    (god-local-mode (if status status 1))))
 
 (defun god-exempt-mode-p ()
   "Return non-nil if major-mode is exempt.
