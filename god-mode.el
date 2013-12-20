@@ -120,7 +120,7 @@ our own keybindings."
   (cond
    ;; For better keyboard macro interpretation.
    ((string= key " ") (god-mode-interpret-key "SPC"))
-   ;; By default all other things are C-*///
+   ;; By default all other things are C-*
    (t
     (let* ((formatted (format "C-%s" key))
            (command (read-kbd-macro formatted))
