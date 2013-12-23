@@ -8,7 +8,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.10.2
+;; Version: 2.10.3
 
 ;; This file is not part of GNU Emacs.
 
@@ -42,6 +42,7 @@
 (defcustom god-exempt-major-modes
   '(dired-mode
     grep-mode
+    magit-status-mode
     magit-log-edit-mode
     vc-annotate-mode)
   "List of major modes that should not start in god-local-mode."
