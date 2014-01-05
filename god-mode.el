@@ -41,6 +41,7 @@
 
 (defcustom god-exempt-major-modes
   '(dired-mode
+    git-commit-mode
     grep-mode
     magit-status-mode
     magit-log-edit-mode
