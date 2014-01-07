@@ -8,7 +8,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.10.4
+;; Version: 2.12.0
 
 ;; This file is not part of GNU Emacs.
 
