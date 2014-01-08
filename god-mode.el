@@ -206,6 +206,7 @@ call it."
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
+;;;###autoload
 (defun god-mode-maybe-activate (&optional status)
   "Activate God mode locally on individual buffers when appropriate."
   (when (and god-global-mode
