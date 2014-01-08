@@ -160,9 +160,12 @@ enabled. See also `god-local-mode-resume'."
   "Try to run a command that takes additional key presses."
   (let* ((key. (god-mode-read-event prompt)))
     (let* ((control (if (string= key. god-literal-key) nil control))
-           (key (if (string= key. god-literal-key)
-                    (god-mode-read-event prompt)
-                  key.))
+           (key (cond ((and (string= key. " ")
+                            (string= prompt "M-"))
+                       "SPC")
+                      ((string= key. god-literal-key)
+                       (god-mode-read-event prompt))
+                      (t key.)))
            (formatted (format (if keymapp
                                   (if control
                                       (concat format " C-%s")
