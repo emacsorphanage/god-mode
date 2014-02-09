@@ -22,25 +22,33 @@ See the Mapping section for a complete rundown of the transformations.
 
 Load it up:
 
-    (require 'god-mode)
+``` lisp
+(require 'god-mode)
+```
 
 Activate for all future buffers by running `M-x god-mode`. Although the
 activation is buffer-local.
 
 Toggle between God mode and non-God mode using `ESC`:
 
-    (global-set-key (kbd "<escape>") 'god-local-mode)
+``` lisp
+(global-set-key (kbd "<escape>") 'god-local-mode)
+```
 
 If you want to enable/disable on *all active and future buffers*, use
 this:
 
-    (global-set-key (kbd "<escape>") 'god-mode-all)
+``` lisp
+(global-set-key (kbd "<escape>") 'god-mode-all)
+```
 
 Also, you can add this to your `.xmodmap` to rebind Caps Lock to
 Escape:
 
-    remove Lock = Caps_Lock
-    keysym Caps_Lock = Escape
+``` lisp
+remove Lock = Caps_Lock
+keysym Caps_Lock = Escape
+```
 
 And run `xmodmap .xmodmap` for the changes to take effect immediately.
 
@@ -87,46 +95,71 @@ This library defines the following mapping:
 You can change the cursor style indicate whether you're in God mode or
 not.
 
-    (defun my-update-cursor ()
-      (setq cursor-type (if (or god-local-mode buffer-read-only)
-                            'box
-                          'bar)))
+``` lisp
+(defun my-update-cursor ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only)
+                        'box
+                      'bar)))
 
-    (add-hook 'god-mode-enabled-hook 'my-update-cursor)
-    (add-hook 'god-mode-disabled-hook 'my-update-cursor)
+(add-hook 'god-mode-enabled-hook 'my-update-cursor)
+(add-hook 'god-mode-disabled-hook 'my-update-cursor)
+```
+
+## Change modeline color
+
+You can use the following function to switch the entire modeline's foreground and background:
+
+``` lisp
+(defun c/god-mode-update-cursor ()
+  (let ((limited-colors-p (> 257 (length (defined-colors)))))
+    (cond (god-local-mode (progn
+                            (set-face-background 'mode-line (if limited-colors-p "white" "#e9e2cb"))
+                            (set-face-background 'mode-line-inactive (if limited-colors-p "white" "#e9e2cb"))))
+          (t (progn
+               (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
+               (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832")))))))
+```
 
 ## Overwrite mode
 
 You can pause `god-mode` when `overwrite-mode` is enabled and resume
 when `overwrite-mode` is disabled.
 
-    (defun god-toggle-on-overwrite ()
-      "Toggle god-mode on overwrite-mode."
-      (if (bound-and-true-p overwrite-mode)
-          (god-local-mode-pause)
-        (god-local-mode-resume)))
+``` lisp
+(defun god-toggle-on-overwrite ()
+  "Toggle god-mode on overwrite-mode."
+  (if (bound-and-true-p overwrite-mode)
+      (god-local-mode-pause)
+    (god-local-mode-resume)))
 
-    (add-hook 'overwrite-mode-hook 'god-toggle-on-overwrite)
+(add-hook 'overwrite-mode-hook 'god-toggle-on-overwrite)
+```
 
 ## Nice keybindings
 
 The following customizations are popular:
 
-    (define-key god-local-mode-map (kbd "z") 'repeat)
-    (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+``` lisp
+(define-key god-local-mode-map (kbd "z") 'repeat)
+(define-key god-local-mode-map (kbd "i") 'god-local-mode)
+```
 
 Although I personally prefer:
 
-    (define-key god-local-mode-map (kbd ".") 'repeat)
+``` lisp
+(define-key god-local-mode-map (kbd ".") 'repeat)
+```
 
 Feel free to alter and customize as you prefer.
 
 Also handy are these:
 
-    (global-set-key (kbd "C-x C-1") 'delete-other-windows)
-    (global-set-key (kbd "C-x C-2") 'split-window-below)
-    (global-set-key (kbd "C-x C-3") 'split-window-right)
-    (global-set-key (kbd "C-x C-0") 'delete-window)
+``` lisp
+(global-set-key (kbd "C-x C-1") 'delete-other-windows)
+(global-set-key (kbd "C-x C-2") 'split-window-below)
+(global-set-key (kbd "C-x C-3") 'split-window-right)
+(global-set-key (kbd "C-x C-0") 'delete-window)
+```
 
 So that you can run `x1`/`x2`/`x3`/`x0` in god-mode.
 
@@ -139,7 +172,9 @@ toggler with a keybinding.
 Sometimes `god-mode` is enabled in buffers where it makes no sense. In
 that case you can add the major mode to `god-exempt-major-modes`:
 
-    (add-to-list 'god-exempt-major-modes 'dired-mode)
+``` lisp
+(add-to-list 'god-exempt-major-modes 'dired-mode)
+```
 
 Since `dired-mode` is already in the list, that's a noop, but you get
 the idea. Consider opening an issue or pull request if you find a
