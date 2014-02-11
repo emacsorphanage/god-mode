@@ -219,16 +219,17 @@ call it."
 Members of the `god-exempt-major-modes' list are exempt."
   (memq major-mode god-exempt-major-modes))
 
-(defun god--special-mode-p (major-mode)
-  (let ((parent-mode (get major-mode 'derived-mode-parent)))
-    (cond ((eq parent-mode 'special-mode))
-          ((not (null parent-mode))
-           (god--special-mode-p parent-mode))
+(defun god-mode-child-of-p (major-mode parent-mode)
+  "Return non-nil if MAJOR-MODE is derived from PARENT-MODE."
+  (let ((parent (get major-mode 'derived-mode-parent)))
+    (cond ((eq parent parent-mode))
+          ((not (null parent))
+           (god-mode-child-of-p parent parent-mode))
           (t nil))))
 
 (defun god-special-mode-p ()
   "Return non-nil if major-mode is child of special-mode."
-  (god--special-mode-p major-mode))
+  (god-mode-child-of-p major-mode 'special-mode))
 
 (defun god-view-mode-p ()
   "Return non-nil if view-mode is enabled in current buffer."
