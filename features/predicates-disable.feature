@@ -5,6 +5,7 @@ Feature: Predicate based disable
     And I describe function "god-mode"
     And I grep current directory
     And I view the units table
+    And I start ielm
 
   Scenario: God mode is automatically enabled for fundamental-mode
     When I switch to buffer "god-mode-test"
@@ -20,4 +21,8 @@ Feature: Predicate based disable
 
   Scenario: God mode is disabled in *Units Table* (has view-mode enabled)
     When I switch to buffer "*Units Table*"
+    Then god-mode is disabled
+
+  Scenario: God mode is disabled in comint derived buffers
+    When I switch to buffer "*ielm*"
     Then god-mode is disabled

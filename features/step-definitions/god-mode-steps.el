@@ -22,6 +22,11 @@
          (require 'calc-units)
          (math-build-units-table-buffer nil)))
 
+(Given "^I start ielm$"
+       (lambda ()
+         (require 'ielm)
+         (ielm)))
+
 (When "I switch to buffer \"\\(.+\\)\""
       (lambda (buffer)
         (switch-to-buffer buffer)))

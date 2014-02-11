@@ -184,7 +184,8 @@ Another option to control god-mode's global behavior is to provide a
 function with no arguments that must return non-nil if god-mode should
 be disabled for the current buffer. See the `god-exempt-predicates`
 variable and its default members `god-exempt-mode-p`,
-`god-view-mode-p` and `god-special-mode-p` for further details.
+`god-comint-mode-p`, `god-view-mode-p` and `god-special-mode-p` for
+further details.
 
 ## Not implemented yet
 

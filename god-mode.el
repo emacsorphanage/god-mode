@@ -55,7 +55,10 @@
   :type '(function))
 
 (defcustom god-exempt-predicates
-  (list #'god-exempt-mode-p #'god-view-mode-p #'god-special-mode-p)
+  (list #'god-exempt-mode-p
+        #'god-comint-mode-p
+        #'god-view-mode-p
+        #'god-special-mode-p)
   "List of predicates checked before enabling god-local-mode.
 All predicates must return nil for god-local-mode to start."
   :group 'god
@@ -235,6 +238,10 @@ Members of the `god-exempt-major-modes' list are exempt."
           ((not (null parent))
            (god-mode-child-of-p parent parent-mode))
           (t nil))))
+
+(defun god-comint-mode-p ()
+  "Return non-nil if major-mode is child of comint-mode."
+  (god-mode-child-of-p major-mode 'comint-mode))
 
 (defun god-special-mode-p ()
   "Return non-nil if major-mode is child of special-mode."
