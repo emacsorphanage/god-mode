@@ -156,6 +156,7 @@ enabled. See also `god-local-mode-resume'."
     (prior "<prior>")
     (next "<next>")
     (backspace "DEL")
+    (return "RET")
     (t (char-to-string key))))
 
 (defun key-string-after-consuming-key (key key-string-so-far)
