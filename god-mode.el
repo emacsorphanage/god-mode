@@ -33,6 +33,8 @@
 
 ;;; Code:
 
+(add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
+
 (defcustom god-literal-key
   " "
   "The key used for literal interpretation."
@@ -130,21 +132,28 @@ enabled. See also `god-local-mode-resume'."
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
   (interactive)
-  (let* ((initial-key (aref (this-command-keys-vector) (- (length (this-command-keys-vector)) 1)))
+  (let* ((initial-key (aref (this-command-keys-vector)
+                            (- (length (this-command-keys-vector)) 1)))
          (binding (god-mode-lookup-key-sequence initial-key)))
     (setq this-original-command binding)
     (setq this-command binding)
-    (setq real-this-command binding)    ;; `real-this-command'  is used by emacs to populate `last-repeatable-command', which is used by `repeat'.
+    ;; `real-this-command' is used by emacs to populate
+    ;; `last-repeatable-command', which is used by `repeat'.
+    (setq real-this-command binding)
     (setq god-literal-sequence nil)
     (call-interactively binding)))
 
 (defun god-mode-lookup-key-sequence (&optional key key-string-so-far)
-  "Lookup the command for the given `key' (or the next keypress, if `key' is nil). This function sometimes recurses. `key-string-so-far' should be nil for the first call in the sequence."
+  "Lookup the command for the given `key' (or the next keypress,
+if `key' is nil). This function sometimes
+recurses. `key-string-so-far' should be nil for the first call in
+the sequence."
   (interactive)
-  (let ((sanitized-key (if key-string-so-far (char-to-string (or key (read-event key-string-so-far))) (god-mode-sanitized-key-string (or key (read-event key-string-so-far))))))
-    (god-mode-lookup-command (key-string-after-consuming-key sanitized-key key-string-so-far))
-  )
-)
+  (let ((sanitized-key
+         (if key-string-so-far (char-to-string (or key (read-event key-string-so-far)))
+           (god-mode-sanitized-key-string (or key (read-event key-string-so-far))))))
+    (god-mode-lookup-command
+     (key-string-after-consuming-key sanitized-key key-string-so-far))))
 
 (defun god-mode-sanitized-key-string (key)
   "Convert any special events to textual."
@@ -160,7 +169,8 @@ enabled. See also `god-local-mode-resume'."
     (t (char-to-string key))))
 
 (defun key-string-after-consuming-key (key key-string-so-far)
-  "Interpret god-mode special keys for key (consumes more keys if appropriate). Append to keysequence."
+  "Interpret god-mode special keys for key (consumes more keys if
+appropriate). Append to keysequence."
   (let ((key-consumed t) next-modifier next-key)
     (message key-string-so-far)
     (setq next-modifier
@@ -177,8 +187,13 @@ enabled. See also `god-local-mode-resume'."
             (setq key-consumed nil)
             "C-"
             )))
-    (setq next-key (if key-consumed (god-mode-sanitized-key-string (read-event key-string-so-far)) key))
-    (if key-string-so-far (concat key-string-so-far " " next-modifier next-key) (concat next-modifier next-key))))
+    (setq next-key
+          (if key-consumed
+              (god-mode-sanitized-key-string (read-event key-string-so-far))
+            key))
+    (if key-string-so-far
+        (concat key-string-so-far " " next-modifier next-key)
+      (concat next-modifier next-key))))
 
 (defun god-mode-lookup-command (key-string)
   "Execute extended keymaps such as C-c, or if it is a command,
@@ -190,8 +205,6 @@ call it."
            (god-mode-lookup-key-sequence nil key-string))
           (:else
            (error "God: Unknown key binding for `%s`" key-string)))))
-
-(add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
 ;;;###autoload
 (defun god-mode-maybe-activate (&optional status)
