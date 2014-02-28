@@ -60,6 +60,9 @@ All predicates must return nil for god-local-mode to start."
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
+(defvar god-literal-sequence nil
+  "Activated after space is pressed in a command sequence.")
+
 ;;;###autoload
 (defun god-mode ()
   "Toggle global God mode."
@@ -85,8 +88,6 @@ All predicates must return nil for god-local-mode to start."
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map t)
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
-    (define-key map (kbd "g") 'god-mode-meta)
-    (define-key map (kbd "G") 'god-mode-control-meta)
     map))
 
 (defvar god-mode-universal-argument-map
@@ -126,83 +127,68 @@ enabled. See also `god-local-mode-resume'."
     (setq god-local-mode-paused nil)
     (god-local-mode 1)))
 
-(defun god-mode-meta ()
-  "The command for M-."
-  (interactive)
-  (god-mode-try-command "M-" "M-%s"))
-
-(defun god-mode-control-meta ()
-  "The command for C-M-."
-  (interactive)
-  (god-mode-try-command "C-M-" "C-M-%s"))
-
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
   (interactive)
-  (let ((key (char-to-string
-              (aref (this-command-keys-vector)
-                    (- (length (this-command-keys-vector)) 1)))))
-    (god-mode-interpret-key key)))
+  (let* ((initial-key (aref (this-command-keys-vector) (- (length (this-command-keys-vector)) 1)))
+         (binding (god-mode-lookup-key-sequence initial-key)))
+    (setq this-original-command binding)
+    (setq this-command binding)
+    (setq real-this-command binding)    ;; `real-this-command'  is used by emacs to populate `last-repeatable-command', which is used by `repeat'.
+    (setq god-literal-sequence nil)
+    (call-interactively binding)))
 
-(defun god-mode-interpret-key (key)
-  "Interpret the given key. This function sometimes recurses."
-  (cond
-   ;; For better keyboard macro interpretation.
-   ((string= key " ") (god-mode-interpret-key "SPC"))
-   ;; By default all other things are C-*
-   (t
-    (let* ((formatted (format "C-%s" key))
-           (command (read-kbd-macro formatted))
-           (binding (key-binding command)))
-      (god-mode-execute-binding formatted binding)))))
+(defun god-mode-lookup-key-sequence (&optional key key-string-so-far)
+  "Lookup the command for the given `key' (or the next keypress, if `key' is nil). This function sometimes recurses. `key-string-so-far' should be nil for the first call in the sequence."
+  (interactive)
+  (let ((sanitized-key (if key-string-so-far (char-to-string (or key (read-event key-string-so-far))) (god-mode-sanitized-key-string (or key (read-event key-string-so-far))))))
+    (god-mode-lookup-command (key-string-after-consuming-key sanitized-key key-string-so-far))
+  )
+)
 
-(defun god-mode-try-command (prompt format &optional keymapp control)
-  "Try to run a command that takes additional key presses."
-  (let* ((key. (god-mode-read-event prompt)))
-    (let* ((control (if (string= key. god-literal-key) nil control))
-           (key (cond ((and (string= key. " ")
-                            (string= prompt "M-"))
-                       "SPC")
-                      ((string= key. god-literal-key)
-                       (god-mode-read-event prompt))
-                      (t key.)))
-           (formatted (format (if keymapp
-                                  (if control
-                                      (concat format " C-%s")
-                                    (concat format " %s"))
-                                format)
-                              key))
-           (command (read-kbd-macro formatted))
-           (binding (key-binding command)))
-      (god-mode-execute-binding formatted binding (not control)))))
+(defun god-mode-sanitized-key-string (key)
+  "Convert any special events to textual."
+  (case key
+    (tab "TAB")
+    (?\  "SPC")
+    (left "<left>")
+    (right "<right>")
+    (prior "<prior>")
+    (next "<next>")
+    (backspace "DEL")
+    (t (char-to-string key))))
 
-(defun god-mode-read-event (prompt)
-  "Read in an event and convert any special events to textual
-events."
-  (let ((event (read-event prompt)))
-    (case event
-      (tab "TAB")
-      (left "<left>")
-      (right "<right>")
-      (prior "<prior>")
-      (next "<next>")
-      (backspace "DEL")
-      (t (char-to-string event)))))
+(defun key-string-after-consuming-key (key key-string-so-far)
+  "Interpret god-mode special keys for key (consumes more keys if appropriate). Append to keysequence."
+  (let ((key-consumed t) next-modifier next-key)
+    (message key-string-so-far)
+    (setq next-modifier
+          (cond
+           ((string= key god-literal-key)
+            (setq god-literal-sequence t)
+            "")
+           (god-literal-sequence
+            (setq key-consumed nil)
+            "")
+           ((string= key "g") "M-")
+           ((string= key "G") "C-M-")
+           (t
+            (setq key-consumed nil)
+            "C-"
+            )))
+    (setq next-key (if key-consumed (god-mode-sanitized-key-string (read-event key-string-so-far)) key))
+    (if key-string-so-far (concat key-string-so-far " " next-modifier next-key) (concat next-modifier next-key))))
 
-(defun god-mode-execute-binding (formatted binding &optional literal)
+(defun god-mode-lookup-command (key-string)
   "Execute extended keymaps such as C-c, or if it is a command,
 call it."
-  (cond ((commandp binding)
-         (setq this-original-command binding)
-         (setq this-command binding)
-         ;; `real-this-command' is used by emacs to populate
-         ;; `last-repeatable-command', which is used by `repeat'.
-         (setq real-this-command binding)
-         (call-interactively binding))
-        ((keymapp binding)
-         (god-mode-try-command formatted formatted t (not literal)))
-        (:else
-         (error "God: Unknown key binding for `%s`" formatted))))
+  (let ((binding (key-binding (read-kbd-macro key-string))))
+    (cond ((commandp binding)
+           binding)
+          ((keymapp binding)
+           (god-mode-lookup-key-sequence nil key-string))
+          (:else
+           (error "God: Unknown key binding for `%s`" key-string)))))
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
