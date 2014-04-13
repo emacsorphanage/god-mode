@@ -8,7 +8,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.12.0
+;; Version: 2.12.1
 
 ;; This file is not part of GNU Emacs.
 
@@ -32,6 +32,8 @@
 ;; See README.md.
 
 ;;; Code:
+
+(require 'cl)
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
