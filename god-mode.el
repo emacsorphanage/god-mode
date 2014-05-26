@@ -96,7 +96,6 @@ enabled. See also `god-local-mode-resume'."
     (setq god-local-mode-paused nil)
     (god-local-mode 1)))
 
-
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
