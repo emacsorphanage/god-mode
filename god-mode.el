@@ -61,6 +61,41 @@ All predicates must return nil for god-local-mode to start."
   :group 'god
   :type '(repeat function))
 
+(defvar god-local-mode-map
+  (let ((map (make-sparse-keymap)))
+    (suppress-keymap map t)
+    (define-key map [remap self-insert-command] 'god-mode-self-insert)
+    map))
+
+(defvar god-mode-universal-argument-map
+  (let ((map (copy-keymap universal-argument-map)))
+    (define-key map (kbd "u") 'universal-argument-more)
+    map)
+  "Keymap used while processing \\[universal-argument] with god-mode on.")
+
+;;;###autoload
+(define-minor-mode god-local-mode
+  "Minor mode for running commands."
+  nil " God" god-local-mode-map
+  (if god-local-mode
+      (run-hooks 'god-mode-enabled-hook)
+    (run-hooks 'god-mode-disabled-hook)))
+
+(defun god-local-mode-pause ()
+  "Pause god-mode local to the buffer, if it's
+enabled. See also `god-local-mode-resume'."
+  (when god-local-mode
+    (god-local-mode -1)
+    (set (make-local-variable 'god-local-mode-paused)
+         t)))
+
+(defun god-local-mode-resume ()
+  "Will re-enable god-mode, if it was active when
+`god-local-mode-pause' was called. If not, nothing happens."
+  (when (bound-and-true-p god-local-mode-paused)
+    (setq god-local-mode-paused nil)
+    (god-local-mode 1)))
+
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
@@ -88,18 +123,6 @@ All predicates must return nil for god-local-mode to start."
           (buffer-list))
     (setq god-global-mode (= new-status 1))))
 
-(defvar god-local-mode-map
-  (let ((map (make-sparse-keymap)))
-    (suppress-keymap map t)
-    (define-key map [remap self-insert-command] 'god-mode-self-insert)
-    map))
-
-(defvar god-mode-universal-argument-map
-  (let ((map (copy-keymap universal-argument-map)))
-    (define-key map (kbd "u") 'universal-argument-more)
-    map)
-  "Keymap used while processing \\[universal-argument] with god-mode on.")
-
 (defadvice save&set-overriding-map
   (before god-mode-add-to-universal-argument-map (map) activate compile)
   "This is used to set special keybindings after C-u is
@@ -107,29 +130,6 @@ pressed. When god-mode is active, intercept the call to add in
 our own keybindings."
   (if (and god-local-mode (equal universal-argument-map map))
       (setq map god-mode-universal-argument-map)))
-
-;;;###autoload
-(define-minor-mode god-local-mode
-  "Minor mode for running commands."
-  nil " God" god-local-mode-map
-  (if god-local-mode
-      (run-hooks 'god-mode-enabled-hook)
-    (run-hooks 'god-mode-disabled-hook)))
-
-(defun god-local-mode-pause ()
-  "Pause god-mode local to the buffer, if it's
-enabled. See also `god-local-mode-resume'."
-  (when god-local-mode
-    (god-local-mode -1)
-    (set (make-local-variable 'god-local-mode-paused)
-         t)))
-
-(defun god-local-mode-resume ()
-  "Will re-enable god-mode, if it was active when
-`god-local-mode-pause' was called. If not, nothing happens."
-  (when (bound-and-true-p god-local-mode-paused)
-    (setq god-local-mode-paused nil)
-    (god-local-mode 1)))
 
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
