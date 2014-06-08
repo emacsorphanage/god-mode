@@ -135,6 +135,22 @@ when `overwrite-mode` is disabled.
 (add-hook 'overwrite-mode-hook 'god-toggle-on-overwrite)
 ```
 
+## Using with org-mode fast keys
+
+If you want to use god-mode with fast-keys, you can use a rebinding of
+self-insert like this:
+
+``` lisp
+(define-key god-local-mode-map [remap self-insert-command] 'my-god-mode-self-insert)
+
+(defun my-god-mode-self-insert ()
+  (interactive)
+  (if (and (bolp)
+           (eq major-mode 'org-mode))
+      (call-interactively 'org-self-insert-command)
+    (call-interactively 'god-mode-self-insert)))
+```
+
 ## Nice keybindings
 
 The following customizations are popular:
