@@ -137,6 +137,8 @@ our own keybindings."
   (let* ((initial-key (aref (this-command-keys-vector)
                             (- (length (this-command-keys-vector)) 1)))
          (binding (god-mode-lookup-key-sequence initial-key)))
+    (when (god-mode-upper-p initial-key)
+      (setq this-command-keys-shift-translated t))
     (setq this-original-command binding)
     (setq this-command binding)
     ;; `real-this-command' is used by emacs to populate
@@ -144,6 +146,11 @@ our own keybindings."
     (setq real-this-command binding)
     (setq god-literal-sequence nil)
     (call-interactively binding)))
+
+(defun god-mode-upper-p (char)
+  "Is the given char upper case?"
+  (and (>= char ?A)
+       (<= char ?Z)))
 
 (defun god-mode-lookup-key-sequence (&optional key key-string-so-far)
   "Lookup the command for the given `key' (or the next keypress,
