@@ -153,7 +153,8 @@ our own keybindings."
 (defun god-mode-upper-p (char)
   "Is the given char upper case?"
   (and (>= char ?A)
-       (<= char ?Z)))
+       (<= char ?Z)
+       (/= char ?G)))
 
 (defun god-mode-lookup-key-sequence (&optional key key-string-so-far)
   "Lookup the command for the given `key' (or the next keypress,
