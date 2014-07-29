@@ -29,3 +29,13 @@ Feature: C- commands
     impatience
     hubris
     """
+
+  Scenario: execute named keyboard macro
+    Given I go to line "1"
+    And I bind a named keyboard macro which kills line to C-c C-r
+    And I press "cr"
+    Then the buffer's contents should be:
+    """
+    impatience
+    hubris
+    """

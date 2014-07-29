@@ -2,6 +2,12 @@
 ;; files in this directory whose names end with "-steps.el" will be
 ;; loaded automatically by Ecukes.
 
+(Given "^I bind a named keyboard macro which kills line to C-c C-r$"
+  (lambda ()
+    (fset 'god-mode-test-keyboard-macro
+          "\C-a\C-k\C-k\C-n\C-n\C-n\C-n\C-n\C-n")
+    (global-set-key (kbd "C-c C-r") 'god-mode-test-keyboard-macro)))
+
 (Given "^god-mode is enabled for all buffers$"
   (lambda ()
     (when (not god-global-mode)

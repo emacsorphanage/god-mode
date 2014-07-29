@@ -148,7 +148,9 @@ our own keybindings."
     ;; `last-repeatable-command', which is used by `repeat'.
     (setq real-this-command binding)
     (setq god-literal-sequence nil)
-    (call-interactively binding)))
+    (if (commandp binding t)
+        (call-interactively binding)
+      (execute-kbd-macro (symbol-function binding)))))
 
 (defun god-mode-upper-p (char)
   "Is the given char upper case?"
