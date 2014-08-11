@@ -150,7 +150,7 @@ our own keybindings."
     (setq god-literal-sequence nil)
     (if (commandp binding t)
         (call-interactively binding)
-      (execute-kbd-macro (symbol-function binding)))))
+      (execute-kbd-macro binding))))
 
 (defun god-mode-upper-p (char)
   "Is the given char upper case?"
