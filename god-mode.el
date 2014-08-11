@@ -213,8 +213,10 @@ appropriate). Append to keysequence."
 (defun god-mode-lookup-command (key-string)
   "Execute extended keymaps such as C-c, or if it is a command,
 call it."
-  (let ((binding (key-binding (read-kbd-macro key-string))))
+  (let* ((key-vector (read-kbd-macro key-string t))
+         (binding (key-binding key-vector)))
     (cond ((commandp binding)
+           (setq last-command-event (aref key-vector (- (length key-vector) 1)))
            binding)
           ((keymapp binding)
            (god-mode-lookup-key-sequence nil key-string))
