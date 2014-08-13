@@ -205,8 +205,11 @@ appropriate). Append to keysequence."
            (god-literal-sequence
             (setq key-consumed nil)
             "")
-            ((string= key "g") (cdr (assoc key god-mod-alist)))
-            ((string= key "G") (cdr (assoc key god-mod-alist)))
+            ((and
+               (stringp key)
+               (not (eq nil (assoc key god-mod-alist)))
+               (not (eq nil key)))
+             (cdr (assoc key god-mod-alist)))
            (t
             (setq key-consumed nil)
             (cdr (assoc nil god-mod-alist))
