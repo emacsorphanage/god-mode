@@ -37,6 +37,13 @@
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
+
+(defvar god-mod-alist
+ '((nil . "C-")
+  ("g" . "M-")
+  ("G" . "C-M-")))
+
+
 (defcustom god-literal-key
   " "
   "The key used for literal interpretation."
@@ -196,11 +203,11 @@ appropriate). Append to keysequence."
            (god-literal-sequence
             (setq key-consumed nil)
             "")
-           ((string= key "g") "M-")
-           ((string= key "G") "C-M-")
+            ((string= key "g") (cdr (assoc key god-mod-alist)))
+            ((string= key "G") (cdr (assoc key god-mod-alist)))
            (t
             (setq key-consumed nil)
-            "C-"
+            (cdr (assoc nil god-mod-alist))
             )))
     (setq next-key
           (if key-consumed
