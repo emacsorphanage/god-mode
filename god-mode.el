@@ -38,11 +38,13 @@
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
 
-(defvar god-mod-alist
+(defcustom god-mod-alist
  '((nil . "C-")
   ("g" . "M-")
-  ("G" . "C-M-")))
-
+  ("G" . "C-M-"))
+  "List of keys and their associated modifer."
+  :group 'god
+  :type '(alist))
 
 (defcustom god-literal-key
   " "
