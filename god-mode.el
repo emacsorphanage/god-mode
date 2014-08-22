@@ -37,6 +37,15 @@
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
+
+(defcustom god-mod-alist
+ '((nil . "C-")
+  ("g" . "M-")
+  ("G" . "C-M-"))
+  "List of keys and their associated modifer."
+  :group 'god
+  :type '(alist))
+
 (defcustom god-literal-key
   " "
   "The key used for literal interpretation."
@@ -196,11 +205,14 @@ appropriate). Append to keysequence."
            (god-literal-sequence
             (setq key-consumed nil)
             "")
-           ((string= key "g") "M-")
-           ((string= key "G") "C-M-")
+            ((and
+               (stringp key)
+               (not (eq nil (assoc key god-mod-alist)))
+               (not (eq nil key)))
+             (cdr (assoc key god-mod-alist)))
            (t
             (setq key-consumed nil)
-            "C-"
+            (cdr (assoc nil god-mod-alist))
             )))
     (setq next-key
           (if key-consumed
