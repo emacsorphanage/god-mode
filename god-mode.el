@@ -33,7 +33,7 @@
 
 ;;; Code:
 
-(require 'cl)
+(require 'cl-lib)
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
@@ -181,7 +181,7 @@ the sequence."
 
 (defun god-mode-sanitized-key-string (key)
   "Convert any special events to textual."
-  (case key
+  (cl-case key
     (tab "TAB")
     (?\  "SPC")
     (left "<left>")
