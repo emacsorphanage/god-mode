@@ -37,6 +37,8 @@
 
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
+(defvar god-local-mode-paused nil)
+(make-variable-buffer-local 'god-local-mode-paused)
 
 (defcustom god-mod-alist
  '((nil . "C-")
@@ -98,8 +100,7 @@ All predicates must return nil for god-local-mode to start."
 enabled. See also `god-local-mode-resume'."
   (when god-local-mode
     (god-local-mode -1)
-    (set (make-local-variable 'god-local-mode-paused)
-         t)))
+    (setq god-local-mode-paused t)))
 
 (defun god-local-mode-resume ()
   "Will re-enable god-mode, if it was active when
