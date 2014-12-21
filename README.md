@@ -55,6 +55,12 @@ keysym Caps_Lock = Escape
 
 And run `xmodmap .xmodmap` for the changes to take effect immediately.
 
+Or use dconf:
+
+    dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape']"
+
+See [here](http://askubuntu.com/questions/363346/how-to-permanently-switch-caps-lock-and-esc) for more details.
+
 ## Mapping
 
 This library defines the following mapping:
