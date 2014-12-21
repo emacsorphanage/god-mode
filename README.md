@@ -12,6 +12,9 @@ In the example below you can see how much effort is reduced:
 
     Before: C-p C-k C-n M-^ ) C-j C-y M-r C-x z z M-2 M-g M-g C-x C-s
     After:    p   k   n g ^ )   j   y g r     . .   2   g   g   x   s
+    
+(Regarding `.` see [nice keybindings](https://github.com/chrisdone/god-mode#nice-keybindings) section.)    
+    
 
 You'll find that this mode comes surprisingly naturally and that you
 already know how to run your existing Emacs commands.
