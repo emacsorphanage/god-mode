@@ -46,6 +46,19 @@ this:
 (global-set-key (kbd "<escape>") 'god-mode-all)
 ```
 
+If you are using the global mode, you might want to make no buffers
+exempt:
+
+``` lisp
+(setq god-exempt-major-modes nil)
+(setq god-exempt-predicates nil)
+```
+
+This means that e.g. magit-mode or dired-mode will also enter god-mode
+when you activate it globally, and vise-verse. It means you can always
+reliably use god-mode commands in any buffer as long as it is globally
+activated.
+
 Also, you can add this to your `.xmodmap` to rebind Caps Lock to
 Escape:
 
