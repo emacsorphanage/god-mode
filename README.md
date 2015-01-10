@@ -158,6 +158,27 @@ when `overwrite-mode` is disabled.
 (add-hook 'overwrite-mode-hook 'god-toggle-on-overwrite)
 ```
 
+## isearch integration
+
+There is a small module for providing god-mode-like behaviour for
+isearch: You can hit <escape> while in isearch, for example:
+
+    s hello <escape> s s s RET
+
+For
+
+    C-s hello C-s C-s C-s RET
+
+Activate and configure with the following:
+
+``` lisp
+(require 'god-mode-isearch)
+(define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
+(define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
+```
+
+Configure `god-mode-isearch-map` for additional keybindings.
+
 ## Using with org-mode fast keys
 
 If you want to use god-mode with fast-keys, you can use a rebinding of
@@ -204,6 +225,10 @@ So that you can run `x1`/`x2`/`x3`/`x0` in god-mode.
 
 ## Global god-mode and exempt major modes
 
+**Note:** This is less necessary in recent god-mode, as god-mode
+  overrides all printable single byte keys, so it will override
+  dired-mode or magit-mode.
+
 If you do `M-x god-mode`, then all buffers will be started in God
 mode. If you don't like that behavior, just use the `god-local-mode`
 toggler with a keybinding.
@@ -225,8 +250,3 @@ be disabled for the current buffer. See the `god-exempt-predicates`
 variable and its default members `god-exempt-mode-p`,
 `god-comint-mode-p`, `god-view-mode-p` and `god-special-mode-p` for
 further details.
-
-## Not implemented yet
-
-* C- with backspace and arrow keys don't quite work, not looked into
-  it yet.
