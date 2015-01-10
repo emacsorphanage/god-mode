@@ -8,7 +8,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.13.0
+;; Version: 2.14.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -79,6 +79,10 @@ All predicates must return nil for god-local-mode to start."
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map t)
     (define-key map [remap self-insert-command] 'god-mode-self-insert)
+    (let ((i ?\s))
+      (while (< i 256)
+        (define-key map (vector i) 'god-mode-self-insert)
+        (setq i (1+ i))))
     map))
 
 (defvar god-mode-universal-argument-map
@@ -278,7 +282,6 @@ Members of the `god-exempt-major-modes' list are exempt."
          (when (funcall (car preds))
            (throw 'disable t))
          (setq preds (cdr preds)))))))
-
 
 (provide 'god-mode)
 
