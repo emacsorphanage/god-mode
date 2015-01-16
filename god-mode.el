@@ -82,7 +82,8 @@ All predicates must return nil for god-local-mode to start."
     (let ((i ?\s))
       (while (< i 256)
         (define-key map (vector i) 'god-mode-self-insert)
-        (setq i (1+ i))))
+        (setq i (1+ i)))
+      (define-key map (kbd "DEL") nil))
     map))
 
 (defvar god-mode-universal-argument-map
