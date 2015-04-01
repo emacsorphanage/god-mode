@@ -8,7 +8,7 @@
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
-;; Version: 2.14.0
+;; Version: 2.15.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -137,7 +137,7 @@ enabled. See also `god-local-mode-resume'."
     (setq god-global-mode t)
     (mapc (lambda (buffer)
             (with-current-buffer buffer
-              (god-mode-maybe-activate new-status)))
+              (god-mode-activate new-status)))
           (buffer-list))
     (setq god-global-mode (= new-status 1))))
 
@@ -244,8 +244,12 @@ call it."
 ;;;###autoload
 (defun god-mode-maybe-activate (&optional status)
   "Activate God mode locally on individual buffers when appropriate."
+  (when (not (minibufferp))
+    (god-mode-activate status)))
+
+(defun god-mode-activate (&optional status)
+  "Activate God mode locally on individual buffers when appropriate."
   (when (and god-global-mode
-             (not (minibufferp))
              (god-passes-predicates-p))
     (god-local-mode (if status status 1))))
 
