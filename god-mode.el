@@ -41,9 +41,9 @@
 (make-variable-buffer-local 'god-local-mode-paused)
 
 (defcustom god-mod-alist
- '((nil . "C-")
-  ("g" . "M-")
-  ("G" . "C-M-"))
+  '((nil . "C-")
+    ("g" . "M-")
+    ("G" . "C-M-"))
   "List of keys and their associated modifer."
   :group 'god
   :type '(alist))
@@ -211,11 +211,11 @@ appropriate). Append to keysequence."
            (god-literal-sequence
             (setq key-consumed nil)
             "")
-            ((and
-               (stringp key)
-               (not (eq nil (assoc key god-mod-alist)))
-               (not (eq nil key)))
-             (cdr (assoc key god-mod-alist)))
+           ((and
+             (stringp key)
+             (not (eq nil (assoc key god-mod-alist)))
+             (not (eq nil key)))
+            (cdr (assoc key god-mod-alist)))
            (t
             (setq key-consumed nil)
             (cdr (assoc nil god-mod-alist))
