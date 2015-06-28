@@ -56,10 +56,7 @@
 
 (defcustom god-exempt-major-modes
   '(dired-mode
-    git-commit-mode
     grep-mode
-    magit-status-mode
-    magit-log-edit-mode
     vc-annotate-mode)
   "List of major modes that should not start in god-local-mode."
   :group 'god
@@ -68,6 +65,7 @@
 (defcustom god-exempt-predicates
   (list #'god-exempt-mode-p
         #'god-comint-mode-p
+        #'god-magit-mode-p
         #'god-view-mode-p
         #'god-special-mode-p)
   "List of predicates checked before enabling god-local-mode.
@@ -277,6 +275,13 @@ Members of the `god-exempt-major-modes' list are exempt."
 (defun god-view-mode-p ()
   "Return non-nil if view-mode is enabled in current buffer."
   view-mode)
+
+(defun god-magit-mode-p ()
+  "Return non-nil if a Magit-related mode is enabled."
+  (or (bound-and-true-p global-git-commit-mode)
+      (eq major-mode 'git-commit-mode)  ; For versions prior to Magit 2.1.0
+      (god-mode-child-of-p major-mode 'magit-popup-mode)
+      (god-mode-child-of-p major-mode 'magit-mode)))
 
 (defun god-passes-predicates-p ()
   "Return non-nil if all `god-exempt-predicates' return nil."
