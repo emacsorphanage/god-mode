@@ -57,7 +57,9 @@
 (defcustom god-exempt-major-modes
   '(dired-mode
     grep-mode
-    vc-annotate-mode)
+    vc-annotate-mode
+    git-commit-mode  ; For versions prior to Magit 2.1.0
+    magit-popup-mode)
   "List of major modes that should not start in god-local-mode."
   :group 'god
   :type '(function))
@@ -65,7 +67,7 @@
 (defcustom god-exempt-predicates
   (list #'god-exempt-mode-p
         #'god-comint-mode-p
-        #'god-magit-mode-p
+        #'god-git-commit-mode-p
         #'god-view-mode-p
         #'god-special-mode-p)
   "List of predicates checked before enabling god-local-mode.
@@ -276,12 +278,16 @@ Members of the `god-exempt-major-modes' list are exempt."
   "Return non-nil if view-mode is enabled in current buffer."
   view-mode)
 
-(defun god-magit-mode-p ()
-  "Return non-nil if a Magit-related mode is enabled."
-  (or (bound-and-true-p global-git-commit-mode)
-      (eq major-mode 'git-commit-mode)  ; For versions prior to Magit 2.1.0
-      (god-mode-child-of-p major-mode 'magit-popup-mode)
-      (god-mode-child-of-p major-mode 'magit-mode)))
+(defun god-git-commit-mode-p ()
+  "Return non-nil if a `git-commit-mode' will be enabled in this buffer."
+  (and (bound-and-true-p global-git-commit-mode)
+       ;; `git-commit-filename-regexp' defined in the same library as
+       ;; `global-git-commit-mode'.  Expression above maybe evaluated
+       ;; to true because of autoload cookie.  So we perform
+       ;; additional check.
+       (boundp 'git-commit-filename-regexp)
+       buffer-file-name
+       (string-match-p git-commit-filename-regexp buffer-file-name)))
 
 (defun god-passes-predicates-p ()
   "Return non-nil if all `god-exempt-predicates' return nil."
