@@ -5,7 +5,7 @@
 (Given "^I bind a named keyboard macro which kills line to C-c C-r$"
   (lambda ()
     (fset 'god-mode-test-keyboard-macro
-          "\C-a\C-k\C-k\C-n\C-n\C-n\C-n\C-n\C-n")
+          "\C-a\C-k\C-k")
     (global-set-key (kbd "C-c C-r") 'god-mode-test-keyboard-macro)))
 
 (Given "^god-mode is enabled for all buffers$"
