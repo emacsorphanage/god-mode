@@ -86,12 +86,6 @@ All predicates must return nil for god-local-mode to start."
       (define-key map (kbd "DEL") nil))
     map))
 
-(defvar god-mode-universal-argument-map
-  (let ((map (copy-keymap universal-argument-map)))
-    (define-key map (kbd "u") 'universal-argument-more)
-    map)
-  "Keymap used while processing \\[universal-argument] with god-mode on.")
-
 ;;;###autoload
 (define-minor-mode god-local-mode
   "Minor mode for running commands."
@@ -141,13 +135,18 @@ enabled. See also `god-local-mode-resume'."
           (buffer-list))
     (setq god-global-mode (= new-status 1))))
 
-(defadvice save&set-overriding-map
-  (before god-mode-add-to-universal-argument-map (map) activate compile)
-  "This is used to set special keybindings after C-u is
-pressed. When god-mode is active, intercept the call to add in
-our own keybindings."
-  (if (and god-local-mode (equal universal-argument-map map))
-      (setq map god-mode-universal-argument-map)))
+(defun god-mode-maybe-universal-argument-more ()
+  "If god mode is enabled, call `universal-argument-more'."
+  (interactive)
+  (if god-local-mode
+      (call-interactively #'universal-argument-more)
+    (let ((binding (god-mode-lookup-command "u")))
+      (if (commandp binding t)
+          (call-interactively binding)
+        (execute-kbd-macro binding)))))
+
+(define-key universal-argument-map (kbd "u")
+  #'god-mode-maybe-universal-argument-more)
 
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
