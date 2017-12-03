@@ -39,11 +39,11 @@
 
 (Then "^god-mode is enabled$"
       (lambda ()
-        (assert (not (null god-local-mode)))))
+        (cl-assert (not (null god-local-mode)))))
 
 (Then "^god-mode is disabled$"
       (lambda ()
-        (assert (null god-local-mode))))
+        (cl-assert (null god-local-mode))))
 
 (Then "^I have god-mode on$"
       "Turn god-mode on."
@@ -67,4 +67,4 @@ Examples:
       (lambda (expected)
         (let ((actual (buffer-string))
               (message "Expected buffer's contents to be '%s', but was '%s'"))
-          (assert (s-equals? expected actual) nil message expected actual))))
+          (cl-assert (s-equals? expected actual) nil message expected actual))))

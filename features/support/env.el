@@ -1,4 +1,5 @@
 (require 'f)
+(require 'cl-lib)
 
 (defvar god-mode-support-path
   (f-dirname load-file-name))
