@@ -25,3 +25,7 @@ Feature: Predicate based disable
   Scenario: God mode is disabled in comint derived buffers
     When I switch to buffer "*ielm*"
     Then god-mode is disabled
+
+  Scenario: God mode is disabled in mode-class special buffers
+    When I open a test-special-mode buffer
+    Then god-mode is disabled

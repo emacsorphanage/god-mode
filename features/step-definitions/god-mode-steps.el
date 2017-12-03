@@ -30,6 +30,11 @@
          (god-local-mode 0)
          (god-mode-maybe-activate)))
 
+(Given "^I open a test-special-mode buffer"
+       (lambda ()
+         (set-buffer (get-buffer-create "*test-special-mode*"))
+         (test-special-mode)))
+
 (Given "^I start ielm$"
        (lambda ()
          (require 'ielm)
