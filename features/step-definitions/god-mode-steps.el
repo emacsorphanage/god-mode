@@ -23,10 +23,12 @@
           (get-buffer-process (grep "grep -Rin god ."))
           nil)))
 
-(Given "^I view the units table$"
+(Given "^I open a view-mode buffer"
        (lambda ()
-         (require 'calc-units)
-         (math-build-units-table-buffer nil)))
+         (set-buffer (get-buffer-create "*view-mode-buffer*"))
+         (view-mode)
+         (god-local-mode 0)
+         (god-mode-maybe-activate)))
 
 (Given "^I start ielm$"
        (lambda ()
