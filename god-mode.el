@@ -204,7 +204,8 @@ appropriate). Append to keysequence."
     (message key-string-so-far)
     (setq next-modifier
           (cond
-           ((string= key god-literal-key)
+           ;; If this is the first command, ignore god-literal-sequence
+           ((and key-string-so-far (string= key god-literal-key))
             (setq god-literal-sequence t)
             "")
            (god-literal-sequence

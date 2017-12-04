@@ -40,6 +40,14 @@ Feature: C- commands
     hubris
     """
 
+  Scenario: execute C-[god-literal-key]
+    Given I bind "C-SPC" to "set-mark-command"
+    And I go to beginning of buffer
+    And I send the key sequence "SPC"
+    And I go to end of buffer
+    And I send the key sequence "u SPC"
+    Then the cursor should be at point "1"
+
   Scenario: execute commands with C-arrow
     Given I bind "C-x C-<left>" to "backward-word"
     And I go to line "1"
