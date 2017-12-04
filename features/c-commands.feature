@@ -39,3 +39,10 @@ Feature: C- commands
     impatience
     hubris
     """
+
+  Scenario: execute commands with C-arrow
+    Given I bind "C-x C-<left>" to "backward-word"
+    And I go to line "1"
+    And I go to end of line
+    And I send the key sequence "x <left>"
+    Then the cursor should be at point "1"
