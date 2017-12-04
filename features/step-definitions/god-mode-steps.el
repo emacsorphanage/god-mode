@@ -39,6 +39,10 @@
       (lambda (buffer)
         (switch-to-buffer buffer)))
 
+(When "I send the key sequence \"\\(.+\\)\""
+      (lambda (keys)
+        (execute-kbd-macro (kbd keys))))
+
 (Then "^god-mode is enabled$"
       (lambda ()
         (cl-assert (not (null god-local-mode)))))

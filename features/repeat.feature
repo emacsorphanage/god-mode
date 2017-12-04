@@ -7,17 +7,17 @@ Feature: Repeat
     And I go to line "1"
 
   Scenario: M-5 C-d C-x z does delete 5 times then 5 more times
-    When I press "M-5 C-d C-x z"
+    When I send the key sequence "M-5 C-d C-x z"
     Then the buffer's contents should be "klmnopqrstuvwxyz one two three"
 
   Scenario: 5dx z does delete 5 times then 5 more times
-    When I press "5dx z"
+    When I send the key sequence "5dx SPC z"
     Then the buffer's contents should be "klmnopqrstuvwxyz one two three"
 
   Scenario: M-f C-x z M-d deletes the second word
-    When I press "M-f C-x z M-d"
+    When I send the key sequence "M-f C-x z M-d"
     Then the buffer's contents should be "abcdefghijklmnopqrstuvwxyz one three"
 
   Scenario: gfx zgd deletes the second word
-    When I press "gfx zgd"
+    When I send the key sequence "gfx SPC zgd"
     Then the buffer's contents should be "abcdefghijklmnopqrstuvwxyz one three"
