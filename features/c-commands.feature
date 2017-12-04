@@ -54,3 +54,39 @@ Feature: C- commands
     And I go to end of line
     And I send the key sequence "x <left>"
     Then the cursor should be at point "1"
+
+  Scenario: execute commands with uppercase letters (control)
+    Given I bind "C-S-A" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "A"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with uppercase letters (met)
+    Given I bind "M-S-A" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "g A"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with uppercase letters (combination)
+    Given I bind "C-x C-S-A" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "xA"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with shifted arrows (control)
+    Given I bind "C-x C-S-<left>" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "x S-<left>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with shifted arrows (meta)
+    Given I bind "M-S-<left>" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "g S-<left>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with shifted arrows (space)
+    Given I bind "C-c S-<left>" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "C-c S-<left>"
+    Then the cursor should be at point "1"
