@@ -4,7 +4,6 @@ Feature: Predicate based disable
     And I am in buffer "god-mode-test"
     And I describe function "god-mode"
     And I grep current directory
-    And I view the units table
     And I start ielm
 
   Scenario: God mode is automatically enabled for fundamental-mode
@@ -19,8 +18,8 @@ Feature: Predicate based disable
     When I switch to buffer "*grep*"
     Then god-mode is disabled
 
-  Scenario: God mode is disabled in *Units Table* (has view-mode enabled)
-    When I switch to buffer "*Units Table*"
+  Scenario: God mode is disabled in buffers with view-mode
+    When I open a view-mode buffer
     Then god-mode is disabled
 
   Scenario: God mode is disabled in comint derived buffers

@@ -7,17 +7,17 @@ Feature: Prefix arguments
     And I go to line "1"
 
   Scenario: C-u C-d does delete 4 times
-    When I press "C-u C-d"
+    When I send the key sequence "C-u C-d"
     Then the buffer's contents should be "efghijklmnopqrstuvwxyz"
 
   Scenario: ud does delete 4 times
-    When I press "ud"
+    When I send the key sequence "ud"
     Then the buffer's contents should be "efghijklmnopqrstuvwxyz"
 
   Scenario: C-u C-u C-d does delete 16 times
-    When I press "C-u C-u C-d"
+    When I send the key sequence "C-u C-u C-d"
     Then the buffer's contents should be "qrstuvwxyz"
 
   Scenario: uud does delete 16 times
-    When I press "uud"
+    When I send the key sequence "uud"
     Then the buffer's contents should be "qrstuvwxyz"

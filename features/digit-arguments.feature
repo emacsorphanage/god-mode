@@ -7,9 +7,9 @@ Feature: Digit arguments
     And I go to line "1"
 
   Scenario: M-5 C-d does delete 5 times
-    When I press "M-5 C-d"
+    When I send the key sequence "M-5 C-d"
     Then the buffer's contents should be "fghijklmnopqrstuvwxyz"
 
   Scenario: 5d does delete 5 times
-    When I press "5d"
+    When I send the key sequence "5d"
     Then the buffer's contents should be "fghijklmnopqrstuvwxyz"

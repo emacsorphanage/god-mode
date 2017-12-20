@@ -5,7 +5,7 @@
 (Given "^I bind a named keyboard macro which kills line to C-c C-r$"
   (lambda ()
     (fset 'god-mode-test-keyboard-macro
-          "\C-a\C-k\C-k\C-n\C-n\C-n\C-n\C-n\C-n")
+          "\C-a\C-k\C-k")
     (global-set-key (kbd "C-c C-r") 'god-mode-test-keyboard-macro)))
 
 (Given "^god-mode is enabled for all buffers$"
@@ -23,10 +23,12 @@
           (get-buffer-process (grep "grep -Rin god ."))
           nil)))
 
-(Given "^I view the units table$"
+(Given "^I open a view-mode buffer"
        (lambda ()
-         (require 'calc-units)
-         (math-build-units-table-buffer nil)))
+         (set-buffer (get-buffer-create "*view-mode-buffer*"))
+         (view-mode)
+         (god-local-mode 0)
+         (god-mode-maybe-activate)))
 
 (Given "^I start ielm$"
        (lambda ()
@@ -37,13 +39,17 @@
       (lambda (buffer)
         (switch-to-buffer buffer)))
 
+(When "I send the key sequence \"\\(.+\\)\""
+      (lambda (keys)
+        (execute-kbd-macro (kbd keys))))
+
 (Then "^god-mode is enabled$"
       (lambda ()
-        (assert (not (null god-local-mode)))))
+        (cl-assert (not (null god-local-mode)))))
 
 (Then "^god-mode is disabled$"
       (lambda ()
-        (assert (null god-local-mode))))
+        (cl-assert (null god-local-mode))))
 
 (Then "^I have god-mode on$"
       "Turn god-mode on."
@@ -67,4 +73,4 @@ Examples:
       (lambda (expected)
         (let ((actual (buffer-string))
               (message "Expected buffer's contents to be '%s', but was '%s'"))
-          (assert (s-equals? expected actual) nil message expected actual))))
+          (cl-assert (s-equals? expected actual) nil message expected actual))))
