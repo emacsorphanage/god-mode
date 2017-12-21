@@ -49,7 +49,7 @@
   :type '(alist))
 
 (defcustom god-literal-key
-  " "
+  "SPC"
   "The key used for literal interpretation."
   :group 'god
   :type 'string)
@@ -179,8 +179,8 @@ recurses. `key-string-so-far' should be nil for the first call in
 the sequence."
   (interactive)
   (let ((sanitized-key
-         (if key-string-so-far (char-to-string (or key (read-event key-string-so-far)))
-           (god-mode-sanitized-key-string (or key (read-event key-string-so-far))))))
+         (god-mode-sanitized-key-string
+          (or key (read-event key-string-so-far)))))
     (god-mode-lookup-command
      (key-string-after-consuming-key sanitized-key key-string-so-far))))
 
@@ -204,7 +204,8 @@ appropriate). Append to keysequence."
     (message key-string-so-far)
     (setq next-modifier
           (cond
-           ((string= key god-literal-key)
+           ;; If this is the first command, ignore god-literal-sequence
+           ((and key-string-so-far (string= key god-literal-key))
             (setq god-literal-sequence t)
             "")
            (god-literal-sequence
