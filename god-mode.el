@@ -191,6 +191,8 @@ the sequence."
     (?\  "SPC")
     (left "<left>")
     (right "<right>")
+    (S-left "S-<left>")
+    (S-right "S-<right>")
     (prior "<prior>")
     (next "<next>")
     (backspace "DEL")
@@ -224,6 +226,10 @@ appropriate). Append to keysequence."
           (if key-consumed
               (god-mode-sanitized-key-string (read-event key-string-so-far))
             key))
+    (when (and (= (length next-key) 1)
+               (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu"))
+      ;; A single uppercase character indicates that S- was pressed
+      (setq next-modifier (concat next-modifier "S-")))
     (if key-string-so-far
         (concat key-string-so-far " " next-modifier next-key)
       (concat next-modifier next-key))))
