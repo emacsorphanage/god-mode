@@ -23,6 +23,12 @@
 
 (add-to-list 'load-path god-mode-root-path)
 
+(define-derived-mode test-special-mode fundamental-mode "Test"
+  "This mode is marked special via its mode class rather than
+through inheritance.")
+
+(put 'test-special-mode 'mode-class 'special)
+
 (require 'god-mode)
 (require 'espuds)
 

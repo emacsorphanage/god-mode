@@ -270,8 +270,8 @@ Members of the `god-exempt-major-modes' list are exempt."
   (god-mode-child-of-p major-mode 'comint-mode))
 
 (defun god-special-mode-p ()
-  "Return non-nil if major-mode is child of special-mode."
-  (god-mode-child-of-p major-mode 'special-mode))
+  "Return non-nil if major-mode is special or a child of special-mode."
+  (eq (get major-mode 'mode-class) 'special))
 
 (defun god-view-mode-p ()
   "Return non-nil if view-mode is enabled in current buffer."
