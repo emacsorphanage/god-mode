@@ -202,26 +202,19 @@ the sequence."
 (defun key-string-after-consuming-key (key key-string-so-far)
   "Interpret god-mode special keys for key (consumes more keys if
 appropriate). Append to keysequence."
-  (let ((key-consumed t) next-modifier next-key)
+  (let ((key-consumed t) (next-modifier "") next-key)
     (message key-string-so-far)
-    (setq next-modifier
-          (cond
-           ;; If this is the first command, ignore god-literal-sequence
-           ((and key-string-so-far (string= key god-literal-key))
-            (setq god-literal-sequence t)
-            "")
-           (god-literal-sequence
-            (setq key-consumed nil)
-            "")
-           ((and
-             (stringp key)
-             (not (eq nil (assoc key god-mod-alist)))
-             (not (eq nil key)))
-            (cdr (assoc key god-mod-alist)))
-           (t
-            (setq key-consumed nil)
-            (cdr (assoc nil god-mod-alist))
-            )))
+    (cond
+     ;; Don't check for god-literal-key with the first key
+     ((and key-string-so-far (string= key god-literal-key))
+      (setq god-literal-sequence t))
+     (god-literal-sequence
+      (setq key-consumed nil))
+     ((and (stringp key) (assoc key god-mod-alist))
+      (setq next-modifier (cdr (assoc key god-mod-alist))))
+     (t
+      (setq key-consumed nil
+            next-modifier (cdr (assoc nil god-mod-alist)))))
     (setq next-key
           (if key-consumed
               (god-mode-sanitized-key-string (read-event key-string-so-far))
