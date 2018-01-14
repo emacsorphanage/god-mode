@@ -61,8 +61,14 @@ Feature: C- commands
     And I send the key sequence "A"
     Then the cursor should be at point "1"
 
-  Scenario: execute commands with uppercase letters (met)
-    Given I bind "M-S-A" to "beginning-of-buffer"
+  Scenario: execute commands with uppercase letters (control+meta)
+    Given I bind "C-M-S-A" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "GA"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with uppercase letters (meta)
+    Given I bind "M-A" to "beginning-of-buffer"
     And I go to end of buffer
     And I send the key sequence "g A"
     Then the cursor should be at point "1"
@@ -71,6 +77,12 @@ Feature: C- commands
     Given I bind "C-x C-S-A" to "beginning-of-buffer"
     And I go to end of buffer
     And I send the key sequence "xA"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with uppercase letters (literal)
+    Given I bind "C-c L" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "c SPC L"
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shifted arrows (control)

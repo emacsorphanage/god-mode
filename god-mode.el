@@ -111,9 +111,6 @@ enabled. See also `god-local-mode-resume'."
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
-(defvar god-literal-sequence nil
-  "Activated after space is pressed in a command sequence.")
-
 ;;;###autoload
 (defun god-mode ()
   "Toggle global God mode."
@@ -161,7 +158,6 @@ enabled. See also `god-local-mode-resume'."
     ;; `real-this-command' is used by emacs to populate
     ;; `last-repeatable-command', which is used by `repeat'.
     (setq real-this-command binding)
-    (setq god-literal-sequence nil)
     (if (commandp binding t)
         (call-interactively binding)
       (execute-kbd-macro binding))))
@@ -202,33 +198,29 @@ the sequence."
 (defun key-string-after-consuming-key (key key-string-so-far)
   "Interpret god-mode special keys for key (consumes more keys if
 appropriate). Append to keysequence."
-  (let ((key-consumed t) next-modifier next-key)
+  (let ((key-consumed t) (next-modifier "") next-key)
     (message key-string-so-far)
-    (setq next-modifier
-          (cond
-           ;; If this is the first command, ignore god-literal-sequence
-           ((and key-string-so-far (string= key god-literal-key))
-            (setq god-literal-sequence t)
-            "")
-           (god-literal-sequence
-            (setq key-consumed nil)
-            "")
-           ((and
-             (stringp key)
-             (not (eq nil (assoc key god-mod-alist)))
-             (not (eq nil key)))
-            (cdr (assoc key god-mod-alist)))
-           (t
-            (setq key-consumed nil)
-            (cdr (assoc nil god-mod-alist))
-            )))
+    (cond
+     ;; Don't check for god-literal-key with the first key
+     ((and key-string-so-far (string= key god-literal-key)))
+     ((and (stringp key) (assoc key god-mod-alist))
+      (setq next-modifier (cdr (assoc key god-mod-alist))))
+     (t
+      (setq key-consumed nil
+            next-modifier (cdr (assoc nil god-mod-alist)))))
     (setq next-key
           (if key-consumed
               (god-mode-sanitized-key-string (read-event key-string-so-far))
             key))
     (when (and (= (length next-key) 1)
-               (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu"))
-      ;; A single uppercase character indicates that S- was pressed
+               (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu")
+               ;; If C- is part of the modifier, S- needs to be given
+               ;; in order to distinguish the uppercase from the
+               ;; lowercase bindings. If C- is not in the modifier,
+               ;; then emacs natively treats uppercase differently
+               ;; from lowercase, and the S- modifier should not be
+               ;; given
+               (string-prefix-p "C-" next-modifier))
       (setq next-modifier (concat next-modifier "S-")))
     (if key-string-so-far
         (concat key-string-so-far " " next-modifier next-key)
