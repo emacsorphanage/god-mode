@@ -213,8 +213,14 @@ appropriate). Append to keysequence."
               (god-mode-sanitized-key-string (read-event key-string-so-far))
             key))
     (when (and (= (length next-key) 1)
-               (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu"))
-      ;; A single uppercase character indicates that S- was pressed
+               (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu")
+               ;; If C- is part of the modifier, S- needs to be given
+               ;; in order to distinguish the uppercase from the
+               ;; lowercase bindings. If C- is not in the modifier,
+               ;; then emacs natively treats uppercase differently
+               ;; from lowercase, and the S- modifier should not be
+               ;; given
+               (string-prefix-p "C-" next-modifier))
       (setq next-modifier (concat next-modifier "S-")))
     (if key-string-so-far
         (concat key-string-so-far " " next-modifier next-key)
