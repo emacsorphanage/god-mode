@@ -111,9 +111,6 @@ enabled. See also `god-local-mode-resume'."
 (defvar god-global-mode nil
   "Activate God mode on all buffers?")
 
-(defvar god-literal-sequence nil
-  "Activated after space is pressed in a command sequence.")
-
 ;;;###autoload
 (defun god-mode ()
   "Toggle global God mode."
@@ -161,7 +158,6 @@ enabled. See also `god-local-mode-resume'."
     ;; `real-this-command' is used by emacs to populate
     ;; `last-repeatable-command', which is used by `repeat'.
     (setq real-this-command binding)
-    (setq god-literal-sequence nil)
     (if (commandp binding t)
         (call-interactively binding)
       (execute-kbd-macro binding))))
@@ -206,10 +202,7 @@ appropriate). Append to keysequence."
     (message key-string-so-far)
     (cond
      ;; Don't check for god-literal-key with the first key
-     ((and key-string-so-far (string= key god-literal-key))
-      (setq god-literal-sequence t))
-     (god-literal-sequence
-      (setq key-consumed nil))
+     ((and key-string-so-far (string= key god-literal-key)))
      ((and (stringp key) (assoc key god-mod-alist))
       (setq next-modifier (cdr (assoc key god-mod-alist))))
      (t
