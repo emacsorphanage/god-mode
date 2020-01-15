@@ -2,6 +2,10 @@
 
 ;; Copyright (c) 2014 Chris Done. All rights reserved.
 
+;; Author: Chris Done <chrisdone@gmail.com>
+;; URL: https://github.com/chrisdone/god-mode
+;; Version: 2.15.0
+
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 3, or (at your option)
@@ -14,6 +18,10 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; See README.md.
 
 ;;; Code:
 
@@ -41,3 +49,4 @@
   (setq overriding-terminal-local-map isearch-mode-map))
 
 (provide 'god-mode-isearch)
+;;; god-mode-isearch.el ends here
