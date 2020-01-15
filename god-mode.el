@@ -61,7 +61,7 @@
     vc-annotate-mode
     git-commit-mode  ; For versions prior to Magit 2.1.0
     magit-popup-mode)
-  "List of major modes that should not start in god-local-mode."
+  "List of major modes that should not start with `god-local-mode' enabled."
   :group 'god
   :type '(function))
 
@@ -71,8 +71,8 @@
         #'god-git-commit-mode-p
         #'god-view-mode-p
         #'god-special-mode-p)
-  "List of predicates checked before enabling god-local-mode.
-All predicates must return nil for god-local-mode to start."
+  "List of predicates checked before enabling `god-local-mode'.
+All predicates must return nil for `god-local-mode' to start."
   :group 'god
   :type '(repeat function))
 
@@ -96,28 +96,28 @@ All predicates must return nil for god-local-mode to start."
     (run-hooks 'god-mode-disabled-hook)))
 
 (defun god-local-mode-pause ()
-  "Pause god-mode local to the buffer, if it's
-enabled. See also `god-local-mode-resume'."
+  "Pause `god-local-mode' if it is enabled.
+See also `god-local-mode-resume'."
   (when god-local-mode
     (god-local-mode -1)
     (setq god-local-mode-paused t)))
 
 (defun god-local-mode-resume ()
-  "Will re-enable god-mode, if it was active when
-`god-local-mode-pause' was called. If not, nothing happens."
+  "Re-enable `god-local-mode'.
+If it was not active when `god-local-mode-pause' was called, nothing happens."
   (when (bound-and-true-p god-local-mode-paused)
     (setq god-local-mode-paused nil)
     (god-local-mode 1)))
 
 (defvar god-global-mode nil
-  "Activate God mode on all buffers?")
+  "Enable `god-local-mode' on all buffers.")
 
 (defvar god-literal-sequence nil
-  "Activated after space is pressed in a command sequence.")
+  "Activated after `god-literal-key' is pressed in a command sequence.")
 
 ;;;###autoload
 (defun god-mode ()
-  "Toggle global God mode."
+  "Toggle global `god-local-mode'."
   (interactive)
   (setq god-global-mode (not god-global-mode))
   (if god-global-mode
@@ -126,7 +126,7 @@ enabled. See also `god-local-mode-resume'."
 
 ;;;###autoload
 (defun god-mode-all ()
-  "Toggle God mode in all buffers."
+  "Toggle `god-local-mode' in all buffers."
   (interactive)
   (let ((new-status (if (bound-and-true-p god-local-mode) -1 1)))
     (setq god-global-mode t)
@@ -137,7 +137,7 @@ enabled. See also `god-local-mode-resume'."
     (setq god-global-mode (= new-status 1))))
 
 (defun god-mode-maybe-universal-argument-more ()
-  "If god mode is enabled, call `universal-argument-more'."
+  "If `god-local-mode' is enabled, call `universal-argument-more'."
   (interactive)
   (if god-local-mode
       (call-interactively #'universal-argument-more)
@@ -168,16 +168,15 @@ enabled. See also `god-local-mode-resume'."
       (execute-kbd-macro binding))))
 
 (defun god-mode-upper-p (char)
-  "Is the given char upper case?"
+  "Check if CHAR is an upper case character."
   (and (>= char ?A)
        (<= char ?Z)
        (/= char ?G)))
 
 (defun god-mode-lookup-key-sequence (&optional key key-string-so-far)
-  "Lookup the command for the given `key' (or the next keypress,
-if `key' is nil). This function sometimes
-recurses. `key-string-so-far' should be nil for the first call in
-the sequence."
+  "Lookup the command for the given KEY (or the next keypress, if KEY is nil).
+This function sometimes recurses.
+KEY-STRING-SO-FAR should be nil for the first call in the sequence."
   (interactive)
   (let ((sanitized-key
          (god-mode-sanitized-key-string
@@ -186,7 +185,7 @@ the sequence."
      (god-key-string-after-consuming-key sanitized-key key-string-so-far))))
 
 (defun god-mode-sanitized-key-string (key)
-  "Convert any special events to textual."
+  "Convert any special events in KEY to textual representation."
   (cl-case key
     (tab "TAB")
     (?\  "SPC")
@@ -201,8 +200,9 @@ the sequence."
     (t (char-to-string key))))
 
 (defun god-key-string-after-consuming-key (key key-string-so-far)
-  "Interpret god-mode special keys for key (consumes more keys if
-appropriate). Append to keysequence."
+  "Interpret god-mode special keys for KEY.
+Consumes more keys if appropriate.
+Appends to key sequence KEY-STRING-SO-FAR."
   (let ((key-consumed t) (next-modifier "") next-key)
     (message key-string-so-far)
     (cond
@@ -235,8 +235,7 @@ appropriate). Append to keysequence."
       (concat next-modifier next-key))))
 
 (defun god-mode-lookup-command (key-string)
-  "Execute extended keymaps such as C-c, or if it is a command,
-call it."
+  "Execute extended keymaps in KEY-STRING, or call it if it is a command."
   (let* ((key-vector (read-kbd-macro key-string t))
          (binding (key-binding key-vector)))
     (cond ((commandp binding)
@@ -249,18 +248,20 @@ call it."
 
 ;;;###autoload
 (defun god-mode-maybe-activate (&optional status)
-  "Activate God mode locally on individual buffers when appropriate."
+  "Activate `god-local-mode' on individual buffers when appropriate.
+STATUS is passed as an argument to `god-mode-activate'."
   (when (not (minibufferp))
     (god-mode-activate status)))
 
 (defun god-mode-activate (&optional status)
-  "Activate God mode locally on individual buffers when appropriate."
+  "Activate `god-local-mode' on individual buffers when appropriate.
+STATUS is passed as an argument to `god-local-mode'."
   (when (and god-global-mode
              (god-passes-predicates-p))
     (god-local-mode (if status status 1))))
 
 (defun god-exempt-mode-p ()
-  "Return non-nil if major-mode is exempt.
+  "Return non-nil if `major-mode' is exempt.
 Members of the `god-exempt-major-modes' list are exempt."
   (memq major-mode god-exempt-major-modes))
 
@@ -273,15 +274,15 @@ Members of the `god-exempt-major-modes' list are exempt."
           (t nil))))
 
 (defun god-comint-mode-p ()
-  "Return non-nil if major-mode is child of comint-mode."
+  "Return non-nil if `major-mode' is derived from `comint-mode'."
   (god-mode-child-of-p major-mode 'comint-mode))
 
 (defun god-special-mode-p ()
-  "Return non-nil if major-mode is special or a child of special-mode."
+  "Return non-nil if `major-mode' is special or derived from `special-mode'."
   (eq (get major-mode 'mode-class) 'special))
 
 (defun god-view-mode-p ()
-  "Return non-nil if view-mode is enabled in current buffer."
+  "Return non-nil if variable `view-mode' is non-nil in current buffer."
   view-mode)
 
 (defun god-git-commit-mode-p ()

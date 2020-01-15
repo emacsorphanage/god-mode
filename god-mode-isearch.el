@@ -40,14 +40,15 @@
   "Keymap for modal isearch.")
 
 (defun god-mode-isearch-activate ()
-  "Switch the isearch-local god-mode."
+  "Activate God mode in the isearch buffer."
   (interactive)
   (setq overriding-terminal-local-map god-mode-isearch-map))
 
 (defun god-mode-isearch-disable ()
-  "Switch back to regular isearch."
+  "Deactivate God mode in the isearch buffer."
   (interactive)
   (setq overriding-terminal-local-map isearch-mode-map))
 
 (provide 'god-mode-isearch)
+
 ;;; god-mode-isearch.el ends here
