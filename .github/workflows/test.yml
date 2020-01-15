@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        emacs_version:
+          - 24.3
+          - 24.4
+          - 24.5
+          - 25.1
+          - 25.2
+          - 25.3
+          - 26.1
+          - 26.2
+          - 26.3
+          - snapshot
+        include:
+          - emacs_version: snapshot
+            allow_failure: true
+    steps:
+    - uses: purcell/setup-emacs@master
+      with:
+        version: ${{ matrix.emacs_version }}
+    - uses: actions/checkout@v1
+    - uses: conao3/setup-cask@master
+    - name: Install dependencies
+      run: "cask install"
+    - name: Run tests
+      if: matrix.allow_failure != true
+      run: 'cask exec ecukes'
+    - name: Run tests (allow failure)
+      if: matrix.allow_failure == true
+      run: 'cask exec ecukes || true'
