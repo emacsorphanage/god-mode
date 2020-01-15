@@ -1,6 +1,6 @@
 # God Mode — no more RSI
 
-***NOTE***: Emacs 24.3 is required for this package to work well!
+***NOTE***: Emacs 24.4 is required for this package to work well!
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
