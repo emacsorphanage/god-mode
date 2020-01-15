@@ -183,7 +183,7 @@ the sequence."
          (god-mode-sanitized-key-string
           (or key (read-event key-string-so-far)))))
     (god-mode-lookup-command
-     (key-string-after-consuming-key sanitized-key key-string-so-far))))
+     (god-key-string-after-consuming-key sanitized-key key-string-so-far))))
 
 (defun god-mode-sanitized-key-string (key)
   "Convert any special events to textual."
@@ -200,7 +200,7 @@ the sequence."
     (return "RET")
     (t (char-to-string key))))
 
-(defun key-string-after-consuming-key (key key-string-so-far)
+(defun god-key-string-after-consuming-key (key key-string-so-far)
   "Interpret god-mode special keys for key (consumes more keys if
 appropriate). Append to keysequence."
   (let ((key-consumed t) (next-modifier "") next-key)
