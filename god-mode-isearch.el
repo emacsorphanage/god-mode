@@ -1,6 +1,7 @@
 ;;; god-mode-isearch.el --- God-mode-like behaviour for isearch
 
-;; Copyright (c) 2014 Chris Done. All rights reserved.
+;; Copyright (C) 2014 Chris Done
+;; Copyright (C) 2020 Akhil Wali
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode

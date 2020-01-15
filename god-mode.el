@@ -5,6 +5,7 @@
 ;; Copyright (C) 2013 Rüdiger Sonderfeld
 ;; Copyright (C) 2013 Dillon Kearns
 ;; Copyright (C) 2013 Fabián Ezequiel Gallina
+;; Copyright (C) 2020 Akhil Wali
 
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/chrisdone/god-mode
