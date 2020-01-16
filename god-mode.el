@@ -1,4 +1,4 @@
-;;; god-mode.el --- God-like command entering minor mode
+;;; god-mode.el --- God-like command entering minor mode  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2013 Chris Done
 ;; Copyright (C) 2013 Magnar Sveen

@@ -1,4 +1,4 @@
-;;; god-mode-isearch.el --- God-mode-like behaviour for isearch
+;;; god-mode-isearch.el --- God-mode-like behaviour for isearch  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2014 Chris Done
 ;; Copyright (C) 2020 Akhil Wali
