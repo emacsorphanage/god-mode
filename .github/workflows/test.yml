@@ -35,7 +35,7 @@ jobs:
     - uses: actions/checkout@v1
     - uses: conao3/setup-cask@master
     - name: Install dependencies
-      run: "cask install"
+      run: 'cask install'
     - name: Run tests
       if: matrix.allow_failure != true
       run: 'cask exec ecukes'
