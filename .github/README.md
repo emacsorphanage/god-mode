@@ -252,9 +252,9 @@ variable and its default members `god-exempt-mode-p`,
 `god-comint-mode-p`, `god-view-mode-p` and `god-special-mode-p` for
 further details.
 
-[nice-keybindings]: https://github.com/darth10/god-mode#nice-keybindings
+[nice-keybindings]: https://github.com/emacsorphanage/god-mode#nice-keybindings
 [switch-caps-lock-and-esc]: https://askubuntu.com/questions/363346/how-to-permanently-switch-caps-lock-and-esc
 [melpa-link]: https://melpa.org/#/god-mode
 [melpa-badge]: https://melpa.org/packages/god-mode-badge.svg
-[gh-actions-link]: https://github.com/darth10/god-mode/actions
-[gh-actions-badge]: https://github.com/darth10/god-mode/workflows/CI/badge.svg
+[gh-actions-link]: https://github.com/emacsorphanage/god-mode/actions
+[gh-actions-badge]: https://github.com/emacsorphanage/god-mode/workflows/CI/badge.svg
