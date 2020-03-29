@@ -1,6 +1,9 @@
 # God Mode — no more RSI
 
-***NOTE***: Emacs 24.3 is required for this package to work well!
+[![melpa-badge][melpa-badge]][melpa-link]
+[![gh-actions-badge][gh-actions-badge]][gh-actions-link]
+
+***NOTE***: Emacs 24.4 is required for this package to work well!
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
@@ -13,9 +16,7 @@ In the example below you can see how much effort is reduced:
     Before: C-p C-k C-n M-^ ) C-j C-y M-r C-x z z M-2 M-g M-g C-x C-s
     After:    p   k   n g ^ )   j   y g r     . .   2   g   g   x   s
 
-(Regarding `.` see
-[nice keybindings](https://github.com/chrisdone/god-mode#nice-keybindings)
-section.)
+(Regarding `.` see [nice keybindings][nice-keybindings] section.)
 
 You'll find that this mode comes surprisingly naturally and that you
 already know how to run your existing Emacs commands.
@@ -73,7 +74,7 @@ Or use dconf:
 
     dconf write /org/gnome/desktop/input-sources/xkb-options "['caps:escape']"
 
-See [here](http://askubuntu.com/questions/363346/how-to-permanently-switch-caps-lock-and-esc) for more details.
+See [here][switch-caps-lock-and-esc] for more details.
 
 ## Mapping
 
@@ -250,3 +251,10 @@ be disabled for the current buffer. See the `god-exempt-predicates`
 variable and its default members `god-exempt-mode-p`,
 `god-comint-mode-p`, `god-view-mode-p` and `god-special-mode-p` for
 further details.
+
+[nice-keybindings]: https://github.com/emacsorphanage/god-mode#nice-keybindings
+[switch-caps-lock-and-esc]: https://askubuntu.com/questions/363346/how-to-permanently-switch-caps-lock-and-esc
+[melpa-link]: https://melpa.org/#/god-mode
+[melpa-badge]: https://melpa.org/packages/god-mode-badge.svg
+[gh-actions-link]: https://github.com/emacsorphanage/god-mode/actions
+[gh-actions-badge]: https://github.com/emacsorphanage/god-mode/workflows/CI/badge.svg

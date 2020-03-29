@@ -1,6 +1,12 @@
-;;; god-mode-isearch.el --- God-mode-like behaviour for isearch
+;;; god-mode-isearch.el --- God-mode-like behaviour for isearch  -*- lexical-binding: t; -*-
 
-;; Copyright (c) 2014 Chris Done. All rights reserved.
+;; Copyright (C) 2014 Chris Done
+;; Copyright (C) 2020 Akhil Wali
+
+;; Author: Chris Done <chrisdone@gmail.com>
+;; URL: https://github.com/chrisdone/god-mode
+;; Version: 2.16.0
+;; Package-Requires: ((emacs "24.4"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -14,6 +20,10 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; See README.md.
 
 ;;; Code:
 
@@ -31,13 +41,15 @@
   "Keymap for modal isearch.")
 
 (defun god-mode-isearch-activate ()
-  "Switch the isearch-local god-mode."
+  "Activate God mode in the isearch buffer."
   (interactive)
   (setq overriding-terminal-local-map god-mode-isearch-map))
 
 (defun god-mode-isearch-disable ()
-  "Switch back to regular isearch."
+  "Deactivate God mode in the isearch buffer."
   (interactive)
   (setq overriding-terminal-local-map isearch-mode-map))
 
 (provide 'god-mode-isearch)
+
+;;; god-mode-isearch.el ends here
