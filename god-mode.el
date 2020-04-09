@@ -178,11 +178,11 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
       (execute-kbd-macro binding))))
 
 (defun god-mode-upper-p (key)
-  "Check if KEY is an upper case character."
+  "Check if KEY is an upper case character not present in `god-mod-alist'."
   (and (characterp key)
+       (not (member key (mapcar #'car god-mod-alist)))
        (>= key ?A)
-       (<= key ?Z)
-       (/= key ?G)))
+       (<= key ?Z)))
 
 (defun god-mode-lookup-key-sequence (&optional key key-string-so-far)
   "Lookup the command for the given KEY (or the next keypress, if KEY is nil).
