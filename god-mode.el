@@ -77,6 +77,11 @@ All predicates must return nil for `god-local-mode' to start."
   :group 'god
   :type '(repeat function))
 
+(defun god-mode-make-f-key (n &optional shift)
+  "Get the event for numbered function key N, with shift status SHIFT.
+For example, calling with arguments 5 and t yields the symbol `S-f5'."
+  (intern (format "%sf%d" (if shift "S-" "") n)))
+
 (defvar god-local-mode-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map t)
@@ -84,8 +89,11 @@ All predicates must return nil for `god-local-mode' to start."
     (let ((i ?\s))
       (while (< i 256)
         (define-key map (vector i) 'god-mode-self-insert)
-        (setq i (1+ i)))
-      (define-key map (kbd "DEL") nil))
+        (setq i (1+ i))))
+    (dotimes (i 35)
+      (define-key map (vector (god-mode-make-f-key (1+ i))) 'god-mode-self-insert)
+      (define-key map (vector (god-mode-make-f-key (1+ i) t)) 'god-mode-self-insert))
+    (define-key map (kbd "DEL") nil)
     map))
 
 ;;;###autoload
@@ -156,6 +164,7 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
   (let* ((initial-key (aref (this-command-keys-vector)
                             (- (length (this-command-keys-vector)) 1)))
          (binding (god-mode-lookup-key-sequence initial-key)))
+    ;; For now, set the shift-translation status only for alphabetic keys.
     (when (god-mode-upper-p initial-key)
       (setq this-command-keys-shift-translated t))
     (setq this-original-command binding)
@@ -168,11 +177,12 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
         (call-interactively binding)
       (execute-kbd-macro binding))))
 
-(defun god-mode-upper-p (char)
-  "Check if CHAR is an upper case character."
-  (and (>= char ?A)
-       (<= char ?Z)
-       (/= char ?G)))
+(defun god-mode-upper-p (key)
+  "Check if KEY is an upper case character."
+  (and (characterp key)
+       (>= key ?A)
+       (<= key ?Z)
+       (/= key ?G)))
 
 (defun god-mode-lookup-key-sequence (&optional key key-string-so-far)
   "Lookup the command for the given KEY (or the next keypress, if KEY is nil).
@@ -185,20 +195,29 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
     (god-mode-lookup-command
      (god-key-string-after-consuming-key sanitized-key key-string-so-far))))
 
+(defvar god-mode-sanitized-key-alist
+  (append
+   '((tab . "TAB")
+     (?\  . "SPC")
+     (left . "<left>")
+     (right . "<right>")
+     (S-left . "S-<left>")
+     (S-right . "S-<right>")
+     (prior . "<prior>")
+     (next . "<next>")
+     (backspace . "DEL")
+     (return . "RET"))
+   ;; f1..f35 and S-f1..S-f35
+   (cl-mapcan (lambda (i)
+                (list (cons (god-mode-make-f-key i)   (format "<f%d>" i))
+                      (cons (god-mode-make-f-key i t) (format "S-<f%d>" i))))
+              (number-sequence 1 35)))
+  "Association list mapping special events to their textual representations.")
+
 (defun god-mode-sanitized-key-string (key)
   "Convert any special events in KEY to textual representation."
-  (cl-case key
-    (tab "TAB")
-    (?\  "SPC")
-    (left "<left>")
-    (right "<right>")
-    (S-left "S-<left>")
-    (S-right "S-<right>")
-    (prior "<prior>")
-    (next "<next>")
-    (backspace "DEL")
-    (return "RET")
-    (t (char-to-string key))))
+  (or (cdr (assq key god-mode-sanitized-key-alist))
+      (char-to-string key)))
 
 (defun god-key-string-after-consuming-key (key key-string-so-far)
   "Interpret god-mode special keys for KEY.

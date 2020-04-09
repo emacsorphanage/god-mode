@@ -108,3 +108,27 @@ Feature: C- commands
     And I go to end of buffer
     And I send the key sequence "C-c S-<left>"
     Then the cursor should be at point "1"
+
+  Scenario: execute commands with numbered function keys (literal)
+    Given I bind "C-c <f12>" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "c SPC <f12>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with numbered function keys (control)
+    Given I bind "C-c C-<f12>" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "c <f12>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with numbered function keys (meta)
+    Given I bind "C-c M-<f12>" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "c g <f12>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with numbered function keys (control+shift)
+    Given I bind "C-c C-S-<f12>" to "beginning-of-buffer"
+    And I go to end of buffer
+    And I send the key sequence "c S-<f12>"
+    Then the cursor should be at point "1"
