@@ -8,7 +8,7 @@
 ;; Copyright (C) 2020 Akhil Wali
 
 ;; Author: Chris Done <chrisdone@gmail.com>
-;; URL: https://github.com/chrisdone/god-mode
+;; URL: https://github.com/emacsorphanage/god-mode
 ;; Version: 2.16.0
 ;; Package-Requires: ((emacs "24.4"))
 
