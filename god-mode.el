@@ -42,7 +42,13 @@
 (defvar god-local-mode-paused nil)
 (make-variable-buffer-local 'god-local-mode-paused)
 
-(defcustom god-mod-alist
+;; DEPRECATED
+(defvaralias 'god-mod-alist 'god-mode-alist
+  "Alias of `god-mode-alist' for backward compatibility.
+Use `god-mode-alist' instead.")
+(make-obsolete 'god-mod-alist 'god-mode-alist "2.16.1")
+
+(defcustom god-mode-alist
   '((nil . "C-")
     ("g" . "M-")
     ("G" . "C-M-"))
@@ -178,9 +184,9 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
       (execute-kbd-macro binding))))
 
 (defun god-mode-upper-p (key)
-  "Check if KEY is an upper case character not present in `god-mod-alist'."
+  "Check if KEY is an upper case character not present in `god-mode-alist'."
   (and (characterp key)
-       (not (member key (mapcar #'car god-mod-alist)))
+       (not (member key (mapcar #'car god-mode-alist)))
        (>= key ?A)
        (<= key ?Z)))
 
@@ -231,11 +237,11 @@ Appends to key sequence KEY-STRING-SO-FAR."
       (setq god-literal-sequence t))
      (god-literal-sequence
       (setq key-consumed nil))
-     ((and (stringp key) (assoc key god-mod-alist))
-      (setq next-modifier (cdr (assoc key god-mod-alist))))
+     ((and (stringp key) (assoc key god-mode-alist))
+      (setq next-modifier (cdr (assoc key god-mode-alist))))
      (t
       (setq key-consumed nil
-            next-modifier (cdr (assoc nil god-mod-alist)))))
+            next-modifier (cdr (assoc nil god-mode-alist)))))
     (setq next-key
           (if key-consumed
               (god-mode-sanitized-key-string (read-event key-string-so-far))
