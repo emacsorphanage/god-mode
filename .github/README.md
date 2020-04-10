@@ -1,6 +1,9 @@
 # God Mode — no more RSI
 
 [![melpa-badge][melpa-badge]][melpa-link]
+
+[![melpa-stable-badge][melpa-stable-badge]][melpa-stable-link]
+
 [![gh-actions-badge][gh-actions-badge]][gh-actions-link]
 
 ***NOTE***: Emacs 24.4 is required for this package to work well!
@@ -255,6 +258,8 @@ further details.
 [nice-keybindings]: https://github.com/emacsorphanage/god-mode#nice-keybindings
 [switch-caps-lock-and-esc]: https://askubuntu.com/questions/363346/how-to-permanently-switch-caps-lock-and-esc
 [melpa-link]: https://melpa.org/#/god-mode
+[melpa-stable-link]: https://stable.melpa.org/#/god-mode
 [melpa-badge]: https://melpa.org/packages/god-mode-badge.svg
+[melpa-stable-badge]: https://stable.melpa.org/packages/god-mode-badge.svg
 [gh-actions-link]: https://github.com/emacsorphanage/god-mode/actions
 [gh-actions-badge]: https://github.com/emacsorphanage/god-mode/workflows/CI/badge.svg
