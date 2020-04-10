@@ -1,9 +1,7 @@
 # God Mode — no more RSI
 
 [![melpa-badge][melpa-badge]][melpa-link]
-
 [![melpa-stable-badge][melpa-stable-badge]][melpa-stable-link]
-
 [![gh-actions-badge][gh-actions-badge]][gh-actions-link]
 
 ***NOTE***: Emacs 24.4 is required for this package to work well!
