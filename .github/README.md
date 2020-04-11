@@ -4,7 +4,7 @@
 [![melpa-stable-badge][melpa-stable-badge]][melpa-stable-link]
 [![gh-actions-badge][gh-actions-badge]][gh-actions-link]
 
-***NOTE***: Emacs 24.4 is required for this package to work well!
+_NOTE_: Emacs 24.4 is required for this package to work well.
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of commands and
@@ -41,7 +41,7 @@ Toggle between God mode and non-God mode using `ESC`:
 (global-set-key (kbd "<escape>") 'god-local-mode)
 ```
 
-If you want to enable/disable on *all active and future buffers*, use
+If you want to enable/disable on _all active and future buffers_, use
 this:
 
 ``` lisp
@@ -227,9 +227,9 @@ So that you can run `x1`/`x2`/`x3`/`x0` in god-mode.
 
 ## Global god-mode and exempt major modes
 
-**Note:** This is less necessary in recent god-mode, as god-mode
-  overrides all printable single byte keys, so it will override
-  dired-mode or magit-mode.
+_NOTE_: This is less necessary in recent versions of god-mode, as
+god-mode overrides all printable single byte keys, so it will override
+dired-mode or magit-mode.
 
 If you do `M-x god-mode`, then all buffers will be started in God
 mode. If you don't like that behavior, just use the `god-local-mode`
