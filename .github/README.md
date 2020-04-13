@@ -20,7 +20,7 @@ In the example below, you can see how much effort is reduced:
     Before: C-p C-k C-n M-^ ) C-j C-y M-r C-x z z M-2 M-g M-g C-x C-s
     After:    p   k   n g ^ )   j   y g r     . .   2   g   g   x   s
 
-(Regarding <kbd>.</kbd>, see [useful key bindings section][useful-key-bindings].)
+(Regarding <kbd>.</kbd>, see the [useful key bindings section][useful-key-bindings].)
 
 You'll find this mode surprisingly natural, as you would already know how to use
 your existing Emacs commands. Whenever you feel like it, you can explicitly use
