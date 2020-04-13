@@ -63,11 +63,30 @@ Use `god-mode-alist' instead.")
   :type 'string)
 
 (defcustom god-exempt-major-modes
-  '(dired-mode
+  '(Custom-mode
+    Info-mode
+    ag-mode
+    calculator-mode
+    calendar-mode
+    cider-test-report-mode
+    compilation-mode
+    debugger-mode
+    dired-mode
+    edebug-mode
+    ediff-mode
+    eww-mode
+    geben-breakpoint-list-mode
+    git-commit-mode                     ; For versions prior to Magit 2.1.0
     grep-mode
+    ibuffer-mode
+    magit-popup-mode
+    org-agenda-mode
+    pdf-outline-buffer-mode
+    recentf-dialog-mode
+    sldb-mode
+    sly-db-mode
     vc-annotate-mode
-    git-commit-mode  ; For versions prior to Magit 2.1.0
-    magit-popup-mode)
+    wdired-mode)
   "List of major modes that should not start with `god-local-mode' enabled."
   :group 'god
   :type '(function))
