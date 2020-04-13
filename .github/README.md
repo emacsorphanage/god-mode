@@ -20,7 +20,7 @@ In the example below, you can see how much effort is reduced:
     Before: C-p C-k C-n M-^ ) C-j C-y M-r C-x z z M-2 M-g M-g C-x C-s
     After:    p   k   n g ^ )   j   y g r     . .   2   g   g   x   s
 
-(Regarding <kbd>.</kbd>, see [nice keybindings section][nice-keybindings].)
+(Regarding <kbd>.</kbd>, see [useful key bindings section][useful-key-bindings].)
 
 You'll find this mode surprisingly natural, as you would already know how to use
 your existing Emacs commands. Whenever you feel like it, you can explicitly use
@@ -119,7 +119,7 @@ This package defines the following key mappings:
 
   * <kbd>1</kbd> <kbd>2</kbd> <kbd>f</kbd> → <kbd>M-12</kbd> <kbd>C-f</kbd>
 
-* If you use some of the [nice keybindings][nice-keybindings],
+* If you use some of the [useful key bindings][useful-key-bindings],
   <kbd>z</kbd> or <kbd>.</kbd> can repeat the previous command:
 
   * <kbd>g</kbd> <kbd>f</kbd> <kbd>.</kbd> <kbd>.</kbd> → <kbd>M-f</kbd>
@@ -216,7 +216,7 @@ mapping that calls `org-self-insert-command` in `org-mode`:
 (define-key god-local-mode-map [remap self-insert-command] #'my-god-mode-self-insert)
 ```
 
-## Nice keybindings
+## Useful key bindings
 
 The following key bindings are popular:
 
@@ -266,7 +266,7 @@ disabled in the current buffer. See the `god-exempt-predicates` variable and its
 default members `god-exempt-mode-p`, `god-comint-mode-p`, `god-view-mode-p` and
 `god-special-mode-p` for further details.
 
-[nice-keybindings]: #nice-keybindings
+[useful-key-bindings]: #useful-key-bindings
 [key-mapping]: #key-mapping
 [switch-caps-lock-and-esc]: https://askubuntu.com/questions/363346/how-to-permanently-switch-caps-lock-and-esc
 [melpa-link]: https://melpa.org/#/god-mode
