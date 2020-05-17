@@ -389,6 +389,8 @@ parameter to help enforce this restriction."
                       (with-current-buffer buffer
                         (unwind-protect (god-local-mode 0)
                           (remove-hook 'post-command-hook post-hook)))))
+                   (kill-temp-map
+                    (set-transient-map temp-map 'god-prefix-command-p cleanup))
                    (post-hook
                     (lambda ()
                       (unless (and
@@ -398,9 +400,7 @@ parameter to help enforce this restriction."
                                ;; `this-command' has not changed.  For example,
                                ;; `execute-extended-command' behaves this way.
                                (not (window-minibuffer-p)))
-                        (funcall kill-temp-map))))
-                   (kill-temp-map
-                    (set-transient-map temp-map 'god-prefix-command-p cleanup)))
+                        (funcall kill-temp-map)))))
             (add-hook 'post-command-hook post-hook)
             ;; Pass the current prefix argument along to the next command
             (setq prefix-arg current-prefix-arg)
