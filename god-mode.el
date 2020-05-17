@@ -380,8 +380,6 @@ parameter to help enforce this restriction."
           (message "Switched to God mode for the next command ...")
           (letrec ((caller this-command)
                    (buffer (current-buffer))
-                   (temp-map (make-composed-keymap
-                              (cons god-local-mode-map (current-active-maps))))
                    (cleanup
                     (lambda ()
                       ;; Perform cleanup in original buffer even if the command
@@ -389,8 +387,9 @@ parameter to help enforce this restriction."
                       (with-current-buffer buffer
                         (unwind-protect (god-local-mode 0)
                           (remove-hook 'post-command-hook post-hook)))))
-                   (kill-temp-map
-                    (set-transient-map temp-map 'god-prefix-command-p cleanup))
+                   (kill-transient-map
+                    (set-transient-map
+                     god-local-mode-map 'god-prefix-command-p cleanup))
                    (post-hook
                     (lambda ()
                       (unless (and
@@ -400,7 +399,7 @@ parameter to help enforce this restriction."
                                ;; `this-command' has not changed.  For example,
                                ;; `execute-extended-command' behaves this way.
                                (not (window-minibuffer-p)))
-                        (funcall kill-temp-map)))))
+                        (funcall kill-transient-map)))))
             (add-hook 'post-command-hook post-hook)
             ;; Pass the current prefix argument along to the next command
             (setq prefix-arg current-prefix-arg)
