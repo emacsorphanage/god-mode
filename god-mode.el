@@ -351,6 +351,7 @@ Members of the `god-exempt-major-modes' list are exempt."
            (throw 'disable t))
          (setq preds (cdr preds)))))))
 
+;;;###autoload
 (defun god-execute-with-current-bindings (&optional called-interactively)
     "Execute a single command from God mode, preserving current keybindings.
 
