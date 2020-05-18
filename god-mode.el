@@ -89,7 +89,7 @@ Use `god-mode-alist' instead.")
     wdired-mode)
   "List of major modes that should not start with `god-local-mode' enabled."
   :group 'god
-  :type '(function))
+  :type '(repeat symbol))
 
 (defcustom god-exempt-predicates
   (list #'god-exempt-mode-p
