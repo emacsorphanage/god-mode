@@ -310,9 +310,9 @@ STATUS is passed as an argument to `god-local-mode'."
 Members of the `god-exempt-major-modes' list are exempt."
   (memq major-mode god-exempt-major-modes))
 
-(defun god-mode-child-of-p (major-mode parent-mode)
-  "Return non-nil if MAJOR-MODE is derived from PARENT-MODE."
-  (let ((parent (get major-mode 'derived-mode-parent)))
+(defun god-mode-child-of-p (mode parent-mode)
+  "Return non-nil if MODE is derived from PARENT-MODE."
+  (let ((parent (get mode 'derived-mode-parent)))
     (cond ((eq parent parent-mode))
           ((not (null parent))
            (god-mode-child-of-p parent parent-mode))
