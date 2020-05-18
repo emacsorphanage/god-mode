@@ -10,7 +10,7 @@
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/emacsorphanage/god-mode
 ;; Version: 2.16.2
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is not part of GNU Emacs.
 
