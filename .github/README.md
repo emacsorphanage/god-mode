@@ -266,81 +266,43 @@ disabled in the current buffer. See the `god-exempt-predicates` variable and its
 default members `god-exempt-mode-p`, `god-comint-mode-p`, `god-view-mode-p` and
 `god-special-mode-p` for further details.
 
-## Use with Evil
+## Usage with Evil
 
 [Evil][evil] is a popular Emacs package that provides modal editing in the style
-of Vi. While it doesn't always work well with God mode by default, there are
-some simple customizations that enable them to be used together smoothly.
+of Vi. While Evil doesn't always work well with God mode, there are a few simple
+customizations that enable them to be used together smoothly.
 
-### Considerations
+* For running occasional and single commands in God mode, the built-in
+  `god-execute-with-current-bindings` command works well with Evil without
+  additional customization. This is quite similar to Evil's
+  `evil-execute-in-emacs-state` command. All Evil bindings remain available when
+  using `god-execute-with-current-bindings`. For example, executing
+  `god-execute-with-current-bindings` and entering <kbd>v</kbd> will execute
+  `evil-visual-block`, which is bound to <kbd>C-v</kbd> in Evil's Normal state.
 
-When choosing a solution, consider the following questions:
-* Do I wish to use God mode for occasional, single commands (similar in spirit
-to `evil-execute-in-emacs-state`), or to use it in a sustained manner?
-* Do I need Evil-specific keybindings to be accessible within God mode, or will
-I use God mode to access default Emacs bindings? For example, when I press
-<kbd>v</kbd> in God mode, should it run `evil-visual-block` (Evil's default
-binding for <kbd>C-v</kbd>) or `scroll-up-command` (Emacs' default)?
-* Do I want God mode to have a dedicated state within Evil, or do I want to
-remain inside the classic Evil states while using it?
+* For sustained usage of God mode, it's a bit trickier as keybindings in Evil
+  states generally override God mode. For example, if God mode is activated in
+  Normal state, entering <kbd>v</kbd> executes `evil-visual-char`, which is
+  bound to <kbd>v</kbd> in Normal state, instead of executing
+  `evil-visual-block`. A good option to use Evil's state-specific keybindings
+  through God mode is to create an intercept keymap using
+  `evil-make-intercept-map` and `god-local-mode-map`. For example, you can
+  enable use of God mode in Normal state as follows:
 
-### Using built-in functionality
+  ```emacs-lisp
+  (evil-make-intercept-map
+   (evil-get-auxiliary-keymap god-local-mode-map 'god t t) 'normal)
+  ```
 
-For running occasional, single commands via God mode, the built-in command
-`god-execute-with-current-bindings` works well with Evil without additional
-customization. All Evil bindings remain available when using this command,
-so e.g. pressing <kbd>v</kbd> will run `evil-visual-block`.
-
-For sustained usage of God mode, it gets trickier. Evil's keybindings in Motion,
-Normal, and Visual states generally override God mode. For example, if I am in
-Normal state and activate God mode, pressing <kbd>v</kbd> runs the Normal state
-binding for <kbd>v</kbd> (`evil-visual-char`) just as though God mode were not
-active. This behavior may be fine if all you want to do is run Emacs commands
-using God mode from within Insert state, since Evil doesn't bind most unmodified
-keys in Insert. If you need to access Evil bindings using God state, you'll need
-to apply the following customization for each Evil state `STATE` where you wish
-to do so:
-
-```emacs-lisp
-(evil-make-intercept-map
-     (evil-get-auxiliary-keymap god-local-mode-map 'god t t) 'STATE)
-```
-
-For example:
-
-```emacs-lisp
-(evil-make-intercept-map
-     (evil-get-auxiliary-keymap god-local-mode-map 'god t t) 'normal)
-```
-
-As a reminder these customizations are *not* necessary if you only use God mode
-via `god-execute-with-current-bindings`.
-
-### `evil-god-state`
-
-Another option is to use the package [`evil-god-state`][evil-god-state].
-This package provides a dedicated Evil state for using God mode.
-
-For running occasional, single commands via God mode, the package provides
-`evil-execute-in-god-state`. This works similar to
-`god-execute-with-current-bindings`. For sustained use, just use the command
-`evil-god-state`.
-
-An advantage of using a dedicated Evil state is that it provides built-in
-integration with the Evil mode line indicator. A disadvantage is that Evil's
-state-specific keybindings from other states are not available in God state.
-This is true whether using `evil-god-state` directly, or via
-`evil-execute-in-god-state`.  Thus, `evil-god-state` is most useful for
-accessing Emacs default bindings through God mode.
-
-### Summary
-
-To minimize the amount of customization you must apply:
-* If you do not want a dedicated Evil state for God mode, and/or want to access
-Evil state-specific bindings via God mode, use built-in God mode features as
-described.
-* If you want a dedicated Evil state for God mode, and/or want to access only
-Emacs default bindings via God mode, use `evil-god-state`.
+* Another option to use God mode with Evil is to use the
+  [`evil-god-state`][evil-god-state] package, which provides a dedicated Evil
+  state for using God mode. For running occasional, single commands through God
+  mode, use the `evil-execute-in-god-state` command. This works similar to
+  `god-execute-with-current-bindings`. For sustained use of God mode, use the
+  `evil-god-state` command. `evil-god-state` is also useful for accessing
+  default Emacs keybindings through God mode. However, a disadvantage of
+  `evil-god-state` is that Evil's state-specific keybindings will not be
+  available in God mode.
 
 [useful-key-bindings]: #useful-key-bindings
 [key-mapping]: #key-mapping
