@@ -351,6 +351,76 @@ Members of the `god-exempt-major-modes' list are exempt."
            (throw 'disable t))
          (setq preds (cdr preds)))))))
 
+;;;###autoload
+(defun god-execute-with-current-bindings (&optional called-interactively)
+    "Execute a single command from God mode, preserving current keybindings.
+
+This command activates God mode temporarily, and deactivates God
+mode as soon as the next command is run.  Prefix arguments do not
+count as commands for this purpose, and do not cause God mode to
+exit.  Moreover, any prefix argument that exists at the time of
+this command's invocation is passed along to the next command.
+
+Unlike normal use of God mode, this command makes available all
+keybindings that were active at the time of its invocation,
+including keybindings that are normally invisible to God mode,
+such as those in `emulation-mode-map-alists' or text overlay
+properties.  This makes it suitable for use with packages like
+Evil that utilize such higher-priority keymaps.  (See Info
+node `(elisp)Active Keymaps' for technical details on keymap
+precedence.  For an alternative to this command, check out the
+evil-god-state package, available on MELPA.)
+
+This command has no effect when called from within God mode.
+
+For interactive use only.  CALLED-INTERACTIVELY is a dummy
+parameter to help enforce this restriction."
+    (interactive "d")
+    (if called-interactively
+        (unless god-local-mode
+          (message "Switched to God mode for the next command ...")
+          (letrec ((caller this-command)
+                   (buffer (current-buffer))
+                   (cleanup
+                    (lambda ()
+                      ;; Perform cleanup in original buffer even if the command
+                      ;; switched buffers
+                      (with-current-buffer buffer
+                        (unwind-protect (god-local-mode 0)
+                          (remove-hook 'post-command-hook post-hook)))))
+                   (kill-transient-map
+                    (set-transient-map
+                     god-local-mode-map 'god-prefix-command-p cleanup))
+                   (post-hook
+                    (lambda ()
+                      (unless (and
+                               (eq this-command caller)
+                               ;; If we've entered the minibuffer, this implies
+                               ;; a non-prefix command was run, even if
+                               ;; `this-command' has not changed.  For example,
+                               ;; `execute-extended-command' behaves this way.
+                               (not (window-minibuffer-p)))
+                        (funcall kill-transient-map)))))
+            (add-hook 'post-command-hook post-hook)
+            ;; Pass the current prefix argument along to the next command
+            (setq prefix-arg current-prefix-arg)
+            ;; Technically we don't need to activate God mode since the
+            ;; transient keymap is already in place, but it's useful to provide
+            ;; a mode line lighter and run any hook functions the user has set
+            ;; up.  This could be made configurable in the future.
+            (god-local-mode 1)))
+      (error "This function should only be called interactively")))
+
+(defun god-prefix-command-p ()
+  "Return non-nil if the current command is a \"prefix\" command.
+This includes prefix arguments and any other command that should
+be ignored by `god-execute-with-current-bindings'."
+  (memq this-command '(god-mode-self-insert
+                       digit-argument
+                       negative-argument
+                       universal-argument
+                       universal-argument-more)))
+
 (provide 'god-mode)
 
 ;;; god-mode.el ends here
