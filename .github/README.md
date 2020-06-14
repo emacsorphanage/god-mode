@@ -311,7 +311,7 @@ customizations that enable them to be used together smoothly.
 [melpa-stable-link]: https://stable.melpa.org/#/god-mode
 [melpa-badge]: https://melpa.org/packages/god-mode-badge.svg
 [melpa-stable-badge]: https://stable.melpa.org/packages/god-mode-badge.svg
-[gh-actions-link]: https://github.com/emacsorphanage/god-mode/actions
-[gh-actions-badge]: https://github.com/emacsorphanage/god-mode/workflows/CI/badge.svg
+[gh-actions-link]: https://github.com/emacsorphanage/god-mode/actions?query=workflow%3ACI+branch%3Amaster
+[gh-actions-badge]: https://github.com/emacsorphanage/god-mode/workflows/CI/badge.svg?branch=master
 [evil]: https://github.com/emacs-evil/evil
 [evil-god-state]: https://github.com/gridaphobe/evil-god-state
