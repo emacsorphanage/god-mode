@@ -189,18 +189,19 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
   (let* ((initial-key (aref (this-command-keys-vector)
                             (- (length (this-command-keys-vector)) 1)))
          (binding (god-mode-lookup-key-sequence initial-key)))
-    ;; For now, set the shift-translation status only for alphabetic keys.
-    (when (god-mode-upper-p initial-key)
-      (setq this-command-keys-shift-translated t))
-    (setq this-original-command binding)
-    (setq this-command binding)
-    ;; `real-this-command' is used by emacs to populate
-    ;; `last-repeatable-command', which is used by `repeat'.
-    (setq real-this-command binding)
-    (setq god-literal-sequence nil)
-    (if (commandp binding t)
-        (call-interactively binding)
-      (execute-kbd-macro binding))))
+    (when binding
+      ;; For now, set the shift-translation status only for alphabetic keys.
+      (when (god-mode-upper-p initial-key)
+        (setq this-command-keys-shift-translated t))
+      (setq this-original-command binding)
+      (setq this-command binding)
+      ;; `real-this-command' is used by emacs to populate
+      ;; `last-repeatable-command', which is used by `repeat'.
+      (setq real-this-command binding)
+      (setq god-literal-sequence nil)
+      (if (commandp binding t)
+          (call-interactively binding)
+        (execute-kbd-macro binding)))))
 
 (defun god-mode-upper-p (key)
   "Check if KEY is an upper case character not present in `god-mode-alist'."
@@ -248,6 +249,20 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
   (or (cdr (assq key god-mode-sanitized-key-alist))
       (char-to-string key)))
 
+(defun god-mode-help-char-dispatch (help-key key-string-so-far)
+  "Invokes `prefix-help-command' by entering the key sequence KEY-STRING-SO-FAR
+followed by the `help-char' key.
+HELP-KEY contains the key that caused `god-mode-help-char-dispatch' to be called
+from the command loop."
+  ;; Adding an element (t . key) to `unread-command-events' will add key to
+  ;; the current command's key sequence.
+  (setq unread-command-events
+        (cl-loop for key in (append (read-kbd-macro key-string-so-far t)
+                                    (list help-char))
+                 collect (cons t key)))
+  ;; Return nil so that `god-mode-lookup-command' doesn't perform any action.
+  nil)
+
 (defun god-key-string-after-consuming-key (key key-string-so-far)
   "Interpret god-mode special keys for KEY.
 Consumes more keys if appropriate.
@@ -269,31 +284,34 @@ Appends to key sequence KEY-STRING-SO-FAR."
           (if key-consumed
               (god-mode-sanitized-key-string (read-event key-string-so-far))
             key))
-    (when (and (= (length next-key) 1)
-               (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu")
-               ;; If C- is part of the modifier, S- needs to be given
-               ;; in order to distinguish the uppercase from the
-               ;; lowercase bindings. If C- is not in the modifier,
-               ;; then emacs natively treats uppercase differently
-               ;; from lowercase, and the S- modifier should not be
-               ;; given
-               (string-prefix-p "C-" next-modifier))
-      (setq next-modifier (concat next-modifier "S-")))
-    (if key-string-so-far
-        (concat key-string-so-far " " next-modifier next-key)
-      (concat next-modifier next-key))))
+    (if (and key-string-so-far (string= next-key (format "%c" help-char)))
+        (god-mode-help-char-dispatch next-key key-string-so-far)
+      (when (and (= (length next-key) 1)
+                 (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu")
+                 ;; If C- is part of the modifier, S- needs to be given
+                 ;; in order to distinguish the uppercase from the
+                 ;; lowercase bindings. If C- is not in the modifier,
+                 ;; then emacs natively treats uppercase differently
+                 ;; from lowercase, and the S- modifier should not be
+                 ;; given
+                 (string-prefix-p "C-" next-modifier))
+        (setq next-modifier (concat next-modifier "S-")))
+      (if key-string-so-far
+          (concat key-string-so-far " " next-modifier next-key)
+        (concat next-modifier next-key)))))
 
 (defun god-mode-lookup-command (key-string)
   "Execute extended keymaps in KEY-STRING, or call it if it is a command."
-  (let* ((key-vector (read-kbd-macro key-string t))
-         (binding (key-binding key-vector)))
-    (cond ((commandp binding)
-           (setq last-command-event (aref key-vector (- (length key-vector) 1)))
-           binding)
-          ((keymapp binding)
-           (god-mode-lookup-key-sequence nil key-string))
-          (:else
-           (error "God: Unknown key binding for `%s`" key-string)))))
+  (when key-string
+    (let* ((key-vector (read-kbd-macro key-string t))
+           (binding (key-binding key-vector)))
+      (cond ((commandp binding)
+             (setq last-command-event (aref key-vector (- (length key-vector) 1)))
+             binding)
+            ((keymapp binding)
+             (god-mode-lookup-key-sequence nil key-string))
+            (:else
+             (error "God: Unknown key binding for `%s`" key-string))))))
 
 ;;;###autoload
 (defun god-mode-maybe-activate (&optional status)
