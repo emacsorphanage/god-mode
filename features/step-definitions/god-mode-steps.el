@@ -5,19 +5,19 @@
 (require 'seq)
 
 (Given "^I bind a named keyboard macro which kills line to C-c C-r$"
-  (lambda ()
-    (fset 'god-mode-test-keyboard-macro
-          "\C-a\C-k\C-k")
-    (global-set-key (kbd "C-c C-r") 'god-mode-test-keyboard-macro)))
+       (lambda ()
+         (fset 'god-mode-test-keyboard-macro
+               "\C-a\C-k\C-k")
+         (global-set-key (kbd "C-c C-r") 'god-mode-test-keyboard-macro)))
 
 (Given "^I bind \"\\([^\"]+\\)\" to \"\\([^\"]+\\)\""
-  (lambda (key cmd)
-    (local-set-key (kbd key) (intern cmd))))
+       (lambda (key cmd)
+         (local-set-key (kbd key) (intern cmd))))
 
 (Given "^god-mode is enabled for all buffers$"
-  (lambda ()
-    (when (not god-global-mode)
-      (god-mode))))
+       (lambda ()
+         (when (not god-global-mode)
+           (god-mode))))
 
 (Given "^I describe function \"\\(.+\\)\"$"
        (lambda (fn)
