@@ -2,6 +2,8 @@
 ;; files in this directory whose names end with "-steps.el" will be
 ;; loaded automatically by Ecukes.
 
+(require 'seq)
+
 (Given "^I bind a named keyboard macro which kills line to C-c C-r$"
   (lambda ()
     (fset 'god-mode-test-keyboard-macro
@@ -70,6 +72,12 @@
       (lambda ()
         (god-local-mode -1)))
 
+(Then "^there is a \"\\([^\"]+\\)\" buffer$"
+      (lambda (name)
+        (cl-assert
+         (seq-filter (lambda (b) (string-prefix-p name (buffer-name b)))
+                     (buffer-list)))))
+
 (Then "^the buffer's contents should be\\(?: \"\\(.+\\)\"\\|:\\)$"
       "Asserts that the current buffer includes some text.
 
@@ -83,3 +91,17 @@ Examples:
         (let ((actual (buffer-string))
               (message "Expected buffer's contents to be '%s', but was '%s'"))
           (cl-assert (s-equals? expected actual) nil message expected actual))))
+
+(Then "^the buffer's contents should contain\\(?: \"\\(.+\\)\"\\|:\\)$"
+      "Asserts that the current buffer contains some text.
+
+Examples:
+ - Then the buffer's contents should contain  \"CONTENTS\"
+ - Then the buffer's contents should contain:
+     \"\"\"
+     CONTENTS
+     \"\"\""
+      (lambda (expected)
+        (let ((actual (buffer-string))
+              (message "Expected buffer's contents to contain '%s', but was '%s'"))
+          (cl-assert (s-contains? expected actual) nil message expected actual))))
