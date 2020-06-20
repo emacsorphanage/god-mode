@@ -111,7 +111,7 @@ This package defines the following key mappings:
    * <kbd>g</kbd> <kbd>f</kbd> → <kbd>M-f</kbd>
 
 * <kbd>G</kbd> is used to indicate both the control and meta modifiers
-  (<kbd>C-M-</kbd>). This key can be also changed through `god-mode-alist`. Here
+  (<kbd>C-M-</kbd>). This key can also be changed through `god-mode-alist`. Here
   are some examples:
 
    * <kbd>G</kbd> <kbd>x</kbd> → <kbd>C-M-x</kbd>
