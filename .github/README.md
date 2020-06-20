@@ -51,7 +51,7 @@ God mode can be toggled through `god-local-mode` using the escape key
 ```
 
 If you want to toggle God mode on _all active and future buffers_, use
-`god-mod-all` as follows:
+`god-mode-all` as follows:
 
 ```emacs-lisp
 (global-set-key (kbd "<escape>") #'god-mode-all)
