@@ -206,7 +206,7 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
 (defun god-mode-upper-p (key)
   "Check if KEY is an upper case character not present in `god-mode-alist'."
   (and (characterp key)
-       (not (member key (mapcar #'car god-mode-alist)))
+       (not (member (char-to-string key) (mapcar #'car god-mode-alist)))
        (>= key ?A)
        (<= key ?Z)))
 
