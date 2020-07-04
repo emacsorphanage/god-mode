@@ -105,3 +105,11 @@ Examples:
         (let ((actual (buffer-string))
               (message "Expected buffer's contents to contain '%s', but was '%s'"))
           (cl-assert (s-contains? expected actual) nil message expected actual))))
+
+(Then "^region's contents should be\\(?: \"\\(.+\\)\"\\|:\\)$"
+      "Asserts that the current region inclues some text."
+      (lambda (expected)
+        (let ((actual (buffer-substring-no-properties
+                       (region-beginning) (region-end)))
+              (message "Expected region's contents to be '%s', but was '%s'"))
+          (cl-assert (s-equals? expected actual) nil message expected actual))))
