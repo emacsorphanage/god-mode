@@ -9,12 +9,12 @@ Feature: Regions
 
   Scenario: mark is preserved (control)
     When I send the key sequence "SPC f"
-    Then "H" is selected in the buffer
+    Then the region should be "H"
 
   Scenario: mark is preserved (meta)
     When I send the key sequence "SPC gf"
-    Then "Here" is selected in the buffer
+    Then the region should be "Here"
 
   Scenario: mark is preserved (control+meta)
     When I send the key sequence "SPC gfGf"
-    Then "Here we" is selected in the buffer
+    Then the region should be "Here we"
