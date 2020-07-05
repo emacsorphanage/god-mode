@@ -46,10 +46,6 @@
          (require 'ielm)
          (ielm)))
 
-(When "I switch to buffer \"\\(.+\\)\""
-      (lambda (buffer)
-        (switch-to-buffer buffer)))
-
 (When "I send the key sequence \"\\(.+\\)\""
       (lambda (keys)
         (execute-kbd-macro (kbd keys))))
