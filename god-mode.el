@@ -407,9 +407,11 @@ parameter to help enforce this restriction."
                     (lambda ()
                       ;; Perform cleanup in original buffer even if the command
                       ;; switched buffers
-                      (with-current-buffer buffer
-                        (unwind-protect (god-local-mode 0)
-                          (remove-hook 'post-command-hook post-hook)))))
+                      (if (buffer-live-p buffer)
+                        (with-current-buffer buffer
+                          (unwind-protect (god-local-mode 0)
+                            (remove-hook 'post-command-hook post-hook)))
+                        (remove-hook 'post-command-hook post-hook))))
                    (kill-transient-map
                     (set-transient-map
                      god-local-mode-map 'god-prefix-command-p cleanup))
