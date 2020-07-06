@@ -293,7 +293,7 @@ Appends to key sequence KEY-STRING-SO-FAR."
                  ;; lowercase bindings. If C- is not in the modifier,
                  ;; then emacs natively treats uppercase differently
                  ;; from lowercase, and the S- modifier should not be
-                 ;; given
+                 ;; supplied.
                  (string-prefix-p "C-" next-modifier))
         (setq next-modifier (concat next-modifier "S-")))
       (if key-string-so-far
