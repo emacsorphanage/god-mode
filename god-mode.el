@@ -270,7 +270,7 @@ Appends to key sequence KEY-STRING-SO-FAR."
   (let ((key-consumed t) (next-modifier "") next-key)
     (message key-string-so-far)
     (cond
-     ;; Don't check for god-literal-key with the first key
+     ;; Don't check for `god-literal-key' with the first key.
      ((and key-string-so-far (string= key god-literal-key))
       (setq god-literal-sequence t))
      (god-literal-sequence
@@ -406,7 +406,7 @@ parameter to help enforce this restriction."
                    (cleanup
                     (lambda ()
                       ;; Perform cleanup in original buffer even if the command
-                      ;; switched buffers
+                      ;; switched buffers.
                       (if (buffer-live-p buffer)
                         (with-current-buffer buffer
                           (unwind-protect (god-local-mode 0)
@@ -426,7 +426,7 @@ parameter to help enforce this restriction."
                                (not (window-minibuffer-p)))
                         (funcall kill-transient-map)))))
             (add-hook 'post-command-hook post-hook)
-            ;; Pass the current prefix argument along to the next command
+            ;; Pass the current prefix argument along to the next command.
             (setq prefix-arg current-prefix-arg)
             ;; Technically we don't need to activate God mode since the
             ;; transient keymap is already in place, but it's useful to provide
