@@ -69,6 +69,15 @@ This means that `magit-mode` or `dired-mode`, for example, will also enter God
 mode when you activate it in all buffers. This means you can always reliably use
 God mode commands in any buffer.
 
+When God mode is enabled, entering function keys will be translated to use
+appropriate key modifiers. For example, entering <kbd><f5></kbd> is translated
+to <kbd>C-<f5></kbd>. To disable this translation, you can use the
+`god-mode-enable-function-key-translation` variable, as follows:
+
+``` emacs-lisp
+(setq god-mode-enable-function-key-translation nil)
+```
+
 Also, you can add this to your `.xmodmap` to rebind the caps lock key to the
 escape key:
 

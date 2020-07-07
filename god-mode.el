@@ -102,6 +102,13 @@ All predicates must return nil for `god-local-mode' to start."
   :group 'god
   :type '(repeat function))
 
+(defcustom god-mode-enable-function-key-translation t
+  "Enables translation of function keys to use modifier keys.
+For example, if this variable is non-nil, then entering `<f5>'
+in God mode will be translated to `C-<f5>'."
+  :group 'god
+  :type 'boolean)
+
 (defun god-mode-make-f-key (n &optional shift)
   "Get the event for numbered function key N, with shift status SHIFT.
 For example, calling with arguments 5 and t yields the symbol `S-f5'."
@@ -115,9 +122,10 @@ For example, calling with arguments 5 and t yields the symbol `S-f5'."
       (while (< i 256)
         (define-key map (vector i) 'god-mode-self-insert)
         (setq i (1+ i))))
-    (dotimes (i 35)
-      (define-key map (vector (god-mode-make-f-key (1+ i))) 'god-mode-self-insert)
-      (define-key map (vector (god-mode-make-f-key (1+ i) t)) 'god-mode-self-insert))
+    (when god-mode-enable-function-key-translation
+      (dotimes (i 35)
+        (define-key map (vector (god-mode-make-f-key (1+ i))) 'god-mode-self-insert)
+        (define-key map (vector (god-mode-make-f-key (1+ i) t)) 'god-mode-self-insert)))
     (define-key map (kbd "DEL") nil)
     map))
 
