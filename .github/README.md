@@ -7,8 +7,8 @@
 _NOTE_: Emacs 25.1 is required for this package to work well.
 
 This is a global minor mode for entering Emacs commands without
-modifier keys. It's similar to Vim's separation of commands and
-insertion mode.
+modifier keys. It's similar to Vim's separation of command mode and
+insert mode.
 
 All existing key bindings will work in God mode. It's only there to reduce your
 usage of modifier keys.
