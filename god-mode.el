@@ -232,23 +232,23 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
 (defvar god-mode-sanitized-key-alist
   (append
    '((tab . "TAB")
-     (S-iso-lefttab . "S-TAB")
      (?\  . "SPC")
      (left . "<left>")
      (right . "<right>")
      (up . "<up>")
      (down . "<down>")
+     (prior . "<prior>")
+     (next . "<next>")
+     (backspace . "DEL")
+     (return . "RET")
+     (S-iso-lefttab . "S-TAB")
      ;; Use key code for S-SPC
      (33554464 . "S-SPC")
      (S-left . "S-<left>")
      (S-right . "S-<right>")
      (S-up . "S-<up>")
      (S-down . "S-<down>")
-     (prior . "<prior>")
-     (next . "<next>")
-     (backspace . "DEL")
      (S-backspace . "S-DEL")
-     (return . "RET")
      (S-return . "S-RET"))
    ;; f1..f35 and S-f1..S-f35
    (cl-mapcan (lambda (i)
