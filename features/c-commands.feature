@@ -132,3 +132,27 @@ Feature: C- commands
     And I go to end of buffer
     When I send the key sequence "c S-<f12>"
     Then the cursor should be at point "1"
+
+  Scenario: execute commands with shift and space (meta+shift)
+    Given I bind "M-S-SPC" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "g S-SPC"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with shift and return (meta+shift)
+    Given I bind "M-S-RET" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "g S-<return>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with shift and tab (meta+shift)
+    Given I bind "M-S-TAB" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "g <S-iso-lefttab>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with shift and backspace (meta+shift)
+    Given I bind "M-S-DEL" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "g S-<backspace>"
+    Then the cursor should be at point "1"
