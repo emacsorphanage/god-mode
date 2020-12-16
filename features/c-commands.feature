@@ -109,10 +109,10 @@ Feature: C- commands
     When I send the key sequence "g S-<left>"
     Then the cursor should be at point "1"
 
-  Scenario: execute commands with shifted arrows (space)
-    Given I bind "C-c S-<left>" to "beginning-of-buffer"
+  Scenario: execute commands with shifted arrows (shift)
+    Given I bind "C-c C-S-<left>" to "beginning-of-buffer"
     And I go to end of buffer
-    When I send the key sequence "C-c S-<left>"
+    When I send the key sequence "c S-<left>"
     Then the cursor should be at point "1"
 
   Scenario: execute commands with numbered function keys (literal)
