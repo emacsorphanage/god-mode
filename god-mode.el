@@ -241,15 +241,15 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
      (next . "<next>")
      (backspace . "DEL")
      (return . "RET")
-     (S-iso-lefttab . "S-TAB")
+     (S-iso-lefttab . "<S-iso-lefttab>")
      ;; Use key code for S-SPC
      (33554464 . "S-SPC")
      (S-left . "S-<left>")
      (S-right . "S-<right>")
      (S-up . "S-<up>")
      (S-down . "S-<down>")
-     (S-backspace . "S-DEL")
-     (S-return . "S-RET"))
+     (S-backspace . "<S-backspace>")
+     (S-return . "<S-return>"))
    ;; f1..f35 and S-f1..S-f35
    (cl-mapcan (lambda (i)
                 (list (cons (god-mode-make-f-key i)   (format "<f%d>" i))

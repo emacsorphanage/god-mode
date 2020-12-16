@@ -140,21 +140,21 @@ Feature: C- commands
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shift and return (control+shift)
-    Given I bind "C-c C-S-RET" to "beginning-of-buffer"
+    Given I bind "C-c C-S-<return>" to "beginning-of-buffer"
     And I go to end of buffer
-    When I send the key sequence "c S-<return>"
+    When I send the key sequence "c <S-return>"
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shift and tab (control+shift)
-    Given I bind "C-c C-S-TAB" to "beginning-of-buffer"
+    Given I bind "C-c C-S-<iso-lefttab>" to "beginning-of-buffer"
     And I go to end of buffer
     When I send the key sequence "c <S-iso-lefttab>"
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shift and backspace (control+shift)
-    Given I bind "C-c C-S-DEL" to "beginning-of-buffer"
+    Given I bind "C-c C-S-<backspace>" to "beginning-of-buffer"
     And I go to end of buffer
-    When I send the key sequence "c S-<backspace>"
+    When I send the key sequence "c <S-backspace>"
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shift and space (meta+shift)
@@ -164,19 +164,19 @@ Feature: C- commands
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shift and return (meta+shift)
-    Given I bind "M-S-RET" to "beginning-of-buffer"
+    Given I bind "M-S-<return>" to "beginning-of-buffer"
     And I go to end of buffer
     When I send the key sequence "g S-<return>"
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shift and tab (meta+shift)
-    Given I bind "M-S-TAB" to "beginning-of-buffer"
+    Given I bind "M-S-<iso-lefttab>" to "beginning-of-buffer"
     And I go to end of buffer
     When I send the key sequence "g <S-iso-lefttab>"
     Then the cursor should be at point "1"
 
   Scenario: execute commands with shift and backspace (meta+shift)
-    Given I bind "M-S-DEL" to "beginning-of-buffer"
+    Given I bind "M-S-<backspace>" to "beginning-of-buffer"
     And I go to end of buffer
     When I send the key sequence "g S-<backspace>"
     Then the cursor should be at point "1"
