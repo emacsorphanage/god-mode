@@ -240,6 +240,8 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
      (prior . "<prior>")
      (next . "<next>")
      (backspace . "DEL")
+     ;; FIXME delete key is not picked up `god-mode-self-insert'.
+     (delete . "<delete>")
      (return . "RET")
      (S-iso-lefttab . "<S-iso-lefttab>")
      ;; Use key code for S-SPC
@@ -249,6 +251,7 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
      (S-up . "S-<up>")
      (S-down . "S-<down>")
      (S-backspace . "<S-backspace>")
+     (S-delete . "<S-delete>")
      (S-return . "<S-return>"))
    ;; f1..f35 and S-f1..S-f35
    (cl-mapcan (lambda (i)

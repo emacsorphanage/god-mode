@@ -91,6 +91,12 @@ Feature: C- commands
     When I send the key sequence "c SPC L"
     Then the cursor should be at point "1"
 
+  Scenario: execute commands with delete (control)
+    Given I bind "C-c C-<delete>" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "c <delete>"
+    Then the cursor should be at point "1"
+
   Scenario: execute commands with shifted arrows (control)
     Given I bind "C-x C-S-<left>" to "beginning-of-buffer"
     And I go to end of buffer
@@ -157,6 +163,12 @@ Feature: C- commands
     When I send the key sequence "c <S-backspace>"
     Then the cursor should be at point "1"
 
+  Scenario: execute commands with shift and delete (control+shift)
+    Given I bind "C-c C-S-<delete>" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "c <S-delete>"
+    Then the cursor should be at point "1"
+
   Scenario: execute commands with shift and space (meta+shift)
     Given I bind "M-S-SPC" to "beginning-of-buffer"
     And I go to end of buffer
@@ -179,4 +191,10 @@ Feature: C- commands
     Given I bind "M-S-<backspace>" to "beginning-of-buffer"
     And I go to end of buffer
     When I send the key sequence "g S-<backspace>"
+    Then the cursor should be at point "1"
+
+  Scenario: execute commands with shift and backspace (meta+shift)
+    Given I bind "M-S-<delete>" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "g S-<delete>"
     Then the cursor should be at point "1"
