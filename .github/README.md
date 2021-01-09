@@ -303,8 +303,9 @@ customizations that enable them to be used together smoothly.
   enable use of God mode in Normal state as follows:
 
   ```emacs-lisp
-  (evil-make-intercept-map
-   (evil-get-auxiliary-keymap god-local-mode-map 'god t t) 'normal)
+  (with-eval-after-load 'god-mode
+    (evil-make-intercept-map god-local-mode-map 'normal)
+    (add-hook 'god-local-mode-hook 'evil-normalize-keymaps))
   ```
 
 * Another option to use God mode with Evil is to use the
