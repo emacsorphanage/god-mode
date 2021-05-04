@@ -158,13 +158,13 @@ follows:
 (add-hook 'god-mode-disabled-hook #'my-god-mode-update-cursor)
 ```
 
-## Change modeline color
+## Change mode line color
 
-You can change the entire modeline's foreground and background to indicate
+You can change the entire mode line's foreground and background to indicate
 whether God mode is active as follows:
 
 ```emacs-lisp
-(defun my-god-mode-update-modeline ()
+(defun my-god-mode-update-mode-line ()
   (let ((limited-colors-p (> 257 (length (defined-colors)))))
     (cond (god-local-mode (progn
                             (set-face-background 'mode-line (if limited-colors-p "white" "#e9e2cb"))
@@ -173,8 +173,8 @@ whether God mode is active as follows:
                (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
                (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832")))))))
 
-(add-hook 'god-mode-enabled-hook #'my-god-mode-update-modeline)
-(add-hook 'god-mode-disabled-hook #'my-god-mode-update-modeline)
+(add-hook 'god-mode-enabled-hook #'my-god-mode-update-mode-line)
+(add-hook 'god-mode-disabled-hook #'my-god-mode-update-mode-line)
 ```
 
 ## `overwrite-mode`
