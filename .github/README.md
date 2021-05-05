@@ -143,10 +143,10 @@ This package defines the following key mappings:
   * <kbd>u</kbd> <kbd>c</kbd> <kbd>o</kbd> → <kbd>C-u</kbd> <kbd>C-c</kbd>
     <kbd>C-o</kbd>
 
-## Cursor style to indicate mode
+## Visual indicators for God mode
 
-You can change the cursor style to indicate whether God mode is active as
-follows:
+You can change the cursor style to visually indicate whether God mode is active
+as follows:
 
 ```emacs-lisp
 (defun my-god-mode-update-cursor-type ()
@@ -155,9 +155,7 @@ follows:
 (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
 ```
 
-## Change mode line color
-
-You can change the entire mode line's foreground and background to indicate
+You can also change the foreground and background of the mode line to indicate
 whether God mode is active as follows:
 
 ```emacs-lisp
@@ -172,6 +170,12 @@ whether God mode is active as follows:
 
 (add-hook 'post-command-hook 'my-god-mode-update-mode-line)
 ```
+
+Note that using `post-command-hook` here should not be an issue for performance.
+If you are concerned about performance for any reason, you can use
+`god-mode-enabled-hook` and `god-mode-disabled-hook`.
+With Emacs 27.1+, you can also use [window hooks][window-hooks].
+
 
 ## `overwrite-mode`
 
@@ -325,3 +329,4 @@ customizations that enable them to be used together smoothly.
 [gh-actions-badge]: https://github.com/emacsorphanage/god-mode/workflows/CI/badge.svg?branch=master
 [evil]: https://github.com/emacs-evil/evil
 [evil-god-state]: https://github.com/gridaphobe/evil-god-state
+[window-hooks]: https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Hooks.html
