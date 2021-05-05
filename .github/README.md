@@ -149,13 +149,10 @@ You can change the cursor style to indicate whether God mode is active as
 follows:
 
 ```emacs-lisp
-(defun my-god-mode-update-cursor ()
-  (setq cursor-type (if (or god-local-mode buffer-read-only)
-                        'box
-                      'bar)))
+(defun my-god-mode-update-cursor-type ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
 
-(add-hook 'god-mode-enabled-hook #'my-god-mode-update-cursor)
-(add-hook 'god-mode-disabled-hook #'my-god-mode-update-cursor)
+(add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
 ```
 
 ## Change mode line color
@@ -173,8 +170,7 @@ whether God mode is active as follows:
                (set-face-background 'mode-line (if limited-colors-p "black" "#0a2832"))
                (set-face-background 'mode-line-inactive (if limited-colors-p "black" "#0a2832")))))))
 
-(add-hook 'god-mode-enabled-hook #'my-god-mode-update-mode-line)
-(add-hook 'god-mode-disabled-hook #'my-god-mode-update-mode-line)
+(add-hook 'post-command-hook 'my-god-mode-update-mode-line)
 ```
 
 ## `overwrite-mode`
