@@ -113,6 +113,13 @@ This package defines the following key mappings:
    Note the use of the space key (<kbd>SPC</kbd>)
    to produce <kbd>C-x</kbd> <kbd>s</kbd>.
 
+* The literal key (<kbd>SPC</kbd>) is sticky. This means you don't have to enter 
+  <kbd>SPC</kbd> repeatedly for key bindings such as <kbd>C-x</kbd> <kbd>r</kbd> <kbd>t</kbd>.
+  The literal key can be changed through `god-literal-key`. Here are some examples:
+  
+   * <kbd>x</kbd> <kbd>SPC</kbd> <kbd>r</kbd> <kbd>t</kbd> → <kbd>C-x</kbd> <kbd>r</kbd> <kbd>t</kbd>
+   * <kbd>x</kbd> <kbd>SPC</kbd> <kbd>r</kbd> <kbd>y</kbd> → <kbd>C-x</kbd> <kbd>r</kbd> <kbd>y</kbd>
+
 * <kbd>g</kbd> is used to indicate the meta modifier (<kbd>M-</kbd>). This means
   that there is no way to enter <kbd>C-g</kbd> in God mode, and you must
   therefore type in <kbd>C-g</kbd> directly. This key can be changed through
