@@ -266,6 +266,9 @@ These are also handy:
 (global-set-key (kbd "C-x C-2") #'split-window-below)
 (global-set-key (kbd "C-x C-3") #'split-window-right)
 (global-set-key (kbd "C-x C-0") #'delete-window)
+
+(define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+(define-key god-local-mode-map (kbd "]") #'forward-paragraph)
 ```
 
 So that you can run <kbd>x</kbd> <kbd>1</kbd>, <kbd>x</kbd>
