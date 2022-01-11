@@ -26,8 +26,9 @@ jobs:
         version: ${{ matrix.emacs_version }}
     - uses: actions/checkout@v1
     - uses: conao3/setup-cask@master
+      if: steps.cache-cask-executable.outputs.cache-hit != 'true'
       with:
-        version: 0.8.4
+        version: snapshot
     - name: Install dependencies
       run: 'cask install'
     - name: Run tests
