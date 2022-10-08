@@ -335,6 +335,8 @@ customizations that enable them to be used together smoothly.
   default Emacs keybindings through God mode. However, a disadvantage of
   `evil-god-state` is that Evil's state-specific keybindings will not be
   available in God mode.
+  
+  DO NOT COMMIT
 
 [useful-key-bindings]: #useful-key-bindings
 [key-mapping]: #key-mapping
