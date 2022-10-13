@@ -159,12 +159,15 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
 
 ;;;###autoload
 (defun god-mode ()
-  "Toggle global `god-local-mode'."
+  "Set `god-global-mode` and `god-local-mode' the same. If they already are, toggle them."
   (interactive)
-  (setq god-global-mode (not god-global-mode))
-  (if god-global-mode
-      (god-local-mode 1)
-    (god-local-mode -1)))
+  (if (eq (bound-and-true-p god-local-mode) god-global-mode)
+      (progn
+	   (setq god-global-mode (not god-global-mode))
+	   (if god-global-mode
+	       (god-local-mode 1)
+	     (god-local-mode -1)))
+    (god-local-mode)))
 
 ;;;###autoload
 (defun god-mode-all ()
