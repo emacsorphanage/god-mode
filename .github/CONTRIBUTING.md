@@ -2,7 +2,7 @@
 
 Please write a failing test before submitting pull requests. All new features should be accompanied by new tests.
 
-Tests are written in [Ecukes](http://ecukes.info), an integration testing framework for Emacs.
+Tests are written in [Ecukes](https://github.com/ecukes/ecukes), an integration testing framework for Emacs.
 
 ## Setup
 
