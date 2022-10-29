@@ -468,32 +468,31 @@ be ignored by `god-execute-with-current-bindings'."
   :group 'god
   :type 'boolean)
 
-;; not sure if this is necessary
-(defvar inputted-key-string nil
-  "The key-sequence that will be translated by god-mode into a command.
-Only used when running `god-mode-describe-key'")
+(defvar god-latest-described-command nil)
+
+(advice-add #'god-mode-lookup-command :filter-args
+	    (lambda (key-string)
+	      (setq god-latest-described-command key-string)))
 
 (defun god-mode--help-fn-describe-function (_arg)
   (insert
-   (format-message "\n  %s%s%s\n  %s\n\n"
-		   "(the given key-sequence \""
-		   ;; (help--key-description-fontified
-		   (string-trim inputted-key-string)
-		   ;; )
-		   "\" was translated into this function"
-		   " by `god-mode-describe-key')")))
+   (format-message "\n  %s\n  %s%s\n  %s%s%s\n\n"
+		   "(`god-local-mode' is enabled: "
+		   " the given key-sequence: "
+		   (god-mode-get-described-key-seq)
+		   " corresponds to this key-binding: "
+		   (help--key-description-fontified
+		    god-latest-described-command)
+		   ")")))
 
-(defun god-set-inputted-key-string (&optional key key-string-so-far)
-  (if key
-      (setq inputted-key-string
-	    (concat inputted-key-string
-		    (god-mode-sanitized-key-string
-		     key)
-		    " "))))
-(defun god-record-key-string (str)
-  (setq inputted-key-string
-	(concat inputted-key-string " " str))
-  str)
+(defun god-mode-get-described-key-seq ()
+  ;; (message "these are the latest keys: %s" (recent-keys 'include-cmds))
+  (let* ((latest-keys (recent-keys 'include-cmds))
+	 (latest-describe-key-index
+	  (cl-position '(nil . god-mode-self-insert)
+		       latest-keys :from-end t :test #'equal))
+	 (start-index (+ 3 latest-describe-key-index)))
+    (key-description (seq-subseq latest-keys start-index))))
 
 (defun god-mode-describe-key ()
   "Describe a key-sequence (starting with ARG) as interpreted by `god-mode'.
@@ -506,17 +505,12 @@ Only applied when `god-translate-key-for-description' is t"
       (progn
 	(add-hook 'help-fns-describe-function-functions
 		  #'god-mode--help-fn-describe-function)
-	(advice-add #'god-mode-sanitized-key-string
-		    :filter-return #'god-record-key-string)
-	(setq inputted-key-string nil)
 	(let ((translated-command
 	       (god-mode-lookup-key-sequence)))
 	  (describe-function translated-command))
 	(remove-hook 'help-fns-describe-function-functions
 		     #'god-mode--help-fn-describe-function)
-	(advice-remove #'god-mode-sanitized-key-string
-		       #'god-record-key-string)
-	(setq inputted-key-string nil))
+	(setq god-latest-described-command nil))
     (call-interactively #'describe-key)))
 
 (provide 'god-mode)
