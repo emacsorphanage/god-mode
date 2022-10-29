@@ -127,6 +127,7 @@ For example, calling with arguments 5 and t yields the symbol `S-f5'."
         (define-key map (vector (god-mode-make-f-key (1+ i))) 'god-mode-self-insert)
         (define-key map (vector (god-mode-make-f-key (1+ i) t)) 'god-mode-self-insert)))
     (define-key map (kbd "DEL") nil)
+    (define-key map (kbd "C-h k") #'god-mode-describe-key)
     map))
 
 ;;;###autoload
@@ -189,7 +190,7 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
         (execute-kbd-macro binding)))))
 
 (define-key universal-argument-map (kbd "u")
-  #'god-mode-maybe-universal-argument-more)
+	    #'god-mode-maybe-universal-argument-more)
 
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
@@ -391,7 +392,7 @@ Members of the `god-exempt-major-modes' list are exempt."
 
 ;;;###autoload
 (defun god-execute-with-current-bindings (&optional called-interactively)
-    "Execute a single command from God mode, preserving current keybindings.
+  "Execute a single command from God mode, preserving current keybindings.
 
 This command activates God mode temporarily, and deactivates God
 mode as soon as the next command is run.  Prefix arguments do not
@@ -413,43 +414,43 @@ This command has no effect when called from within God mode.
 
 For interactive use only.  CALLED-INTERACTIVELY is a dummy
 parameter to help enforce this restriction."
-    (interactive "d")
-    (if called-interactively
-        (unless god-local-mode
-          (message "Switched to God mode for the next command ...")
-          (letrec ((caller this-command)
-                   (buffer (current-buffer))
-                   (cleanup
-                    (lambda ()
-                      ;; Perform cleanup in original buffer even if the command
-                      ;; switched buffers.
-                      (if (buffer-live-p buffer)
+  (interactive "d")
+  (if called-interactively
+      (unless god-local-mode
+        (message "Switched to God mode for the next command ...")
+        (letrec ((caller this-command)
+                 (buffer (current-buffer))
+                 (cleanup
+                  (lambda ()
+                    ;; Perform cleanup in original buffer even if the command
+                    ;; switched buffers.
+                    (if (buffer-live-p buffer)
                         (with-current-buffer buffer
                           (unwind-protect (god-local-mode 0)
                             (remove-hook 'post-command-hook post-hook)))
-                        (remove-hook 'post-command-hook post-hook))))
-                   (kill-transient-map
-                    (set-transient-map
-                     god-local-mode-map 'god-prefix-command-p cleanup))
-                   (post-hook
-                    (lambda ()
-                      (unless (and
-                               (eq this-command caller)
-                               ;; If we've entered the minibuffer, this implies
-                               ;; a non-prefix command was run, even if
-                               ;; `this-command' has not changed.  For example,
-                               ;; `execute-extended-command' behaves this way.
-                               (not (window-minibuffer-p)))
-                        (funcall kill-transient-map)))))
-            (add-hook 'post-command-hook post-hook)
-            ;; Pass the current prefix argument along to the next command.
-            (setq prefix-arg current-prefix-arg)
-            ;; Technically we don't need to activate God mode since the
-            ;; transient keymap is already in place, but it's useful to provide
-            ;; a mode line lighter and run any hook functions the user has set
-            ;; up.  This could be made configurable in the future.
-            (god-local-mode 1)))
-      (error "This function should only be called interactively")))
+                      (remove-hook 'post-command-hook post-hook))))
+                 (kill-transient-map
+                  (set-transient-map
+                   god-local-mode-map 'god-prefix-command-p cleanup))
+                 (post-hook
+                  (lambda ()
+                    (unless (and
+                             (eq this-command caller)
+                             ;; If we've entered the minibuffer, this implies
+                             ;; a non-prefix command was run, even if
+                             ;; `this-command' has not changed.  For example,
+                             ;; `execute-extended-command' behaves this way.
+                             (not (window-minibuffer-p)))
+                      (funcall kill-transient-map)))))
+          (add-hook 'post-command-hook post-hook)
+          ;; Pass the current prefix argument along to the next command.
+          (setq prefix-arg current-prefix-arg)
+          ;; Technically we don't need to activate God mode since the
+          ;; transient keymap is already in place, but it's useful to provide
+          ;; a mode line lighter and run any hook functions the user has set
+          ;; up.  This could be made configurable in the future.
+          (god-local-mode 1)))
+    (error "This function should only be called interactively")))
 
 (defun god-prefix-command-p ()
   "Return non-nil if the current command is a \"prefix\" command.
@@ -460,6 +461,63 @@ be ignored by `god-execute-with-current-bindings'."
                        negative-argument
                        universal-argument
                        universal-argument-more)))
+
+(defcustom god-translate-key-for-description
+  t
+  "Whether to use `god-mode-describe-key' when god-mode is enabled."
+  :group 'god
+  :type 'boolean)
+
+;; not sure if this is necessary
+(defvar inputted-key-string nil
+  "The key-sequence that will be translated by god-mode into a command.
+Only used when running `god-mode-describe-key'")
+
+(defun god-mode--help-fn-describe-function (_arg)
+  (insert
+   (format-message "\n  %s%s%s\n  %s\n\n"
+		   "(the given key-sequence \""
+		   ;; (help--key-description-fontified
+		   (string-trim inputted-key-string)
+		   ;; )
+		   "\" was translated into this function"
+		   " by `god-mode-describe-key')")))
+
+(defun god-set-inputted-key-string (&optional key key-string-so-far)
+  (if key
+      (setq inputted-key-string
+	    (concat inputted-key-string
+		    (god-mode-sanitized-key-string
+		     key)
+		    " "))))
+(defun god-record-key-string (str)
+  (setq inputted-key-string
+	(concat inputted-key-string " " str))
+  str)
+
+(defun god-mode-describe-key ()
+  "Describe a key-sequence (starting with ARG) as interpreted by `god-mode'.
+Use `god-mode-lookup-key-sequence' to translate a key-sequence
+into the appropriate command, and use `describe-function' to display
+its information.
+Only applied when `god-translate-key-for-description' is t"
+  (interactive)
+  (if god-translate-key-for-description
+      (progn
+	(add-hook 'help-fns-describe-function-functions
+		  #'god-mode--help-fn-describe-function)
+	(advice-add #'god-mode-sanitized-key-string
+		    :filter-return #'god-record-key-string)
+	(setq inputted-key-string nil)
+	(let ((translated-command
+	       (god-mode-lookup-key-sequence)))
+	  (describe-function translated-command))
+	(remove-hook 'help-fns-describe-function-functions
+		     #'god-mode--help-fn-describe-function)
+	(advice-remove #'god-mode-sanitized-key-string
+		       #'god-record-key-string)
+	(setq inputted-key-string nil))
+    (call-interactively #'describe-key)))
 
 (provide 'god-mode)
 
