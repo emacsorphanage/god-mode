@@ -470,11 +470,11 @@ be ignored by `god-execute-with-current-bindings'."
 
 (defvar god-latest-described-command nil)
 
-(advice-add #'god-mode-lookup-command :filter-args
-	    (lambda (key-string)
-	      (setq god-latest-described-command key-string)))
-
 (defun god-mode--help-fn-describe-function (_arg)
+  "Insert information about `god-mode' key-bindings for the described function.
+The argument is ignored: it's only needed because all hooks in
+`help-fns-describe-function-functions' take the function-name as argument.
+But in our case it's redundant"
   (insert
    (format-message "\n  %s\n  %s%s\n  %s%s%s\n\n"
 		   "(`god-local-mode' is enabled: "
@@ -486,13 +486,21 @@ be ignored by `god-execute-with-current-bindings'."
 		   ")")))
 
 (defun god-mode-get-described-key-seq ()
-  ;; (message "these are the latest keys: %s" (recent-keys 'include-cmds))
+  "Return the keys that were pressed after `god-mode-describe-key' was called."
   (let* ((latest-keys (recent-keys 'include-cmds))
 	 (latest-describe-key-index
 	  (cl-position '(nil . god-mode-self-insert)
 		       latest-keys :from-end t :test #'equal))
 	 (start-index (+ 3 latest-describe-key-index)))
     (key-description (seq-subseq latest-keys start-index))))
+
+;; this is used in `god-mode-describe-key' as advice to `god-mode-lookup-command'
+;; since this function doesn't really have any other uses,
+;; a lambda would also be fine.
+;; But then we wouldn't be able to remove the advice (AFAIK)
+(defun god-set-described-command (key-string)
+  "Set `god-latest-described-command' to KEY-STRING."
+  (setq god-latest-described-command key-string))
 
 (defun god-mode-describe-key ()
   "Describe a key-sequence (starting with ARG) as interpreted by `god-mode'.
@@ -505,12 +513,14 @@ Only applied when `god-translate-key-for-description' is t"
       (progn
 	(add-hook 'help-fns-describe-function-functions
 		  #'god-mode--help-fn-describe-function)
-	(let ((translated-command
-	       (god-mode-lookup-key-sequence)))
-	  (describe-function translated-command))
+	;; for this advice, a lambda would be fine also,
+	;; but then we wouldn't be able to remove the advice
+	(advice-add #'god-mode-lookup-command :filter-args
+	    #'god-set-described-command)
+	(describe-function (god-mode-lookup-key-sequence))
 	(remove-hook 'help-fns-describe-function-functions
 		     #'god-mode--help-fn-describe-function)
-	(setq god-latest-described-command nil))
+	(advice-remove #'god-mode-lookup-command #'god-set-described-command))
     (call-interactively #'describe-key)))
 
 (provide 'god-mode)
