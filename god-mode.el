@@ -506,23 +506,34 @@ its information.
 Only applied when `god-translate-key-for-description' is t:
 when nil, `describe-key' is called instead"
   (interactive)
-  (if god-translate-key-for-description
-      (progn
-	(message "Describe the following key: ")
-	(add-hook 'help-fns-describe-function-functions
-		  #'god-mode--help-fn-describe-function)
-	(advice-add #'god-mode-lookup-command :filter-args
-		    (lambda (key-string)
-		      (setq god-latest-described-command key-string)))
-	(condition-case err
-	    (describe-function (god-mode-lookup-key-sequence))
-	  (wrong-type-argument (describe-key (vector (caddr err)))))
-	(remove-hook 'help-fns-describe-function-functions
-		     #'god-mode--help-fn-describe-function)
+  (if (not god-translate-key-for-description)
+      (call-interactively #'describe-key)
+    (progn
+      (message "Describe the following key or mouse click: ")
+      (advice-add #'god-mode-lookup-command :filter-args
+		  (lambda (key-string)
+		    (setq god-latest-described-command key-string)))
+      (let ((command
+	     ;; if the key or mouse-click is not recognized by god-mode,
+	     ;; we will pass it to the regular `describe-key'
+	     (condition-case err
+		 (god-mode-lookup-key-sequence)
+	       (wrong-type-argument
+		;; due to  how errors are passed,
+		;; we do not have enough information
+		;; to pass menu items
+		(if (not (equal (cddr err) '((menu-bar))))
+		  (describe-key (vector (caddr err))))))))
+	(if command
+	    (progn
+	      (add-hook 'help-fns-describe-function-functions
+			#'god-mode--help-fn-describe-function)
+	      (describe-function command)
+	      (remove-hook 'help-fns-describe-function-functions
+			   #'god-mode--help-fn-describe-function)))
 	(advice-remove #'god-mode-lookup-command
 		       (lambda (key-string)
-			 (setq god-latest-described-command key-string))))
-    (call-interactively #'describe-key)))
+			 (setq god-latest-described-command key-string)))))))
 
 (provide 'god-mode)
 
