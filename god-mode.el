@@ -468,7 +468,8 @@ be ignored by `god-execute-with-current-bindings'."
   :group 'god
   :type 'boolean)
 
-(defvar god-latest-described-command nil)
+(defvar god-latest-described-command nil
+  "The latest command recorded by `god-mode-describe-key'.")
 
 (defun god-mode--help-fn-describe-function (_arg)
   "Insert information about `god-mode' key-bindings for the described function.
@@ -477,8 +478,8 @@ The argument _ARG is ignored: it's only needed because all hooks in
 But in our case it's redundant"
   (insert
    (format-message "\n  %s\n  %s%s\n  %s%s%s\n\n"
-		   "(`god-local-mode' is enabled: "
-		   " the given key-sequence: "
+		   "(`god-local-mode' is enabled. "
+		   " The given key-sequence: "
 		   (god-mode-get-described-key-seq)
 		   " corresponds to this key-binding: "
 		   (help--key-description-fontified
@@ -493,7 +494,6 @@ But in our case it's redundant"
 		       latest-keys :from-end t :test #'equal))
 	 (start-index (+ 3 latest-describe-key-index))
 	 (key-sequence (key-description (seq-subseq latest-keys start-index))))
-    ;; can't use `help--key-description-fontified' here: it prints SPC three times
     (propertize key-sequence
 		'font-lock-face 'help-key-binding
                 'face 'help-key-binding)))
@@ -503,7 +503,8 @@ But in our case it's redundant"
 Use `god-mode-lookup-key-sequence' to translate a key-sequence
 into the appropriate command, and use `describe-function' to display
 its information.
-Only applied when `god-translate-key-for-description' is t"
+Only applied when `god-translate-key-for-description' is t:
+when nil, `describe-key' is called instead"
   (interactive)
   (if god-translate-key-for-description
       (progn
@@ -516,7 +517,6 @@ Only applied when `god-translate-key-for-description' is t"
 	(describe-function (god-mode-lookup-key-sequence))
 	(remove-hook 'help-fns-describe-function-functions
 		     #'god-mode--help-fn-describe-function)
-	;; TODO I'd like to find a more elegant way to do this
 	(advice-remove #'god-mode-lookup-command
 		       (lambda (key-string)
 			 (setq god-latest-described-command key-string))))
