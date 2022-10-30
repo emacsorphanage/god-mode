@@ -494,14 +494,6 @@ But in our case it's redundant"
 	 (start-index (+ 3 latest-describe-key-index)))
     (key-description (seq-subseq latest-keys start-index))))
 
-;; this is used in `god-mode-describe-key' as advice to `god-mode-lookup-command'
-;; since this function doesn't really have any other uses,
-;; a lambda would also be fine.
-;; But then we wouldn't be able to remove the advice (AFAIK)
-(defun god-set-described-command (key-string)
-  "Set `god-latest-described-command' to KEY-STRING."
-  (setq god-latest-described-command key-string))
-
 (defun god-mode-describe-key ()
   "Describe a key-sequence (starting with ARG) as interpreted by `god-mode'.
 Use `god-mode-lookup-key-sequence' to translate a key-sequence
@@ -513,14 +505,16 @@ Only applied when `god-translate-key-for-description' is t"
       (progn
 	(add-hook 'help-fns-describe-function-functions
 		  #'god-mode--help-fn-describe-function)
-	;; for this advice, a lambda would be fine also,
-	;; but then we wouldn't be able to remove the advice
 	(advice-add #'god-mode-lookup-command :filter-args
-	    #'god-set-described-command)
+		    (lambda (key-string)
+		      (setq god-latest-described-command key-string)))
 	(describe-function (god-mode-lookup-key-sequence))
 	(remove-hook 'help-fns-describe-function-functions
 		     #'god-mode--help-fn-describe-function)
-	(advice-remove #'god-mode-lookup-command #'god-set-described-command))
+	;; TODO I'd like to find a more elegant way to do this
+	(advice-remove #'god-mode-lookup-command
+		       (lambda (key-string)
+			 (setq god-latest-described-command key-string))))
     (call-interactively #'describe-key)))
 
 (provide 'god-mode)
