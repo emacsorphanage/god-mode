@@ -472,7 +472,7 @@ be ignored by `god-execute-with-current-bindings'."
 
 (defun god-mode--help-fn-describe-function (_arg)
   "Insert information about `god-mode' key-bindings for the described function.
-The argument is ignored: it's only needed because all hooks in
+The argument _ARG is ignored: it's only needed because all hooks in
 `help-fns-describe-function-functions' take the function-name as argument.
 But in our case it's redundant"
   (insert
@@ -491,11 +491,15 @@ But in our case it's redundant"
 	 (latest-describe-key-index
 	  (cl-position '(nil . god-mode-self-insert)
 		       latest-keys :from-end t :test #'equal))
-	 (start-index (+ 3 latest-describe-key-index)))
-    (key-description (seq-subseq latest-keys start-index))))
+	 (start-index (+ 3 latest-describe-key-index))
+	 (key-sequence (key-description (seq-subseq latest-keys start-index))))
+    ;; can't use `help--key-description-fontified' here: it prints SPC three times
+    (propertize key-sequence
+		'font-lock-face 'help-key-binding
+                'face 'help-key-binding)))
 
 (defun god-mode-describe-key ()
-  "Describe a key-sequence (starting with ARG) as interpreted by `god-mode'.
+  "Describe a key-sequence as interpreted by `god-mode'.
 Use `god-mode-lookup-key-sequence' to translate a key-sequence
 into the appropriate command, and use `describe-function' to display
 its information.
@@ -503,6 +507,7 @@ Only applied when `god-translate-key-for-description' is t"
   (interactive)
   (if god-translate-key-for-description
       (progn
+	(message "Describe the following key: ")
 	(add-hook 'help-fns-describe-function-functions
 		  #'god-mode--help-fn-describe-function)
 	(advice-add #'god-mode-lookup-command :filter-args
