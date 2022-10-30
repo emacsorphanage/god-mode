@@ -514,7 +514,9 @@ when nil, `describe-key' is called instead"
 	(advice-add #'god-mode-lookup-command :filter-args
 		    (lambda (key-string)
 		      (setq god-latest-described-command key-string)))
-	(describe-function (god-mode-lookup-key-sequence))
+	(condition-case err
+	    (describe-function (god-mode-lookup-key-sequence))
+	  (wrong-type-argument (describe-key (vector (caddr err)))))
 	(remove-hook 'help-fns-describe-function-functions
 		     #'god-mode--help-fn-describe-function)
 	(advice-remove #'god-mode-lookup-command
