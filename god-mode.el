@@ -500,16 +500,15 @@ But in our case it's redundant"
 
 (defun god-mode-describe-key ()
   "Describe a key-sequence as interpreted by `god-mode'.
-Use `god-mode-lookup-key-sequence' to translate a key-sequence
-into the appropriate command, and use `describe-function' to display
-its information.
+Prompt for a key sequence, use `god-mode-lookup-key-sequence' to translate it
+into the appropriate command, and use `describe-function' to describe it.
 Only applied when `god-translate-key-for-description' is t:
 when nil, `describe-key' is called instead"
   (interactive)
   (if (not god-translate-key-for-description)
       (call-interactively #'describe-key)
     (progn
-      (message "Describe the following key or mouse click: ")
+      (message "Describe the following god-mode key or mouse click: ")
       (advice-add #'god-mode-lookup-command :filter-args
 		  (lambda (key-string)
 		    (setq god-latest-described-command key-string)))
