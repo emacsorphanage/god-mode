@@ -508,12 +508,12 @@ when nil, `describe-key' is called instead"
   (if (not god-translate-key-for-description)
       (call-interactively #'describe-key)
     (progn
-      (message "Describe the following god-mode key or mouse click: ")
+      (message "Describe the following god-mode key: ")
       (advice-add #'god-mode-lookup-command :filter-args
 		  (lambda (key-string)
 		    (setq god-latest-described-command key-string)))
       (let ((command
-	     ;; if the key or mouse-click is not recognized by god-mode,
+	     ;; if the key is not recognized by god-mode,
 	     ;; we will pass it to the regular `describe-key'
 	     (condition-case err
 		 (god-mode-lookup-key-sequence)

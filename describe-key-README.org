@@ -1,0 +1,49 @@
+* describe-key now works in god-mode
+** example behavior/output
+*given*:
+ - `god-local-mode' enabled
+ - [C-h k] bound to `god-mode-describe-key'
+ - inputted key sequence: [h SPC k h SPC k]
+ \rightarrow this will be the output in the Help buffer:
+
+#+begin_quote
+god-mode-describe-key is an interactive native-compiled Lisp function
+in ‘god-mode.el’.
+
+It is bound to C-h k.
+
+(god-mode-describe-key)
+
+Describe a key-sequence as interpreted by ‘god-mode’.
+Use ‘god-mode-lookup-key-sequence’ to translate a key-sequence
+into the appropriate command, and use ‘describe-function’ to display
+its information.
+Only applied when ‘god-translate-key-for-description’ is t:
+when nil, ‘describe-key’ is called instead
+
+
+  (`god-local-mode' is enabled.
+   The given key-sequence: h SPC k
+   corresponds to this key-binding: C-h k)
+
+[back]
+#+end_quote
+
+** approach
+Rather than overriding or advising `describe-key', the current approach is to simply bind "C-h k" to `god-mode-describe-key' in the `god-local-mode-map'
+
+I'd like users to still have the option to easily use the regular `describe-key' without having to mess with key-bindings, so I introduced the custom boolean variable `god-translate-key-for-description'. When this variable is nil, `god-mode-describe-key' will simply call `describe-key'.
+
+When invoked, `god-mode-describe-key' works by recording a key-sequence using `god-mode-lookup-key-sequence', and displaying information about its associated command using `describe-key'.
+Information about specific `god-mode' key-bindings is displayed by the function `god-mode--help-fns-describe-function', which is added to the hook 'help-fns-describe-function-functions. This hook is for displaying additional information inside the Help buffer.
+`god-mode--help-fn-describe-function' displays the inputted key sequence, and what key-binding it corresponds to. The inputted key sequence is found by `god-mode-get-describe-key-seq', which inspects the latest keys (`recent-keys') and returns the ones that were inputted after the latest call to `god-mode-self-insert' (which is what started the 'C-h k' command that triggered `god-mode-describe-key'). The corresponding key binding is found by inspecting the variable `god-latest-described-command', which was set earlier in `god-mode-describe-key', via a one-time advice to `god-mode-lookup-command'.
+
+** possible improvements
+*** `god-mode-describe-key' should be able to handle additional events:
+I focused `god-mode-describe-key' on being able to describe key-bindings specific to god-mode. For other types of events (see below) we'll have to advise users to call M-x `describe-key' instead (or set `god-translate-key-for-description' to nil).
+**** mouse clicks
+there is a step that catches keys that are not recognized by god-mode, and sends them to `describe-key' instead. This is able to deal with some clicks, though it lacks the complex logic in `describe-key' to wait for possible double-clicks or complex mouse events
+**** 'regular' key bindings
+When in god mode, the usual key-bindings apply: for example, "C-h k" runs the same command as "h SPC k". But because of how `god-mode-lookup-key-sequence' interprets keys, "C-h" gets translated into ‘C-‘ when describing it, which causes an "Unknown key binding" error
+**** menu items
+I couldn't find a simple way to pass the information from the menu events to `describe-key'
