@@ -130,7 +130,6 @@ For example, calling with arguments 5 and t yields the symbol `S-f5'."
     map))
 
 ;;;###autoload
-;; Use keywords rather than deprecated positional arguments to `define-minor-mode'
 (define-minor-mode god-local-mode
   "Minor mode for running commands."
   :init-value nil
@@ -268,7 +267,6 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
   (or (cdr (assq key god-mode-sanitized-key-alist))
       (char-to-string key)))
 
-;; FIXME: the argument help-key is not used: should it be removed?
 (defun god-mode-help-char-dispatch (_help-key key-string-so-far)
   "Invokes `prefix-help-command' by entering the key sequence KEY-STRING-SO-FAR
 followed by the `help-char' key.
