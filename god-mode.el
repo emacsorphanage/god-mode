@@ -192,7 +192,7 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
         (execute-kbd-macro binding)))))
 
 (define-key universal-argument-map (kbd "u")
-	    #'god-mode-maybe-universal-argument-more)
+  #'god-mode-maybe-universal-argument-more)
 
 (defun god-mode-self-insert ()
   "Handle self-insert keys."
@@ -524,7 +524,7 @@ when nil, `describe-key' is called instead"
 		;; we do not have enough information
 		;; to pass menu items
 		(if (not (equal (cddr err) '((menu-bar))))
-		  (describe-key (vector (caddr err))))))))
+		    (describe-key (vector (caddr err))))))))
 	(if command
 	    (progn
 	      (add-hook 'help-fns-describe-function-functions
