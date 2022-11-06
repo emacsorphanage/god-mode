@@ -133,7 +133,9 @@ For example, calling with arguments 5 and t yields the symbol `S-f5'."
 ;;;###autoload
 (define-minor-mode god-local-mode
   "Minor mode for running commands."
-  nil " God" god-local-mode-map
+  :init-value nil
+  :lighter " God"
+  :keymap god-local-mode-map
   (if god-local-mode
       (run-hooks 'god-mode-enabled-hook)
     (run-hooks 'god-mode-disabled-hook)))
@@ -266,7 +268,7 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
   (or (cdr (assq key god-mode-sanitized-key-alist))
       (char-to-string key)))
 
-(defun god-mode-help-char-dispatch (help-key key-string-so-far)
+(defun god-mode-help-char-dispatch (_help-key key-string-so-far)
   "Invokes `prefix-help-command' by entering the key sequence KEY-STRING-SO-FAR
 followed by the `help-char' key.
 HELP-KEY contains the key that caused `god-mode-help-char-dispatch' to be called
