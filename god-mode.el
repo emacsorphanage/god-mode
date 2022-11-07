@@ -464,11 +464,6 @@ be ignored by `god-execute-with-current-bindings'."
                        universal-argument
                        universal-argument-more)))
 
-(defcustom god-translate-key-for-description
-  t
-  "Whether to use `god-mode-describe-key' when god-mode is enabled."
-  :group 'god
-  :type 'boolean)
 
 (defvar god-latest-described-command nil
   "The latest command recorded by `god-mode-describe-key'.")
@@ -507,34 +502,31 @@ into the appropriate command, and use `describe-function' to describe it.
 Only applied when `god-translate-key-for-description' is t:
 when nil, `describe-key' is called instead"
   (interactive)
-  (if (not god-translate-key-for-description)
-      (call-interactively #'describe-key)
-    (progn
-      (message "Describe the following god-mode key: ")
-      (advice-add #'god-mode-lookup-command :filter-args
-		  (lambda (key-string)
-		    (setq god-latest-described-command key-string)))
-      (let ((command
-	     ;; if the key is not recognized by god-mode,
-	     ;; we will pass it to the regular `describe-key'
-	     (condition-case err
-		 (god-mode-lookup-key-sequence)
-	       (wrong-type-argument
-		;; due to  how errors are passed,
-		;; we do not have enough information
-		;; to pass menu items
-		(if (not (equal (cddr err) '((menu-bar))))
-		    (describe-key (vector (caddr err))))))))
-	(if command
-	    (progn
-	      (add-hook 'help-fns-describe-function-functions
-			#'god-mode--help-fn-describe-function)
-	      (describe-function command)
-	      (remove-hook 'help-fns-describe-function-functions
-			   #'god-mode--help-fn-describe-function)))
-	(advice-remove #'god-mode-lookup-command
-		       (lambda (key-string)
-			 (setq god-latest-described-command key-string)))))))
+  (message "Describe the following god-mode key: ")
+  (advice-add #'god-mode-lookup-command :filter-args
+	      (lambda (key-string)
+		(setq god-latest-described-command key-string)))
+  (let ((command
+	 ;; if the key is not recognized by god-mode,
+	 ;; we will pass it to the regular `describe-key'
+	 (condition-case err
+	     (god-mode-lookup-key-sequence)
+	   (wrong-type-argument
+	    ;; due to  how errors are passed,
+	    ;; we do not have enough information
+	    ;; to pass menu items
+	    (if (not (equal (cddr err) '((menu-bar))))
+		(describe-key (vector (caddr err))))))))
+    (if command
+	(progn
+	  (add-hook 'help-fns-describe-function-functions
+		    #'god-mode--help-fn-describe-function)
+	  (describe-function command)
+	  (remove-hook 'help-fns-describe-function-functions
+		       #'god-mode--help-fn-describe-function)))
+    (advice-remove #'god-mode-lookup-command
+		   (lambda (key-string)
+		     (setq god-latest-described-command key-string)))))
 
 (provide 'god-mode)
 
