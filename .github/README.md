@@ -150,6 +150,13 @@ This package defines the following key mappings:
   * <kbd>u</kbd> <kbd>c</kbd> <kbd>o</kbd> → <kbd>C-u</kbd> <kbd>C-c</kbd>
     <kbd>C-o</kbd>
 
+## 	Lookup a key sequence
+You can use `god-mode-describe-key` to check what command would be triggered by particular keys. This function works similarly to `describe-key`: it prompts for a key combination, translates it into a command, and display its information in the Help buffer.
+
+By default, `god-mode-describe-key` is bound to `C-h k` in `god-local-mode-map`.
+
+Note that `god-mode-describe-key` is only able to interpret key-bindings that are specific to `god-mode`. For other key-bindings, mouse-clicks, and menu items, it's better to use `describe-key`.
+
 ## Visual indicators for God mode
 
 You can change the cursor style to visually indicate whether God mode is active
