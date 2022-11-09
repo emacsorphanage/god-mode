@@ -475,24 +475,24 @@ The argument _ARG is ignored: it's only needed because all hooks in
 But in our case it's redundant"
   (insert
    (format-message "\n  %s\n  %s%s\n  %s%s%s\n\n"
-		   "(`god-local-mode' is enabled. "
-		   " The given key-sequence: "
-		   (god-mode-get-described-key-seq)
-		   " corresponds to this key-binding: "
-		   (help--key-description-fontified
-		    god-latest-described-command)
-		   ")")))
+                   "(`god-local-mode' is enabled. "
+                   " The given key-sequence: "
+                   (god-mode-get-described-key-seq)
+                   " corresponds to this key-binding: "
+                   (help--key-description-fontified
+                    god-latest-described-command)
+                   ")")))
 
 (defun god-mode-get-described-key-seq ()
   "Return the keys that were pressed after `god-mode-describe-key' was called."
   (let* ((latest-keys (recent-keys 'include-cmds))
-	 (latest-describe-key-index
-	  (cl-position '(nil . god-mode-self-insert)
-		       latest-keys :from-end t :test #'equal))
-	 (start-index (+ 3 latest-describe-key-index))
-	 (key-sequence (key-description (seq-subseq latest-keys start-index))))
+         (latest-describe-key-index
+          (cl-position '(nil . god-mode-self-insert)
+                       latest-keys :from-end t :test #'equal))
+         (start-index (+ 3 latest-describe-key-index))
+         (key-sequence (key-description (seq-subseq latest-keys start-index))))
     (propertize key-sequence
-		'font-lock-face 'help-key-binding
+                'font-lock-face 'help-key-binding
                 'face 'help-key-binding)))
 
 (defun god-mode-describe-key ()
@@ -504,29 +504,29 @@ when nil, `describe-key' is called instead"
   (interactive)
   (message "Describe the following god-mode key: ")
   (advice-add #'god-mode-lookup-command :filter-args
-	      (lambda (key-string)
-		(setq god-latest-described-command key-string)))
+              (lambda (key-string)
+                (setq god-latest-described-command key-string)))
   (let ((command
-	 ;; if the key is not recognized by god-mode,
-	 ;; we will pass it to the regular `describe-key'
-	 (condition-case err
-	     (god-mode-lookup-key-sequence)
-	   (wrong-type-argument
-	    ;; due to  how errors are passed,
-	    ;; we do not have enough information
-	    ;; to pass menu items
-	    (if (not (equal (cddr err) '((menu-bar))))
-		(describe-key (vector (caddr err))))))))
+         ;; if the key is not recognized by god-mode,
+         ;; we will pass it to the regular `describe-key'
+         (condition-case err
+             (god-mode-lookup-key-sequence)
+           (wrong-type-argument
+            ;; due to  how errors are passed,
+            ;; we do not have enough information
+            ;; to pass menu items
+            (if (not (equal (cddr err) '((menu-bar))))
+                (describe-key (vector (caddr err))))))))
     (if command
-	(progn
-	  (add-hook 'help-fns-describe-function-functions
-		    #'god-mode--help-fn-describe-function)
-	  (describe-function command)
-	  (remove-hook 'help-fns-describe-function-functions
-		       #'god-mode--help-fn-describe-function)))
+        (progn
+          (add-hook 'help-fns-describe-function-functions
+                    #'god-mode--help-fn-describe-function)
+          (describe-function command)
+          (remove-hook 'help-fns-describe-function-functions
+                       #'god-mode--help-fn-describe-function)))
     (advice-remove #'god-mode-lookup-command
-		   (lambda (key-string)
-		     (setq god-latest-described-command key-string)))))
+                   (lambda (key-string)
+                     (setq god-latest-described-command key-string)))))
 
 (provide 'god-mode)
 
