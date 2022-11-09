@@ -479,10 +479,10 @@ But in our case it's redundant"
                    " The given key-sequence: "
                    (god-mode-get-described-key-seq)
                    " corresponds to this key-binding: "
-		   (if (> emacs-major-version 27)
+                   (if (> emacs-major-version 27)
                        (help--key-description-fontified
-			god-latest-described-command)
-		     god-latest-described-command)
+                        god-latest-described-command)
+                     god-latest-described-command)
                    ")")))
 
 (defun god-mode-get-described-key-seq ()
@@ -494,7 +494,7 @@ But in our case it's redundant"
          (start-index (+ 3 latest-describe-key-index))
          (key-sequence (key-description (seq-subseq latest-keys start-index))))
     (if (> emacs-major-version 27)
-	(propertize key-sequence
+        (propertize key-sequence
                     'font-lock-face 'help-key-binding
                     'face 'help-key-binding)
       key-sequence)))
