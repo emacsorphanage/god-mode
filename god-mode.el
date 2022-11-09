@@ -498,9 +498,7 @@ But in our case it's redundant"
 (defun god-mode-describe-key ()
   "Describe a key-sequence as interpreted by `god-mode'.
 Prompt for a key sequence, use `god-mode-lookup-key-sequence' to translate it
-into the appropriate command, and use `describe-function' to describe it.
-Only applied when `god-translate-key-for-description' is t:
-when nil, `describe-key' is called instead"
+into the appropriate command, and use `describe-function' to describe it"
   (interactive)
   (message "Describe the following god-mode key: ")
   (advice-add #'god-mode-lookup-command :filter-args
