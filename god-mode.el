@@ -512,7 +512,7 @@ when nil, `describe-key' is called instead"
          (condition-case err
              (god-mode-lookup-key-sequence)
            (wrong-type-argument
-            ;; due to  how errors are passed,
+            ;; due to how errors are passed,
             ;; we do not have enough information
             ;; to pass menu items
             (if (not (equal (cddr err) '((menu-bar))))
