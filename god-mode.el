@@ -508,27 +508,30 @@ into the appropriate command, and use `describe-function' to describe it"
   (advice-add #'god-mode-lookup-command :filter-args
               (lambda (key-string)
                 (setq god-latest-described-command key-string)))
-  (let ((command
-         ;; if the key is not recognized by god-mode,
-         ;; we will pass it to the regular `describe-key'
-         (condition-case err
-             (god-mode-lookup-key-sequence)
-           (wrong-type-argument
-            ;; due to how errors are passed,
-            ;; we do not have enough information
-            ;; to pass menu items
-            (if (not (equal (cddr err) '((menu-bar))))
-                (describe-key (vector (caddr err))))))))
-    (if command
-        (progn
-          (add-hook 'help-fns-describe-function-functions
-                    #'god-mode--help-fn-describe-function)
-          (describe-function command)
-          (remove-hook 'help-fns-describe-function-functions
-                       #'god-mode--help-fn-describe-function)))
+  ;; use unwind-protect, and remove the advice / hook in the unwind forms
+  (unwind-protect
+      (let ((command
+             ;; if the key is not recognized by god-mode,
+             ;; we will pass it to the regular `describe-key'
+             (condition-case err
+                 (god-mode-lookup-key-sequence)
+               (wrong-type-argument
+                ;; due to how errors are passed,
+                ;; we do not have enough information
+                ;; to pass menu items
+                (if (not (equal (cddr err) '((menu-bar))))
+                    (describe-key (vector (caddr err))))))))
+        (if command
+            (progn
+              (add-hook 'help-fns-describe-function-functions
+                        #'god-mode--help-fn-describe-function)
+              (describe-function combmand))))
+    ;; unwind forms:
     (advice-remove #'god-mode-lookup-command
                    (lambda (key-string)
-                     (setq god-latest-described-command key-string)))))
+                     (setq god-latest-described-command key-string)))
+    (remove-hook 'help-fns-describe-function-functions
+                 #'god-mode--help-fn-describe-function)))
 
 (provide 'god-mode)
 
