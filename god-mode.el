@@ -525,7 +525,7 @@ into the appropriate command, and use `describe-function' to describe it"
             (progn
               (add-hook 'help-fns-describe-function-functions
                         #'god-mode--help-fn-describe-function)
-              (describe-function combmand))))
+              (describe-function command))))
     ;; unwind forms:
     (advice-remove #'god-mode-lookup-command
                    (lambda (key-string)
