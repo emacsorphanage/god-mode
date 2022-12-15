@@ -190,7 +190,7 @@ whether God mode is active as follows:
 			:foreground "#404148"
 			:background "#efefef"))))
 
-(add-hook 'post-command-hook 'my-god-mode-update-mode-line)
+(add-hook 'post-command-hook #'my-god-mode-update-mode-line)
 ```
 
 Note that using `post-command-hook` here should not be an issue for performance.
@@ -330,7 +330,7 @@ customizations that enable them to be used together smoothly.
   ```emacs-lisp
   (with-eval-after-load 'god-mode
     (evil-make-intercept-map god-local-mode-map 'normal)
-    (add-hook 'god-local-mode-hook 'evil-normalize-keymaps))
+    (add-hook 'god-local-mode-hook #'evil-normalize-keymaps))
   ```
 
 * Another option to use God mode with Evil is to use the
