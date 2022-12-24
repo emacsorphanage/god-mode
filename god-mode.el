@@ -170,10 +170,18 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
     (god-local-mode -1)))
 
 ;;;###autoload
-(defun god-mode-all ()
-  "Toggle `god-local-mode' in all buffers."
+(defun god-mode-all (&optional arg)
+  "Toggle `god-local-mode' in all buffers.
+
+If called from Lisp, toggle the mode if ARG is nil.  Enable the
+mode if ARG is zero or a positive number.  Disable the mode if
+ARG is a negative number."
   (interactive)
-  (let ((new-status (if (bound-and-true-p god-local-mode) -1 1)))
+  (let ((new-status
+	 (cond
+	  ((null arg) (if (bound-and-true-p god-local-mode) -1 1))
+	  ((> 0 arg) -1)
+	  (t 1))))
     (setq god-global-mode t)
     (mapc (lambda (buffer)
             (with-current-buffer buffer
