@@ -109,6 +109,18 @@ in God mode will be translated to `C-<f5>'."
   :group 'god
   :type 'boolean)
 
+(defcustom god-mode-lighter-string
+  "God"
+  "String displayed on the mode line when God mode is active.
+Set it to nil if you don't want a mode line indicator."
+  :group 'god
+  :type '(choice string (const :tag "None" nil)))
+
+(defface god-mode-lighter
+  '((t))
+  "Face for God mode's lighter."
+  :group 'god)
+
 (defun god-mode-make-f-key (n &optional shift)
   "Get the event for numbered function key N, with shift status SHIFT.
 For example, calling with arguments 5 and t yields the symbol `S-f5'."
@@ -134,7 +146,9 @@ For example, calling with arguments 5 and t yields the symbol `S-f5'."
 (define-minor-mode god-local-mode
   "Minor mode for running commands."
   :init-value nil
-  :lighter " God"
+  :lighter (god-mode-lighter-string
+	    ((" "
+	     (:propertize god-mode-lighter-string face god-mode-lighter))))
   :keymap god-local-mode-map
   (if god-local-mode
       (run-hooks 'god-mode-enabled-hook)
