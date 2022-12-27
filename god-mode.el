@@ -173,9 +173,9 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
 (defun god-mode-all (&optional arg)
   "Toggle `god-local-mode' in all buffers.
 
-If called from Lisp, toggle the mode if ARG is nil.  Enable the
-mode if ARG is zero or a positive number.  Disable the mode if
-ARG is a negative number."
+Toggle the mode if ARG is nil. If ARG is non-nil, enable the mode
+if ARG is zero or a positive number, or disable the mode if ARG
+is a negative number."
   (interactive)
   (let ((new-status
 	 (cond
