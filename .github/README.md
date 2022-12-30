@@ -159,7 +159,17 @@ Note that `god-mode-describe-key` is only able to interpret key-bindings that ar
 
 ## Visual indicators for God mode
 
-You can change the cursor style to visually indicate whether God mode is active
+God mode allows you to customize its minor mode lighter by customizing the `god-mode-lighter-string` variable and the `god-mode-lighter` face.
+For example, if you don't want any lighter, you can set the string to nil.
+On the other hand, if you want the lighter to stand out, you can change the face, e.g. by making it inherit from `error`.
+You can do this using `M-x customize-face RET god-mode-lighter` or as follows:
+
+```emacs-lisp
+(custom-set-faces
+ '(god-mode-lighter ((t (:inherit error)))))
+```
+
+Additionally, you can change the cursor style to visually indicate whether God mode is active
 as follows:
 
 ```emacs-lisp
