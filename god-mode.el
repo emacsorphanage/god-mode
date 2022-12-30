@@ -147,8 +147,8 @@ For example, calling with arguments 5 and t yields the symbol `S-f5'."
   "Minor mode for running commands."
   :init-value nil
   :lighter (god-mode-lighter-string
-	    ((" "
-	     (:propertize god-mode-lighter-string face god-mode-lighter))))
+            ((" "
+             (:propertize god-mode-lighter-string face god-mode-lighter))))
   :keymap god-local-mode-map
   (if god-local-mode
       (run-hooks 'god-mode-enabled-hook)
