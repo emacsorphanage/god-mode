@@ -172,7 +172,7 @@ If it was not active when `god-local-mode-pause' was called, nothing happens."
   "Enable `god-local-mode' on all buffers.")
 
 (defvar god-literal-sequence nil
-  "Activated after `god-literal-key' is pressed in a command sequence.")
+  "Toggled when `god-literal-key' is pressed in a command sequence.")
 
 ;;;###autoload
 (defun god-mode ()
@@ -308,38 +308,34 @@ from the command loop."
   "Interpret god-mode special keys for KEY.
 Consumes more keys if appropriate.
 Appends to key sequence KEY-STRING-SO-FAR."
-  (let ((key-consumed t) (next-modifier "") next-key)
+  (let ((modifier "")
+	(next-key (lambda () (god-mode-sanitized-key-string (read-event key-string-so-far)))))
     (message key-string-so-far)
-    (cond
-     ;; Don't check for `god-literal-key' with the first key.
-     ((and key-string-so-far (string= key god-literal-key))
-      (setq god-literal-sequence t))
-     (god-literal-sequence
-      (setq key-consumed nil))
-     ((and (stringp key) (assoc key god-mode-alist))
-      (setq next-modifier (cdr (assoc key god-mode-alist))))
-     (t
-      (setq key-consumed nil
-            next-modifier (cdr (assoc nil god-mode-alist)))))
-    (setq next-key
-          (if key-consumed
-              (god-mode-sanitized-key-string (read-event key-string-so-far))
-            key))
-    (if (and key-string-so-far (string= next-key (format "%c" help-char)))
-        (god-mode-help-char-dispatch next-key key-string-so-far)
-      (when (and (= (length next-key) 1)
-                 (string= (get-char-code-property (aref next-key 0) 'general-category) "Lu")
+    (when key-string-so-far ; Don't check for `god-literal-key' with the first key.
+      (while (string= key god-literal-key)
+        (setq god-literal-sequence (not god-literal-sequence)
+              key (funcall next-key))))
+    (unless god-literal-sequence
+      (let ((modifier-lookup (and (stringp key) (assoc key god-mode-alist))))
+        (if modifier-lookup
+	    (setq modifier (cdr modifier-lookup)
+                  key (funcall next-key))
+	  (setq modifier (cdr (assoc nil god-mode-alist))))))
+    (if (and key-string-so-far (string= key (format "%c" help-char)))
+        (god-mode-help-char-dispatch key key-string-so-far)
+      (when (and (= (length key) 1)
+                 (string= (get-char-code-property (aref key 0) 'general-category) "Lu")
                  ;; If C- is part of the modifier, S- needs to be given
                  ;; in order to distinguish the uppercase from the
                  ;; lowercase bindings. If C- is not in the modifier,
                  ;; then emacs natively treats uppercase differently
                  ;; from lowercase, and the S- modifier should not be
                  ;; supplied.
-                 (string-prefix-p "C-" next-modifier))
-        (setq next-modifier (concat next-modifier "S-")))
+                 (string-prefix-p "C-" modifier))
+        (setq modifier (concat modifier "S-")))
       (if key-string-so-far
-          (concat key-string-so-far " " next-modifier next-key)
-        (concat next-modifier next-key)))))
+          (concat key-string-so-far " " modifier key)
+        (concat modifier key)))))
 
 (defun god-mode-lookup-command (key-string)
   "Execute extended keymaps in KEY-STRING, or call it if it is a command."

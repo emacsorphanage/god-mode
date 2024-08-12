@@ -54,6 +54,12 @@ Feature: C- commands
     When I send the key sequence "c SPC b e g"
     Then the cursor should be at point "1"
 
+  Scenario: toggle god-literal-key
+    Given I bind "C-c k M-l" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "c SPC k SPC g l"
+    Then the cursor should be at point "1"
+
   Scenario: execute commands with C-arrow
     Given I bind "C-x C-<left>" to "backward-word"
     And I go to line "1"
