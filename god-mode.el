@@ -309,7 +309,7 @@ from the command loop."
 Consumes more keys if appropriate.
 Appends to key sequence KEY-STRING-SO-FAR."
   (let ((modifier "")
-	(next-key (lambda () (god-mode-sanitized-key-string (read-event key-string-so-far)))))
+        (next-key (lambda () (god-mode-sanitized-key-string (read-event key-string-so-far)))))
     (message key-string-so-far)
     (when key-string-so-far ; Don't check for `god-literal-key' with the first key.
       (while (string= key god-literal-key)
