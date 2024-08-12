@@ -362,7 +362,7 @@ customizations that enable them to be used together smoothly.
 [melpa-badge]: https://melpa.org/packages/god-mode-badge.svg
 [melpa-stable-badge]: https://stable.melpa.org/packages/god-mode-badge.svg
 [gh-actions-link]: https://github.com/emacsorphanage/god-mode/actions?query=workflow%3ACI+branch%3Amaster
-[gh-actions-badge]: https://github.com/emacsorphanage/god-mode/workflows/CI/badge.svg?branch=master
+[gh-actions-badge]: https://github.com/emacsorphanage/god-mode/actions/workflows/test.yml/badge.svg?branch=master
 [evil]: https://github.com/emacs-evil/evil
 [evil-god-state]: https://github.com/gridaphobe/evil-god-state
 [window-hooks]: https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Hooks.html
