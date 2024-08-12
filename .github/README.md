@@ -4,7 +4,7 @@
 [![melpa-stable-badge][melpa-stable-badge]][melpa-stable-link]
 [![gh-actions-badge][gh-actions-badge]][gh-actions-link]
 
-_NOTE_: This package requires Emacs 26.1 to work well.
+_NOTE_: This package requires Emacs 26.3 to work well.
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of command mode and
