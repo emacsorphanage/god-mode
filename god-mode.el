@@ -318,9 +318,9 @@ Appends to key sequence KEY-STRING-SO-FAR."
     (unless god-literal-sequence
       (let ((modifier-lookup (and (stringp key) (assoc key god-mode-alist))))
         (if modifier-lookup
-	    (setq modifier (cdr modifier-lookup)
+            (setq modifier (cdr modifier-lookup)
                   key (funcall next-key))
-	  (setq modifier (cdr (assoc nil god-mode-alist))))))
+          (setq modifier (cdr (assoc nil god-mode-alist))))))
     (if (and key-string-so-far (string= key (format "%c" help-char)))
         (god-mode-help-char-dispatch key key-string-so-far)
       (when (and (= (length key) 1)
