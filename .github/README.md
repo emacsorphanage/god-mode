@@ -264,11 +264,18 @@ mapping that calls `org-self-insert-command` in `org-mode`:
 
 ## Useful key bindings
 
-The following key bindings are popular:
+For vim refugees, consider using `i` and `<escape>` to toggle god-mode off and
+on:
+
+```emacs-lisp
+(define-key god-local-mode-map (kbd "i") #'god-local-mode)
+(global-set-key (kbd "<escape>") #'(lambda () (interactive) (god-local-mode 1)))
+```
+
+The following key binding is also popular:
 
 ```emacs-lisp
 (define-key god-local-mode-map (kbd "z") #'repeat)
-(define-key god-local-mode-map (kbd "i") #'god-local-mode)
 ```
 
 Although I personally prefer:
