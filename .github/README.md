@@ -367,15 +367,6 @@ customizations that enable them to be used together smoothly.
   `god-off` which is like `emacs-state` but more easy to toggle in and
   out of.  The ability to use a persistent `god-state` is also better
   documented.
- 
-
- 
- 
- 
- 
- 
- 
- 
 
 [useful-key-bindings]: #useful-key-bindings
 [key-mapping]: #key-mapping
