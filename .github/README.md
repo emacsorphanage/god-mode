@@ -360,6 +360,20 @@ customizations that enable them to be used together smoothly.
   default Emacs keybindings through God mode. However, a disadvantage of
   `evil-god-state` is that Evil's state-specific keybindings will not be
   available in God mode.
+ 
+* [`evil-god-toggle`] is an expanded version of `evil-god-state` with features
+  like persistence of visual selections to corresponding active regions,
+  global `god-mode` scope, and a `god-off` which is like `emacs-state` but
+  more easy to toggle in and out of.  The ability to use a persistent
+  `god-state` is also better documented.
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 [useful-key-bindings]: #useful-key-bindings
 [key-mapping]: #key-mapping
@@ -372,4 +386,5 @@ customizations that enable them to be used together smoothly.
 [gh-actions-badge]: https://github.com/emacsorphanage/god-mode/actions/workflows/test.yml/badge.svg?branch=master
 [evil]: https://github.com/emacs-evil/evil
 [evil-god-state]: https://github.com/gridaphobe/evil-god-state
+[evil-god-toggle]: https://github.com/jam1015/evil-god-toggle
 [window-hooks]: https://www.gnu.org/software/emacs/manual/html_node/elisp/Window-Hooks.html
