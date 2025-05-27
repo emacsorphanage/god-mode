@@ -361,19 +361,12 @@ customizations that enable them to be used together smoothly.
   `evil-god-state` is that Evil's state-specific keybindings will not be
   available in God mode.
  
-* [`evil-god-toggle`] is an expanded version of `evil-god-state` with features
-  like persistence of visual selections to corresponding active regions,
-  global `god-mode` scope, and a `god-off` which is like `emacs-state` but
-  more easy to toggle in and out of.  The ability to use a persistent
-  `god-state` is also better documented.
-
- 
- 
- 
- 
- 
- 
- 
+* [`evil-god-toggle`][evil-god-toggle] is an expanded version of
+  `evil-god-state` with features like persistence of visual selections
+  to corresponding active regions, global `god-mode` scope, and a
+  `god-off` which is like `emacs-state` but more easy to toggle in and
+  out of.  The ability to use a persistent `god-state` is also better
+  documented.
 
 [useful-key-bindings]: #useful-key-bindings
 [key-mapping]: #key-mapping
