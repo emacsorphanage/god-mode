@@ -16,6 +16,7 @@ jobs:
           - 29.2
           - 29.3
           - 29.4
+          - 30.1
           - snapshot
         include:
           - emacs_version: snapshot
