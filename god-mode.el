@@ -358,7 +358,12 @@ returns a keymap to allow further key input, or nil if completely unbound."
        ((string-match "\\(.*\\) C-\\(.\\)$" key-string)
         (let* ((prefix (match-string 1 key-string))
                (last (match-string 2 key-string))
-               (fallback-key (string-trim (format "%s %s" prefix last)))
+               (key-str (format "%s %s" prefix last))
+               (fallback-key (if (>= emacs-major-version 28)
+                                 (string-trim-right key-str)
+                               (replace-regexp-in-string
+                                "[ \t\n\r]+$" "" ;; Remove trailing whitespace
+                                key-str)))
                (fallback-vector (read-kbd-macro fallback-key t))
                (fallback-binding (key-binding fallback-vector)))
           (cond
