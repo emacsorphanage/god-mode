@@ -163,6 +163,12 @@ Feature: C- commands
     When I send the key sequence "c <S-return>"
     Then the cursor should be at point "1"
 
+  Scenario: execute commands with fallback lookup
+    Given I bind "C-c a" to "beginning-of-buffer"
+    And I go to end of buffer
+    When I send the key sequence "c a"
+    Then the cursor should be at point "1"
+
   Scenario: execute commands with shift and tab (control+shift)
     Given I bind "C-c C-S-<iso-lefttab>" to "beginning-of-buffer"
     And I go to end of buffer
