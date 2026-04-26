@@ -11,3 +11,11 @@ Feature: Insertion mode
   Scenario: C-u C-u u inserts u 16 times
     When I send the key sequence "C-u C-u u"
     Then the buffer's contents should be "uuuuuuuuuuuuuuuu"
+
+  Scenario: C-x 8 u inserts μ
+    When I send the key sequence "C-x 8 u"
+    Then the buffer's contents should be "μ"
+
+  Scenario: C-x 8 o inserts °
+    When I send the key sequence "C-x 8 o"
+    Then the buffer's contents should be "°"

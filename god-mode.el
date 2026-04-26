@@ -222,6 +222,7 @@ is a negative number."
   (let* ((initial-key (aref (this-command-keys-vector)
                             (- (length (this-command-keys-vector)) 1)))
          (binding (god-mode-lookup-key-sequence initial-key)))
+    (setq god-literal-sequence nil)
     (when binding
       ;; For now, set the shift-translation status only for alphabetic keys.
       (when (god-mode-upper-p initial-key)
@@ -231,10 +232,15 @@ is a negative number."
       ;; `real-this-command' is used by emacs to populate
       ;; `last-repeatable-command', which is used by `repeat'.
       (setq real-this-command binding)
-      (setq god-literal-sequence nil)
       (if (commandp binding t)
           (call-interactively binding)
-        (execute-kbd-macro binding)))))
+        ;; Pause god-mode while executing keyboard macros: god-local-mode-map
+        ;; binds chars 32–255 to god-mode-self-insert, which would intercept
+        ;; the macro's character events before they reach self-insert-command.
+        (god-local-mode-pause)
+        (unwind-protect
+            (execute-kbd-macro binding)
+          (god-local-mode-resume))))))
 
 (defun god-mode-upper-p (key)
   "Check if KEY is an upper case character not present in `god-mode-alist'."
@@ -377,7 +383,19 @@ returns a keymap to allow further key input, or nil if completely unbound."
             (god-mode-lookup-key-sequence nil fallback-key))
 
            ;; Not a command nor a map — wait for more input, don't fail
-           )))))))
+           )))
+
+       ;; Case 4: consult key-translation-map.  iso-transl registers C-x 8
+       ;; sequences there rather than in the global keymap, so key-binding
+       ;; alone cannot find them.
+       (t
+        (let ((translation (lookup-key key-translation-map key-vector)))
+          (cond
+           ((keymapp translation)
+            (god-mode-lookup-key-sequence nil key-string))
+           (translation
+            (setq last-command-event (aref key-vector (1- (length key-vector))))
+            translation))))))))
 
 ;;;###autoload
 (defun god-mode-maybe-activate (&optional status)
