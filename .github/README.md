@@ -4,7 +4,7 @@
 [![melpa-stable-badge][melpa-stable-badge]][melpa-stable-link]
 [![gh-actions-badge][gh-actions-badge]][gh-actions-link]
 
-_NOTE_: This package requires Emacs 26.3 to work well.
+_NOTE_: This package requires Emacs 29 to work well.
 
 This is a global minor mode for entering Emacs commands without
 modifier keys. It's similar to Vim's separation of command mode and
@@ -47,22 +47,22 @@ God mode can be toggled through `god-local-mode` using the escape key
 (<kbd>ESC</kbd>) as follows:
 
 ```emacs-lisp
-(global-set-key (kbd "<escape>") #'god-local-mode)
+(keymap-global-set "<escape>" #'god-local-mode)
 ```
 
 If you want to toggle God mode on _all active and future buffers_, use
 `god-mode-all` as follows:
 
 ```emacs-lisp
-(global-set-key (kbd "<escape>") #'god-mode-all)
+(keymap-global-set "<escape>" #'god-mode-all)
 ```
 
 If God mode is activated through `god-mode` or `god-mode-all`, you might want to
 ensure that no buffers are skipped, as follows:
 
 ```emacs-lisp
-(setq god-exempt-major-modes nil)
-(setq god-exempt-predicates nil)
+(setopt god-exempt-major-modes nil)
+(setopt god-exempt-predicates nil)
 ```
 
 This means that `magit-mode` or `dired-mode`, for example, will also enter God
@@ -76,7 +76,7 @@ translated to <kbd>C-&lt;f5></kbd>. To disable this translation, you can set the
 mode, as follows:
 
 ``` emacs-lisp
-(setq god-mode-enable-function-key-translation nil)
+(setopt god-mode-enable-function-key-translation nil)
 (require 'god-mode)
 ```
 
@@ -240,8 +240,8 @@ You can load and activate this feature as follows:
 
 ```emacs-lisp
 (require 'god-mode-isearch)
-(define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
-(define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
+(keymap-set isearch-mode-map "escape>" #'god-mode-isearch-activate)
+(keymap-set god-mode-isearch-map "<escape>" #'god-mode-isearch-disable)
 ```
 
 You can also configure `god-mode-isearch-map` for additional keybindings.
@@ -259,7 +259,7 @@ mapping that calls `org-self-insert-command` in `org-mode`:
       (call-interactively 'org-self-insert-command)
     (call-interactively 'god-mode-self-insert)))
 
-(define-key god-local-mode-map [remap self-insert-command] #'my-god-mode-self-insert)
+(keymap-set god-local-mode-map "<remap> <self-insert-command>" #'god-mode-self-insert)
 ```
 
 ## Useful key bindings
@@ -268,36 +268,73 @@ For vim refugees, consider using `i` and `<escape>` to toggle god-mode off and
 on:
 
 ```emacs-lisp
-(define-key god-local-mode-map (kbd "i") #'god-local-mode)
-(global-set-key (kbd "<escape>") #'(lambda () (interactive) (god-local-mode 1)))
+(keymap-set god-local-mode-map "i" #'god-local-mode)
+(keymap-global-set "<escape>" #'(lambda () (interactive) (god-local-mode 1)))
 ```
 
 The following key binding is also popular:
 
 ```emacs-lisp
-(define-key god-local-mode-map (kbd "z") #'repeat)
+(keymap-set god-local-mode-map "z" #'repeat)
 ```
 
 Although I personally prefer:
 
 ```emacs-lisp
-(define-key god-local-mode-map (kbd ".") #'repeat)
+(keymap-set god-local-mode-map "." #'repeat)
 ```
 
 These are also handy:
 
 ```emacs-lisp
-(global-set-key (kbd "C-x C-1") #'delete-other-windows)
-(global-set-key (kbd "C-x C-2") #'split-window-below)
-(global-set-key (kbd "C-x C-3") #'split-window-right)
-(global-set-key (kbd "C-x C-0") #'delete-window)
+(keymap-global-set "C-x C-1" #'delete-other-windows)
+(keymap-global-set "C-x C-2" #'split-window-below)
+(keymap-global-set "C-x C-3" #'split-window-right)
+(keymap-global-set "C-x C-0" #'delete-window)
 
-(define-key god-local-mode-map (kbd "[") #'backward-paragraph)
-(define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+(keymap-set god-local-mode-map "[" #'backward-paragraph)
+(keymap-set god-local-mode-map "]" #'forward-paragraph)
 ```
 
 So that you can run <kbd>x</kbd> <kbd>1</kbd>, <kbd>x</kbd>
 <kbd>2</kbd>, <kbd>x</kbd> <kbd>3</kbd>, and <kbd>x</kbd> <kbd>0</kbd> in God mode.
+
+## Setup with use-package
+You can also set all above customizations with following use-package:
+
+```emacs-lisp
+(use-package god-mode ; uncomment anything you want to use
+  :ensure t
+  :config
+  (require 'god-mode-isearch)
+  ;; :custom
+  ;; (god-exempt-major-modes nil)
+  ;; (god-exempt-predicates nil)
+  ;; (god-mode-enable-function-key-translation nil)
+  ;; :custom-face
+  ;; (god-mode-lighter ((t (:inherit error))))
+  :bind (:map
+         global-map
+         ("<escape>" . god-local-mode)
+         ;; ("<escape>" . god-mode-all)
+         ;; ("<escape>" . (lambda () (interactive) (god-local-mode 1)))
+         ;; ("i" . god-local-mode)
+         ;; ("." . repeat)
+         ;; ("C-x C-1" . delete-other-windows)
+         ;; ("C-x C-2" . split-window-below)
+         ;; ("C-x C-3" . split-window-right)
+         ;; ("C-x C-0" . delete-window)
+         ;; :map god-local-mode-map
+         ;; ("[" . backward-paragraph)
+         ;; ("]" . forward-paragraph)
+         ;; :map
+         ;; isearch-mode-map
+         ;; ("<escape>" . god-mode-isearch-activate)
+         ;; :map
+         ;; god-mode-isearch-map
+         ;; ("<escape>" . god-mode-isearch-disable)
+         ))
+```
 
 ## Exempt major modes
 

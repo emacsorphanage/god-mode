@@ -35,8 +35,6 @@
 
 ;;; Code:
 
-(require 'cl-lib)
-
 (add-hook 'after-change-major-mode-hook 'god-mode-maybe-activate)
 
 (defvar god-local-mode-paused nil)
@@ -129,17 +127,17 @@ For example, calling with arguments 5 and t yields the symbol `S-f5'."
 (defvar god-local-mode-map
   (let ((map (make-sparse-keymap)))
     (suppress-keymap map t)
-    (define-key map [remap self-insert-command] 'god-mode-self-insert)
+    (keymap-set map "<remap> <self-insert-command>" #'god-mode-self-insert)
     (let ((i ?\s))
       (while (< i 256)
-        (define-key map (vector i) 'god-mode-self-insert)
+        (keymap-set map (single-key-description i) 'god-mode-self-insert)
         (setq i (1+ i))))
     (when god-mode-enable-function-key-translation
       (dotimes (i 35)
-        (define-key map (vector (god-mode-make-f-key (1+ i))) 'god-mode-self-insert)
-        (define-key map (vector (god-mode-make-f-key (1+ i) t)) 'god-mode-self-insert)))
-    (define-key map (kbd "DEL") nil)
-    (define-key map (kbd "C-h k") #'god-mode-describe-key)
+        (keymap-set map (single-key-description (god-mode-make-f-key (1+ i))) 'god-mode-self-insert)
+        (keymap-set map (single-key-description (god-mode-make-f-key (1+ i) t)) 'god-mode-self-insert)))
+    (keymap-set map "DEL" nil)
+    (keymap-set map "C-h k" #'god-mode-describe-key)
     map))
 
 ;;;###autoload
@@ -192,10 +190,10 @@ if ARG is zero or a positive number, or disable the mode if ARG
 is a negative number."
   (interactive)
   (let ((new-status
-	 (cond
-	  ((null arg) (if (bound-and-true-p god-local-mode) -1 1))
-	  ((> 0 arg) -1)
-	  (t 1))))
+         (cond
+          ((null arg) (if (bound-and-true-p god-local-mode) -1 1))
+          ((> 0 arg) -1)
+          (t 1))))
     (setq god-global-mode t)
     (mapc (lambda (buffer)
             (with-current-buffer buffer
@@ -213,7 +211,7 @@ is a negative number."
           (call-interactively binding)
         (execute-kbd-macro binding)))))
 
-(define-key universal-argument-map (kbd "u")
+(keymap-set universal-argument-map "u"
   #'god-mode-maybe-universal-argument-more)
 
 (defun god-mode-self-insert ()
@@ -285,7 +283,7 @@ KEY-STRING-SO-FAR should be nil for the first call in the sequence."
      (S-delete . "<S-delete>")
      (S-return . "<S-return>"))
    ;; f1..f35 and S-f1..S-f35
-   (cl-mapcan (lambda (i)
+   (mapcan (lambda (i)
                 (list (cons (god-mode-make-f-key i)   (format "<f%d>" i))
                       (cons (god-mode-make-f-key i t) (format "S-<f%d>" i))))
               (number-sequence 1 35)))
@@ -304,9 +302,10 @@ from the command loop."
   ;; Adding an element (t . key) to `unread-command-events' will add key to
   ;; the current command's key sequence.
   (setq unread-command-events
-        (cl-loop for key in (append (read-kbd-macro key-string-so-far t)
-                                    (list help-char))
-                 collect (cons t key)))
+        (mapcar (lambda (key)
+                  (cons t key))
+                (append (read-kbd-macro key-string-so-far t)
+                        (list help-char))))
   ;; Return nil so that `god-mode-lookup-command' doesn't perform any action.
   nil)
 

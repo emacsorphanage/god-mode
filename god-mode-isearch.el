@@ -6,7 +6,7 @@
 ;; Author: Chris Done <chrisdone@gmail.com>
 ;; URL: https://github.com/emacsorphanage/god-mode
 ;; Version: 2.19.0
-;; Package-Requires: ((emacs "26.3"))
+;; Package-Requires: ((emacs "29"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -29,16 +29,16 @@
 
 ;; Recommended use:
 
-;; (define-key isearch-mode-map (kbd "<escape>") 'god-mode-isearch-activate)
-;; (define-key god-mode-isearch-map (kbd "<escape>") 'god-mode-isearch-disable)
+;; (keymap-set isearch-mode-map "<escape>" 'god-mode-isearch-activate)
+;; (keymap-set god-mode-isearch-map "<escape>" 'god-mode-isearch-disable)
 
-(defvar god-mode-isearch-map
-  (let ((map (copy-keymap isearch-mode-map)))
-    (define-key map (kbd "s") 'isearch-repeat-forward)
-    (define-key map (kbd "r") 'isearch-repeat-backward)
-    (define-key map (kbd "w") 'isearch-yank-word-or-char)
-    map)
-  "Keymap for modal isearch.")
+(defvar-keymap god-mode-isearch-map
+  :parent isearch-mode-map
+  :doc
+  "Keymap for modal isearch."
+  "s" #'isearch-repeat-forward
+  "r" #'isearch-repeat-backward
+  "w" #'isearch-yank-word-or-char)
 
 (defun god-mode-isearch-activate ()
   "Activate God mode in the isearch buffer."
