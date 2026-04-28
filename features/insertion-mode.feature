@@ -12,9 +12,9 @@ Feature: Insertion mode
     When I send the key sequence "C-u C-u u"
     Then the buffer's contents should be "uuuuuuuuuuuuuuuu"
 
-  Scenario: C-x 8 u inserts μ
-    When I send the key sequence "C-x 8 u"
-    Then the buffer's contents should be "μ"
+  Scenario: C-x 8 P inserts ¶
+    When I send the key sequence "C-x 8 P"
+    Then the buffer's contents should be "¶"
 
   Scenario: C-x 8 o inserts °
     When I send the key sequence "C-x 8 o"
